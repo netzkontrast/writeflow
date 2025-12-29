@@ -78,7 +78,7 @@ export const publishCommands: SlashCommand[] = [
             fileContent = result.content
               .split('\n')
               .map((line: string) => {
-                const match = line.match(/^\s*\d+→(.*)$/)
+                const match = line.match(/^\s*\d+[\s→:]+(.*)$/)
                 return match ? match[1] : line
               })
               .join('\n')
@@ -193,7 +193,7 @@ ${getPlatformRequirements(platform)}
             fileContent = result.content
               .split('\n')
               .map((line: string) => {
-                const match = line.match(/^\s*\d+→(.*)$/)
+                const match = line.match(/^\s*\d+[\s→:]+(.*)$/)
                 return match ? match[1] : line
               })
               .join('\n')
