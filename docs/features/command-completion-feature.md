@@ -1,278 +1,278 @@
-# WriteFlow 智能命令补全系统
+# WriteFlow Intelligent Command Completion System
 
-## 功能概述
+## Feature Overview
 
-WriteFlow 智能命令补全系统是一个为提升用户输入效率而设计的交互增强功能。该系统通过智能模糊匹配算法，为用户提供实时的命令联想和自动补全功能，极大地提升了命令行操作的效率和用户体验。
+The WriteFlow Intelligent Command Completion System is an interactive enhancement feature designed to improve user input efficiency. This system provides users with real-time command suggestions and auto-completion, greatly enhancing the efficiency and user experience of command-line operations through an intelligent fuzzy matching algorithm.
 
-## 功能需求
+## Functional Requirements
 
-### 用户故事
+### User Stories
 
-作为 WriteFlow 用户：
-- 我希望输入 `/s` 时能看到所有以 `s` 开头的命令
-- 我希望使用 Tab 键快速补全命令
-- 我希望看到命令的描述信息，了解每个命令的用途
-- 我希望支持命令的中文别名，如输入 `/演示` 能匹配到 `/slide`
+As a WriteFlow user:
+- I want to see all commands starting with `s` when I type `/s`.
+- I want to use the Tab key to quickly complete commands.
+- I want to see the description of commands to understand their purpose.
+- I want support for Chinese aliases for commands, e.g., typing `/演示` should match `/slide`.
 
-### 功能特性
+### Features
 
-#### 核心功能
-1. **实时命令联想** - 输入斜杠命令时立即显示匹配建议
-2. **模糊匹配** - 支持前缀、缩写、部分匹配等多种方式
-3. **键盘导航** - 使用方向键选择，Tab 循环，Enter 确认
-4. **视觉反馈** - 清晰的选中状态和操作提示
+#### Core Functions
+1. **Real-Time Command Suggestions** - Immediately display matching suggestions when typing a slash command.
+2. **Fuzzy Matching** - Support various methods such as prefix, abbreviation, and partial matching.
+3. **Keyboard Navigation** - Use arrow keys to select, Tab to cycle, and Enter to confirm.
+4. **Visual Feedback** - Clear selection status and operational hints.
 
-#### 匹配算法
-- **前缀匹配**: `/sl` → `/slide`
-- **缩写匹配**: `/sc` → `/slide create`
-- **连字符感知**: `/slide-c` → `/slide-convert`
-- **中文别名**: `/演示` → `/slide`
-- **模糊匹配**: `/sld` → `/slide`（容错）
+#### Matching Algorithms
+- **Prefix Matching**: `/sl` → `/slide`
+- **Abbreviation Matching**: `/sc` → `/slide create`
+- **Hyphen-Aware Matching**: `/slide-c` → `/slide-convert`
+- **Chinese Alias**: `/演示` → `/slide`
+- **Fuzzy Matching**: `/sld` → `/slide` (error tolerance)
 
-## 技术设计
+## Technical Design
 
-### 系统架构
+### System Architecture
 
 ```
 ┌─────────────────────────────────────────┐
-│           用户输入层                      │
+│           User Input Layer              │
 │         (PromptInput)                    │
 └────────────────┬────────────────────────┘
                  │
 ┌────────────────▼────────────────────────┐
-│          补全逻辑层                       │
+│          Completion Logic Layer         │
 │    (useUnifiedCompletion Hook)          │
 │  ┌──────────────────────────────────┐   │
-│  │  • 输入检测                       │   │
-│  │  • 命令匹配                       │   │
-│  │  • 状态管理                       │   │
-│  │  • 键盘事件处理                    │   │
+│  │  • Input Detection                │   │
+│  │  • Command Matching               │   │
+│  │  • State Management               │   │
+│  │  • Keyboard Event Handling        │   │
 │  └──────────────────────────────────┘   │
 └────────────────┬────────────────────────┘
                  │
 ┌────────────────▼────────────────────────┐
-│          匹配算法层                       │
+│          Matching Algorithm Layer       │
 │    (AdvancedFuzzyMatcher)               │
 │  ┌──────────────────────────────────┐   │
-│  │  • 前缀匹配算法                    │   │
-│  │  • 缩写匹配算法                    │   │
-│  │  • 模糊匹配算法                    │   │
-│  │  • 评分系统                       │   │
+│  │  • Prefix Matching Algorithm      │   │
+│  │  • Abbreviation Matching Algorithm│   │
+│  │  • Fuzzy Matching Algorithm       │   │
+│  │  • Scoring System                 │   │
 │  └──────────────────────────────────┘   │
 └────────────────┬────────────────────────┘
                  │
 ┌────────────────▼────────────────────────┐
-│           命令注册层                      │
+│           Command Registry Layer        │
 │       (CommandRegistry)                 │
 │  ┌──────────────────────────────────┐   │
-│  │  • 命令存储                       │   │
-│  │  • 别名映射                       │   │
-│  │  • 命令查询                       │   │
+│  │  • Command Storage                │   │
+│  │  • Alias Mapping                  │   │
+│  │  • Command Query                  │   │
 │  └──────────────────────────────────┘   │
 └─────────────────────────────────────────┘
 ```
 
-### 核心组件
+### Core Components
 
-#### 1. AdvancedFuzzyMatcher（高级模糊匹配器）
-负责实现多种匹配算法，并为每个匹配结果计算相关性分数。
+#### 1. AdvancedFuzzyMatcher
+Responsible for implementing various matching algorithms and calculating a relevance score for each match.
 
-**主要方法**：
-- `match(candidate, query)` - 执行匹配并返回分数
-- `exactPrefixMatch()` - 精确前缀匹配
-- `hyphenAwareMatch()` - 连字符感知匹配
-- `abbreviationMatch()` - 缩写匹配
-- `fuzzyMatch()` - 模糊匹配
+**Main Methods**:
+- `match(candidate, query)` - Performs a match and returns a score.
+- `exactPrefixMatch()` - Exact prefix matching.
+- `hyphenAwareMatch()` - Hyphen-aware matching.
+- `abbreviationMatch()` - Abbreviation matching.
+- `fuzzyMatch()` - Fuzzy matching.
 
-#### 2. CommandRegistry（命令注册表）
-管理所有可用命令及其别名的中央注册表。
+#### 2. CommandRegistry
+A central registry that manages all available commands and their aliases.
 
-**主要方法**：
-- `registerCommand()` - 注册新命令
-- `getAllCommands()` - 获取所有命令
-- `searchCommands()` - 搜索匹配的命令
-- `resolveAlias()` - 解析别名
+**Main Methods**:
+- `registerCommand()` - Registers a new command.
+- `getAllCommands()` - Gets all commands.
+- `searchCommands()` - Searches for matching commands.
+- `resolveAlias()` - Resolves an alias.
 
 #### 3. useUnifiedCompletion Hook
-React Hook，管理补全状态和用户交互逻辑。
+A React Hook that manages the completion state and user interaction logic.
 
-**状态管理**：
+**State Management**:
 ```typescript
 interface CompletionState {
-  suggestions: CommandSuggestion[]  // 建议列表
-  selectedIndex: number              // 当前选中索引
-  isActive: boolean                 // 补全是否激活
-  context: CompletionContext | null  // 补全上下文
+  suggestions: CommandSuggestion[]  // List of suggestions
+  selectedIndex: number              // Currently selected index
+  isActive: boolean                 // Whether completion is active
+  context: CompletionContext | null  // Completion context
 }
 ```
 
-#### 4. CompletionSuggestions（建议显示组件）
-负责渲染补全建议的 UI 组件。
+#### 4. CompletionSuggestions (Suggestion Display Component)
+A UI component responsible for rendering the completion suggestions.
 
-### 数据流
+### Data Flow
 
-1. **输入触发**: 用户输入 `/` 触发补全系统
-2. **命令检测**: 解析输入，提取命令前缀
-3. **匹配计算**: 使用模糊匹配算法计算所有命令的匹配分数
-4. **结果排序**: 按分数排序，筛选出最相关的建议
-5. **UI 渲染**: 显示建议列表和操作提示
-6. **用户选择**: 通过键盘操作选择命令
-7. **补全执行**: 将选中的命令填充到输入框
+1. **Input Trigger**: The user types `/` to trigger the completion system.
+2. **Command Detection**: The input is parsed to extract the command prefix.
+3. **Match Calculation**: The fuzzy matching algorithm is used to calculate the match score for all commands.
+4. **Result Sorting**: The results are sorted by score to filter for the most relevant suggestions.
+5. **UI Rendering**: The list of suggestions and operational hints are displayed.
+6. **User Selection**: The user selects a command using keyboard operations.
+7. **Completion Execution**: The selected command is filled into the input box.
 
-### 匹配算法详解
+### Matching Algorithm Details
 
-#### 评分系统
+#### Scoring System
 ```
-精确匹配:     10000 分
-前缀匹配:     1000-1500 分
-缩写匹配:     200-900 分
-部分匹配:     100-800 分
-模糊匹配:     10-150 分
-无匹配:       0 分
+Exact Match:     10000 points
+Prefix Match:    1000-1500 points
+Abbreviation Match: 200-900 points
+Partial Match:   100-800 points
+Fuzzy Match:     10-150 points
+No Match:      0 points
 ```
 
-#### 算法优先级
-1. 精确匹配最优先
-2. 前缀匹配次之
-3. 智能缩写匹配
-4. 模糊容错匹配
+#### Algorithm Priority
+1. Exact matches have the highest priority.
+2. Prefix matches are next.
+3. Intelligent abbreviation matches.
+4. Fuzzy, error-tolerant matches.
 
-## 实施计划
+## Implementation Plan
 
-### 第一阶段：基础架构（Day 1）
-- [ ] 创建 `advancedFuzzyMatcher.ts` 实现匹配算法
-- [ ] 创建 `commandRegistry.ts` 管理命令注册
-- [ ] 创建基础的类型定义和接口
+### Phase 1: Basic Architecture (Day 1)
+- [ ] Create `advancedFuzzyMatcher.ts` to implement the matching algorithms.
+- [ ] Create `commandRegistry.ts` to manage command registration.
+- [ ] Create basic type definitions and interfaces.
 
-### 第二阶段：核心逻辑（Day 2）
-- [ ] 实现 `useUnifiedCompletion` Hook
-- [ ] 集成键盘事件处理
-- [ ] 实现补全状态管理
+### Phase 2: Core Logic (Day 2)
+- [ ] Implement the `useUnifiedCompletion` Hook.
+- [ ] Integrate keyboard event handling.
+- [ ] Implement completion state management.
 
-### 第三阶段：UI 集成（Day 3）
-- [ ] 创建 `CompletionSuggestions` 组件
-- [ ] 修改 `PromptInput` 集成补全功能
-- [ ] 添加视觉反馈和动画
+### Phase 3: UI Integration (Day 3)
+- [ ] Create the `CompletionSuggestions` component.
+- [ ] Modify `PromptInput` to integrate the completion feature.
+- [ ] Add visual feedback and animations.
 
-### 第四阶段：优化完善（Day 4）
-- [ ] 添加中文别名支持
-- [ ] 优化匹配算法性能
-- [ ] 添加配置选项
-- [ ] 编写单元测试
+### Phase 4: Optimization and Refinement (Day 4)
+- [ ] Add support for Chinese aliases.
+- [ ] Optimize the performance of the matching algorithms.
+- [ ] Add configuration options.
+- [ ] Write unit tests.
 
-## 测试方案
+## Testing Plan
 
-### 功能测试
-1. **基本补全测试**
-   - 输入 `/s` 应显示 `slide`、`style`、`status`
-   - 输入 `/sl` 应优先显示 `slide`
+### Functional Testing
+1. **Basic Completion Test**
+   - Typing `/s` should display `slide`, `style`, and `status`.
+   - Typing `/sl` should prioritize displaying `slide`.
 
-2. **键盘操作测试**
-   - Tab 键循环选择
-   - Enter 键确认补全
-   - Esc 键取消补全
-   - 方向键上下导航
+2. **Keyboard Operation Test**
+   - The Tab key should cycle through selections.
+   - The Enter key should confirm completion.
+   - The Esc key should cancel completion.
+   - The up and down arrow keys should navigate the list.
 
-3. **中文支持测试**
-   - 输入 `/演示` 应匹配 `/slide`
-   - 输入 `/幻灯` 应匹配 `/slide`
+3. **Chinese Support Test**
+   - Typing `/演示` should match `/slide`.
+   - Typing `/幻灯` should match `/slide`.
 
-### 性能测试
-- 补全响应时间 < 50ms
-- 大量命令（100+）时的性能表现
-- 内存占用监控
+### Performance Testing
+- Completion response time < 50ms.
+- Performance with a large number of commands (100+).
+- Memory usage monitoring.
 
-## 用户界面设计
+## User Interface Design
 
-### 补全建议显示
+### Completion Suggestion Display
 ```
-> /s[光标]
+> /s[cursor]
 ┌─────────────────────────────────────────┐
-│ ▸ /slide    - Slidev PPT 创作命令         │
-│   /style    - 调整写作风格                 │
-│   /status   - 显示系统状态                 │
+│ ▸ /slide    - Slidev PPT creation command │
+│   /style    - Adjust writing style        │
+│   /status   - Display system status       │
 ├─────────────────────────────────────────┤
-│ ↑↓ 导航 • Tab 循环 • Enter 确认 • Esc 取消  │
+│ ↑↓ Navigate • Tab Cycle • Enter Confirm • Esc Cancel │
 └─────────────────────────────────────────┘
 ```
 
-### 交互流程
-1. 用户输入 `/` 触发补全
-2. 实时显示匹配的命令列表
-3. 使用方向键或 Tab 选择
-4. Enter 确认，自动填充命令
-5. 空格键后可继续补全子命令
+### Interaction Flow
+1. The user types `/` to trigger completion.
+2. A list of matching commands is displayed in real-time.
+3. The user selects a command using the arrow keys or Tab.
+4. The user presses Enter to confirm, and the command is auto-filled.
+5. After pressing the spacebar, sub-command completion can continue.
 
-## 配置选项
+## Configuration Options
 
 ```typescript
 interface CompletionConfig {
-  enabled: boolean           // 是否启用补全
-  minChars: number          // 触发补全的最小字符数
-  maxSuggestions: number    // 最大建议数量
-  showDescriptions: boolean // 是否显示命令描述
-  fuzzyMatch: boolean       // 是否启用模糊匹配
-  delay: number            // 延迟触发时间（ms）
+  enabled: boolean           // Whether to enable completion
+  minChars: number          // Minimum characters to trigger completion
+  maxSuggestions: number    // Maximum number of suggestions
+  showDescriptions: boolean // Whether to show command descriptions
+  fuzzyMatch: boolean       // Whether to enable fuzzy matching
+  delay: number            // Trigger delay time (in ms)
 }
 ```
 
-## 扩展性考虑
+## Extensibility Considerations
 
-### 未来增强
-1. **命令参数补全** - 支持命令参数的智能提示
-2. **历史记录** - 基于使用历史的智能排序
-3. **上下文感知** - 根据当前状态提供相关命令
-4. **学习系统** - 根据用户习惯优化匹配结果
+### Future Enhancements
+1. **Command Parameter Completion** - Support for intelligent suggestions for command parameters.
+2. **History-Based Suggestions** - Intelligent sorting based on usage history.
+3. **Context-Awareness** - Provide relevant commands based on the current state.
+4. **Learning System** - Optimize matching results based on user habits.
 
-### 插件支持
-- 允许第三方插件注册新命令
-- 支持自定义匹配算法
-- 可扩展的 UI 主题
+### Plugin Support
+- Allow third-party plugins to register new commands.
+- Support for custom matching algorithms.
+- Extensible UI themes.
 
-## 性能优化
+## Performance Optimization
 
-### 优化策略
-1. **缓存机制** - 缓存匹配结果避免重复计算
-2. **防抖处理** - 减少频繁输入的计算开销
-3. **懒加载** - 按需加载命令描述和元数据
-4. **索引优化** - 构建命令索引加速查找
+### Optimization Strategies
+1. **Caching Mechanism** - Cache matching results to avoid redundant calculations.
+2. **Debouncing** - Reduce the computational overhead of frequent input.
+3. **Lazy Loading** - Load command descriptions and metadata on demand.
+4. **Index Optimization** - Build a command index to speed up lookups.
 
-### 性能指标
-- 首次渲染: < 100ms
-- 匹配计算: < 20ms
-- 内存占用: < 10MB
-- CPU 使用率: < 5%
+### Performance Metrics
+- Initial render: < 100ms
+- Match calculation: < 20ms
+- Memory usage: < 10MB
+- CPU usage: < 5%
 
-## 依赖关系
+## Dependencies
 
-### 核心依赖
-- `ink` - 终端 UI 框架
-- `chalk` - 终端颜色支持
-- `lodash` - 工具函数库
+### Core Dependencies
+- `ink` - Terminal UI framework
+- `chalk` - Terminal color support
+- `lodash` - Utility function library
 
-### 开发依赖
-- `@types/node` - Node.js 类型定义
-- `jest` - 测试框架
-- `@testing-library/react` - React 测试工具
+### Development Dependencies
+- `@types/node` - Node.js type definitions
+- `jest` - Testing framework
+- `@testing-library/react` - React testing tools
 
-## 发布计划
+## Release Plan
 
-### v2.11.0 - 基础版本
-- 基本的命令补全功能
-- Tab/Enter 键支持
-- 前缀匹配算法
+### v2.11.0 - Basic Version
+- Basic command completion functionality.
+- Support for Tab/Enter keys.
+- Prefix matching algorithm.
 
-### v2.12.0 - 增强版本
-- 模糊匹配算法
-- 中文别名支持
-- 性能优化
+### v2.12.0 - Enhanced Version
+- Fuzzy matching algorithm.
+- Support for Chinese aliases.
+- Performance optimization.
 
-### v2.13.0 - 完整版本
-- 命令参数补全
-- 历史记录功能
-- 插件系统支持
+### v2.13.0 - Complete Version
+- Command parameter completion.
+- History-based suggestions.
+- Plugin system support.
 
 ---
 
-*最后更新：2025-01-03*  
-*文档版本：1.0.0*
+*Last updated: 2025-01-03*
+*Document version: 1.0.0*

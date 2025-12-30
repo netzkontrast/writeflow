@@ -1,8 +1,8 @@
-# 🔧 WriteFlow 技术实现详解
+# 🔧 WriteFlow Technical Implementation Details
 
-基于 Claude Code 核心架构的 Node.js/TypeScript 实现方案
+A Node.js/TypeScript implementation based on the core architecture of Claude Code.
 
-## 🚀 核心技术栈
+## 🚀 Core Technology Stack
 
 ### Node.js 22.x + TypeScript 5.3+
 
@@ -22,9 +22,9 @@
 }
 ```
 
-## 📨 h2A 双缓冲异步消息队列实现
+## 📨 h2A Double-Buffered Asynchronous Message Queue Implementation
 
-### 核心队列类（完全复刻 Claude Code）
+### Core Queue Class (Fully Replicates Claude Code)
 
 ```typescript
 // src/core/queue/h2A-queue.ts
@@ -62,10 +62,10 @@ export class H2AAsyncMessageQueue {
     private backpressureThreshold: number = 8000
   ) {}
 
-  // 核心异步迭代器（零延迟设计）
+  // Core async iterator (zero-latency design)
   async *[Symbol.asyncIterator](): AsyncIterator<Message> {
     while (true) {
-      // 检查主缓冲区
+      // Check the primary buffer
       if (this.primaryBuffer.length > 0) {
         const message = this.primaryBuffer.shift()!
         this.recordThroughput()
@@ -73,7 +73,7 @@ export class H2AAsyncMessageQueue {
         continue
       }
 
-      // 等待新消息（异步阻塞）
+      // Wait for a new message (asynchronous blocking)
       const message = await new Promise<Message>((resolve) => {
         this.readResolve = (result) => {
           if (!result.done && result.value) {
@@ -87,24 +87,24 @@ export class H2AAsyncMessageQueue {
     }
   }
 
-  // 零延迟消息入队（Claude Code 核心优势）
+  // Zero-latency message enqueueing (Claude Code's core advantage)
   enqueue(message: Message): boolean {
-    // 策略1: 零延迟路径 - 直接传递给等待的读取者
+    // Strategy 1: Zero-latency path - directly pass to the waiting reader
     if (this.readResolve && !this.isProcessing) {
       this.readResolve({ done: false, value: message })
       this.readResolve = null
       return true
     }
 
-    // 策略2: 缓冲路径 - 检查背压
+    // Strategy 2: Buffering path - check for backpressure
     if (this.primaryBuffer.length >= this.maxBufferSize) {
-      return false // 队列满，拒绝消息
+      return false // Queue is full, reject the message
     }
 
-    // 按优先级插入
+    // Insert by priority
     this.insertByPriority(message)
     
-    // 背压处理
+    // Backpressure handling
     if (this.primaryBuffer.length > this.backpressureThreshold) {
       this.triggerBackpressure()
     }
@@ -115,7 +115,7 @@ export class H2AAsyncMessageQueue {
   private insertByPriority(message: Message): void {
     let insertIndex = this.primaryBuffer.length
     
-    // 找到正确的插入位置（高优先级在前）
+    // Find the correct insertion point (higher priority first)
     for (let i = this.primaryBuffer.length - 1; i >= 0; i--) {
       if (this.primaryBuffer[i].priority >= message.priority) {
         insertIndex = i + 1
@@ -138,7 +138,7 @@ export class H2AAsyncMessageQueue {
     }
   }
 
-  // 性能监控接口
+  // Performance monitoring interface
   getMetrics() {
     return {
       queueSize: this.primaryBuffer.length,
@@ -148,7 +148,7 @@ export class H2AAsyncMessageQueue {
   }
 
   private triggerBackpressure(): void {
-    // 背压策略：切换到副缓冲区处理
+    // Backpressure strategy: switch to the secondary buffer for processing
     if (this.secondaryBuffer.length === 0) {
       this.secondaryBuffer = this.primaryBuffer.splice(0, this.backpressureThreshold / 2)
     }
@@ -156,7 +156,7 @@ export class H2AAsyncMessageQueue {
 }
 ```
 
-## 🤖 nO Agent 主循环引擎
+## 🤖 nO Agent Main Loop Engine
 
 ```typescript
 // src/core/agent/nO-engine.ts
@@ -174,21 +174,21 @@ export class NOMainAgentEngine {
     this.securityValidator = new SixLayerValidator()
   }
 
-  // 主 Agent 循环（复刻 Claude Code nO 引擎）
+  // Main Agent loop (replicates Claude Code's nO engine)
   async *run(): AsyncGenerator<AgentResponse> {
-    console.log("WriteFlow Agent 启动...")
+    console.log("WriteFlow Agent starting...")
     
     try {
-      // 启动消息队列
+      // Start the message queue
       const messageIterator = this.messageQueue[Symbol.asyncIterator]()
       
       while (true) {
         try {
-          // 1. 获取下一个消息
+          // 1. Get the next message
           const { value: message, done } = await messageIterator.next()
           if (done) break
 
-          // 2. 安全验证
+          // 2. Security validation
           const securityCheck = await this.securityValidator.validate({
             type: 'message',
             content: message.payload,
@@ -196,17 +196,17 @@ export class NOMainAgentEngine {
           })
           
           if (!securityCheck.allowed) {
-            yield { type: 'error', content: `安全检查失败: ${securityCheck.reason}` }
+            yield { type: 'error', content: `Security check failed: ${securityCheck.reason}` }
             continue
           }
 
-          // 3. 获取当前上下文
+          // 3. Get the current context
           const context = await this.contextManager.getCurrentContext()
 
-          // 4. 检查 Plan 模式状态
+          // 4. Check the Plan mode state
           const planState = await this.checkPlanMode(message, context)
 
-          // 5. 根据状态路由处理
+          // 5. Route to the appropriate handler based on the state
           switch (planState) {
             case 'default':
               yield* this.handleDefaultMode(message, context)
@@ -222,7 +222,7 @@ export class NOMainAgentEngine {
               break
           }
 
-          // 6. 更新上下文
+          // 6. Update the context
           await this.contextManager.updateContext(message, context)
 
         } catch (error) {
@@ -230,7 +230,7 @@ export class NOMainAgentEngine {
         }
       }
     } catch (error) {
-      console.error("Agent 引擎致命错误:", error)
+      console.error("Fatal error in Agent engine:", error)
     }
   }
 
@@ -238,7 +238,7 @@ export class NOMainAgentEngine {
     message: Message, 
     context: ArticleContext
   ): AsyncGenerator<AgentResponse> {
-    // 解析用户意图
+    // Parse user intent
     const intent = await this.parseUserIntent(message.payload)
     
     switch (intent.type) {
@@ -268,12 +268,12 @@ export class NOMainAgentEngine {
     if (!cmd) {
       yield { 
         type: 'error', 
-        content: `未知命令: ${command}\n可用命令: ${this.getAvailableCommands().join(', ')}` 
+        content: `Unknown command: ${command}\nAvailable commands: ${this.getAvailableCommands().join(', ')}`
       }
       return
     }
 
-    // 执行命令（复刻 Claude Code 三种类型）
+    // Execute the command (replicates the three types from Claude Code)
     try {
       switch (cmd.type) {
         case 'local':
@@ -292,7 +292,7 @@ export class NOMainAgentEngine {
           break
       }
     } catch (error) {
-      yield { type: 'error', content: `命令执行失败: ${error.message}` }
+      yield { type: 'error', content: `Command execution failed: ${error.message}` }
     }
   }
 }
@@ -313,54 +313,54 @@ export interface AgentResponse {
 }
 ```
 
-## 🗜️ wU2 上下文压缩器
+## 🗜️ wU2 Context Compressor
 
 ```typescript
 // src/core/context/wU2-compressor.ts
 export class WU2ContextCompressor {
-  private readonly COMPRESSION_THRESHOLD = 0.92 // 92% 阈值
-  private readonly PRESERVE_RATIO = 0.3 // 保留30%核心内容
+  private readonly COMPRESSION_THRESHOLD = 0.92 // 92% threshold
+  private readonly PRESERVE_RATIO = 0.3 // Preserve 30% of core content
   
   async compress(context: ArticleContext): Promise<ArticleContext> {
     const currentTokens = this.calculateTokens(context)
     const maxTokens = this.getMaxContextTokens()
     
-    // 检查是否需要压缩
+    // Check if compression is needed
     if (currentTokens < maxTokens * this.COMPRESSION_THRESHOLD) {
       return context
     }
 
-    console.log(`触发上下文压缩: ${currentTokens} tokens > ${Math.floor(maxTokens * this.COMPRESSION_THRESHOLD)} tokens`)
+    console.log(`Triggering context compression: ${currentTokens} tokens > ${Math.floor(maxTokens * this.COMPRESSION_THRESHOLD)} tokens`)
 
-    // 执行压缩
+    // Perform compression
     const compressed = await this.performIntelligentCompression(context)
     
-    // 记录压缩结果
+    // Log the compression result
     const compressedTokens = this.calculateTokens(compressed)
     const compressionRatio = 1 - (compressedTokens / currentTokens)
     
-    console.log(`压缩完成: ${currentTokens} -> ${compressedTokens} tokens (${(compressionRatio * 100).toFixed(1)}% 减少)`)
+    console.log(`Compression complete: ${currentTokens} -> ${compressedTokens} tokens (${(compressionRatio * 100).toFixed(1)}% reduction)`)
     
     return compressed
   }
 
   private async performIntelligentCompression(context: ArticleContext): Promise<ArticleContext> {
     return {
-      // 核心上下文（永不压缩）
+      // Core context (never compressed)
       currentArticle: context.currentArticle,
       activeOutline: context.activeOutline,
       writingGoals: context.writingGoals,
       userPreferences: context.userPreferences,
       
-      // 智能压缩内容
+      // Intelligently compressed content
       researchMaterial: await this.compressResearchMaterial(context.researchMaterial),
       dialogueHistory: await this.compressDialogueHistory(context.dialogueHistory),
       referenceArticles: await this.compressReferences(context.referenceArticles),
       toolUsageHistory: await this.compressToolHistory(context.toolUsageHistory),
       
-      // 更新元数据
-      tokenCount: 0, // 将重新计算
-      compressionLevel: 0, // 将重新计算
+      // Update metadata
+      tokenCount: 0, // Will be recalculated
+      compressionLevel: 0, // Will be recalculated
       lastUpdated: Date.now()
     }
   }
@@ -368,38 +368,38 @@ export class WU2ContextCompressor {
   private async compressResearchMaterial(materials: ResearchItem[]): Promise<ResearchItem[]> {
     if (materials.length === 0) return materials
     
-    // 按重要性评分排序
+    // Sort by importance score
     const scored = materials.map(item => ({
       item,
       score: this.calculateImportanceScore(item)
     })).sort((a, b) => b.score - a.score)
     
-    // 保留前70%最重要的内容
+    // Keep the top 70% most important content
     const keepCount = Math.ceil(materials.length * 0.7)
     const kept = scored.slice(0, keepCount)
     
-    // 压缩保留的内容
+    // Compress the kept content
     return kept.map(({ item }) => ({
       ...item,
-      content: this.summarizeText(item.content, 200), // 压缩到200字
-      summary: this.extractKeyPoints(item.content, 3) // 提取3个关键点
+      content: this.summarizeText(item.content, 200), // Compress to 200 words
+      summary: this.extractKeyPoints(item.content, 3) // Extract 3 key points
     }))
   }
 
   private calculateImportanceScore(item: ResearchItem): number {
     let score = 0
     
-    // 时效性（最近的内容得分更高）
+    // Timeliness (more recent content gets a higher score)
     const daysSinceCreated = (Date.now() - item.createdAt) / (1000 * 60 * 60 * 24)
     score += Math.max(0, 1 - daysSinceCreated / 30) * 0.3
     
-    // 引用频率
+    // Reference frequency
     score += Math.min(item.referenceCount / 10, 1) * 0.3
     
-    // 内容质量（长度、结构等）
+    // Content quality (length, structure, etc.)
     score += Math.min(item.content.length / 2000, 1) * 0.2
     
-    // 相关性（与当前文章主题的匹配度）
+    // Relevance (match with the current article topic)
     score += item.relevanceScore * 0.2
     
     return score
@@ -407,9 +407,9 @@ export class WU2ContextCompressor {
 }
 ```
 
-## ⚡ 斜杠命令系统实现
+## ⚡ Slash Command System Implementation
 
-### 命令解析器（复刻 Claude Code 解析逻辑）
+### Command Parser (Replicates Claude Code's Parsing Logic)
 
 ```typescript
 // src/cli/parser/SlashParser.ts
@@ -422,19 +422,19 @@ export interface ParsedCommand {
 }
 
 export class SlashCommandParser {
-  // 复刻 Claude Code chunks.100.mjs:2048 的解析逻辑
+  // Replicates the parsing logic from Claude Code's chunks.100.mjs:2048
   parseCommand(input: string): ParsedCommand | null {
-    // 检测斜杠命令
+    // Detect slash command
     if (!input.startsWith("/")) {
       return null
     }
 
-    // 解析命令和参数（完全复刻原逻辑）
+    // Parse command and arguments (fully replicates the original logic)
     const parts = input.slice(1).split(" ")
     let commandName = parts[0]
     let isMCP = false
 
-    // MCP 命令检测
+    // MCP command detection
     if (parts.length > 1 && parts[1] === "(MCP)") {
       commandName = commandName + " (MCP)"
       isMCP = true
@@ -444,7 +444,7 @@ export class SlashCommandParser {
       throw new Error("Commands are in the form `/command [args]`")
     }
 
-    // 命令分类
+    // Command classification
     const isCustom = commandName.includes(":")
     const type = isMCP ? "mcp" : isCustom ? "custom" : "standard"
     const args = input.slice(commandName.length + 2)
@@ -458,7 +458,7 @@ export class SlashCommandParser {
     }
   }
 
-  // 命令验证（复刻 Zj2 函数）
+  // Command validation (replicates the Zj2 function)
   validateCommand(commandName: string, availableCommands: SlashCommand[]): boolean {
     return availableCommands.some(cmd => 
       cmd.userFacingName() === commandName || 
@@ -466,7 +466,7 @@ export class SlashCommandParser {
     )
   }
 
-  // 命令查找（复刻 cw1 函数）
+  // Command lookup (replicates the cw1 function)
   findCommand(commandName: string, availableCommands: SlashCommand[]): SlashCommand {
     const command = availableCommands.find(cmd =>
       cmd.userFacingName() === commandName ||
@@ -487,7 +487,7 @@ export class SlashCommandParser {
 }
 ```
 
-### 写作命令实现
+### Writing Command Implementation
 
 ```typescript
 // src/cli/commands/writing-commands.ts
@@ -495,18 +495,18 @@ export const WritingCommands: SlashCommand[] = [
   {
     type: "prompt",
     name: "outline",
-    description: "生成文章大纲",
-    aliases: ["大纲", "ol"],
+    description: "Generate an article outline",
+    aliases: ["outline", "ol"],
     
     async getPromptForCommand(args: string, context: AgentContext): Promise<string> {
-      return `请为主题"${args}"生成详细的技术文章大纲。要求：
-1. 包含吸引人的标题
-2. 逻辑清晰的章节结构
-3. 每个章节的核心论点
-4. 预估字数分配
-5. 相关资料建议
+      return `Please generate a detailed technical article outline for the topic "${args}". Requirements:
+1. Include an engaging title
+2. A logically clear chapter structure
+3. The core argument for each chapter
+4. Estimated word count allocation
+5. Suggestions for related materials
 
-请生成易于阅读的结构化大纲。`
+Please generate a well-structured and easy-to-read outline.`
     },
     
     userFacingName: () => "outline",
@@ -517,29 +517,29 @@ export const WritingCommands: SlashCommand[] = [
   {
     type: "prompt", 
     name: "rewrite",
-    description: "智能改写文章内容",
-    aliases: ["改写", "rw"],
+    description: "Intelligently rewrite article content",
+    aliases: ["rewrite", "rw"],
     
     async getPromptForCommand(args: string, context: AgentContext): Promise<string> {
       const [style, ...contentParts] = args.split(" ")
       const content = contentParts.join(" ")
       
       if (!content) {
-        return `请指定要改写的内容。格式：/rewrite [风格] [内容]
-支持的风格：正式(formal), 通俗(casual), 技术(technical), 学术(academic)`
+        return `Please specify the content to rewrite. Format: /rewrite [style] [content]
+Supported styles: formal, casual, technical, academic`
       }
 
-      return `请将以下内容改写为${style}风格，保持原意但改进表达：
+      return `Please rewrite the following content in a ${style} style, preserving the original meaning but improving the expression:
 
-原文：
+Original text:
 ${content}
 
-改写要求：
-1. 保持核心信息和观点
-2. 调整语言风格为${style}
-3. 优化句式结构和流畅性
-4. 确保逻辑清晰易懂
-5. 适当调整专业术语使用`
+Rewrite requirements:
+1. Maintain the core information and ideas
+2. Adjust the language style to ${style}
+3. Optimize sentence structure and flow
+4. Ensure the logic is clear and easy to understand
+5. Appropriately adjust the use of technical terms`
     },
     
     userFacingName: () => "rewrite",
@@ -550,20 +550,20 @@ ${content}
   {
     type: "prompt",
     name: "research", 
-    description: "深度主题研究",
-    aliases: ["研究", "rs"],
+    description: "In-depth topic research",
+    aliases: ["research", "rs"],
     
     async getPromptForCommand(args: string, context: AgentContext): Promise<string> {
-      return `请对主题"${args}"进行深度研究分析，提供：
+      return `Please conduct an in-depth research analysis on the topic "${args}", providing:
 
-1. **背景信息**：主题的基本定义和发展历程
-2. **现状分析**：当前的发展状态和主要特点
-3. **趋势预测**：未来的发展方向和可能变化
-4. **关键观点**：不同角度的重要观点对比
-5. **权威资料**：可靠的信息来源和参考资料
-6. **实用建议**：针对写作的具体建议
+1. **Background Information**: Basic definition and history of the topic
+2. **Current Status Analysis**: Current state of development and key characteristics
+3. **Trend Prediction**: Future directions and potential changes
+4. **Key Perspectives**: Comparison of important viewpoints from different angles
+5. **Authoritative Sources**: Reliable sources of information and references
+6. **Practical Suggestions**: Specific recommendations for writing
 
-请确保信息准确、来源可靠，并提供引用链接。`
+Please ensure the information is accurate, the sources are reliable, and provide citation links.`
     },
     
     userFacingName: () => "research",
@@ -574,41 +574,39 @@ ${content}
   {
     type: "local",
     name: "publish",
-    description: "发布到各平台",
-    aliases: ["发布", "pub"],
+    description: "Publish to various platforms",
+    aliases: ["publish", "pub"],
     
     async call(args: string, context: AgentContext): Promise<string> {
       const [platform, articlePath, ...options] = args.split(" ")
       
       if (!platform || !articlePath) {
-        return `用法: /publish [平台] [文章路径] [选项]
+        return `Usage: /publish [platform] [article_path] [options]
 
-支持的平台:
-- wechat / 微信: 转换为微信公众号格式
-- zhihu / 知乎: 适配知乎发布格式  
-- medium: 转换为 Medium 格式
-- html: 生成静态 HTML 页面
+Supported platforms:
+- wechat: Convert to WeChat Official Account format
+- zhihu: Adapt to Zhihu publishing format
+- medium: Convert to Medium format
+- html: Generate a static HTML page
 
-示例: /publish wechat ./articles/my-article.md`
+Example: /publish wechat ./articles/my-article.md`
       }
 
       try {
         switch (platform.toLowerCase()) {
           case "wechat":
-          case "微信":
             return await this.publishToWeChat(articlePath, options)
           case "zhihu":
-          case "知乎":
             return await this.publishToZhihu(articlePath, options)
           case "medium":
             return await this.publishToMedium(articlePath, options)
           case "html":
             return await this.generateHTML(articlePath, options)
           default:
-            return `不支持的平台: ${platform}`
+            return `Unsupported platform: ${platform}`
         }
       } catch (error) {
-        return `发布失败: ${error.message}`
+        return `Publishing failed: ${error.message}`
       }
     },
     
@@ -618,8 +616,8 @@ ${content}
   {
     type: "local-jsx",
     name: "settings",
-    description: "打开设置界面", 
-    aliases: ["设置", "config"],
+    description: "Open the settings interface",
+    aliases: ["settings", "config"],
     
     async call(args: string, context: AgentContext): Promise<React.ReactElement> {
       const { createElement } = await import('react')
@@ -628,10 +626,10 @@ ${content}
         config: context.getConfig(),
         onSave: async (newConfig) => {
           await context.updateConfig(newConfig)
-          console.log("配置已保存")
+          console.log("Configuration saved")
         },
         onDone: (result) => {
-          console.log(result ? "设置已更新" : "设置已取消")
+          console.log(result ? "Settings updated" : "Settings canceled")
         }
       })
     },
@@ -641,9 +639,9 @@ ${content}
 ]
 ```
 
-## 🛠️ 写作工具系统
+## 🛠️ Writing Tool System
 
-### MH1 工具引擎（写作特化版）
+### MH1 Tool Engine (Writing-Specialized Version)
 
 ```typescript
 // src/tools/base/MH1-tool-engine.ts
@@ -658,24 +656,24 @@ export class MH1WritingToolEngine {
   }
 
   private registerCoreTools(): void {
-    // 文章操作工具
+    // Article operation tools
     this.registerTool(new ReadArticleTool())
     this.registerTool(new WriteArticleTool())
     this.registerTool(new EditArticleTool())
     
-    // 写作工具
+    // Writing tools
     this.registerTool(new OutlineGeneratorTool())
     this.registerTool(new ContentRewriterTool())
     this.registerTool(new StyleAdapterTool())
     this.registerTool(new GrammarCheckerTool())
     
-    // 研究工具
+    // Research tools
     this.registerTool(new WebSearchTool())
     this.registerTool(new WebFetchTool())
     this.registerTool(new FactCheckerTool())
     this.registerTool(new CitationManagerTool())
     
-    // 发布工具
+    // Publishing tools
     this.registerTool(new MarkdownFormatterTool())
     this.registerTool(new WeChatConverterTool())
     this.registerTool(new HTMLGeneratorTool())
@@ -684,10 +682,10 @@ export class MH1WritingToolEngine {
   async executeTool(toolName: string, input: ToolInput): Promise<ToolResult> {
     const tool = this.tools.get(toolName)
     if (!tool) {
-      throw new Error(`工具不存在: ${toolName}`)
+      throw new Error(`Tool does not exist: ${toolName}`)
     }
 
-    // 6层安全验证
+    // 6-layer security validation
     const securityCheck = await this.securityValidator.validate({
       type: 'tool_execution',
       toolName,
@@ -696,15 +694,15 @@ export class MH1WritingToolEngine {
     })
 
     if (!securityCheck.allowed) {
-      throw new Error(`安全检查失败: ${securityCheck.reason}`)
+      throw new Error(`Security check failed: ${securityCheck.reason}`)
     }
 
-    // 执行工具
+    // Execute the tool
     const startTime = Date.now()
     try {
       const result = await tool.execute(input)
       
-      // 记录执行指标
+      // Record execution metrics
       this.executionMetrics.recordExecution(toolName, Date.now() - startTime, true)
       
       return result
@@ -715,10 +713,10 @@ export class MH1WritingToolEngine {
   }
 }
 
-// 核心写作工具实现示例
+// Example implementation of a core writing tool
 export class OutlineGeneratorTool implements WritingTool {
   name = "outline_generator"
-  description = "AI 生成文章大纲"
+  description = "AI-generates an article outline"
   inputSchema = OutlineGeneratorInputSchema
 
   async execute(input: OutlineGeneratorInput): Promise<ToolResult> {
@@ -731,19 +729,19 @@ export class OutlineGeneratorTool implements WritingTool {
       max_tokens: 4000,
       messages: [{
         role: "user", 
-        content: `请为主题"${input.topic}"生成详细的文章大纲：
+        content: `Please generate a detailed article outline for the topic "${input.topic}":
 
-目标读者：${input.audience || "技术读者"}
-文章长度：${input.targetLength || 2000}字
-写作风格：${input.style || "技术性"}
-特殊要求：${input.requirements || "无"}
+Target audience: ${input.audience || "Technical readers"}
+Article length: ${input.targetLength || 2000} words
+Writing style: ${input.style || "Technical"}
+Special requirements: ${input.requirements || "None"}
 
-请生成包含以下结构的大纲：
-1. 吸引人的标题
-2. 引言部分
-3. 主体章节（3-5个）
-4. 结论部分
-5. 每个章节的核心论点和预估字数`
+Please generate an outline with the following structure:
+1. An engaging title
+2. An introduction section
+3. 3-5 main body chapters
+4. A conclusion section
+5. The core argument and estimated word count for each chapter`
       }]
     })
 
@@ -765,7 +763,7 @@ export class OutlineGeneratorTool implements WritingTool {
   }
 
   private parseOutlineFromResponse(text: string): OutlineStructure {
-    // 解析 AI 生成的大纲结构
+    // Parse the AI-generated outline structure
     const lines = text.split('\n').filter(line => line.trim())
     const outline: OutlineItem[] = []
     
@@ -774,7 +772,7 @@ export class OutlineGeneratorTool implements WritingTool {
     for (const line of lines) {
       const trimmed = line.trim()
       
-      // 检测标题级别
+      // Detect heading level
       if (trimmed.startsWith('# ')) {
         outline.push({
           level: 1,
@@ -795,7 +793,7 @@ export class OutlineGeneratorTool implements WritingTool {
           outline.push(section)
         }
       }
-      // 继续解析其他级别...
+      // Continue parsing other levels...
     }
     
     return {
@@ -808,7 +806,7 @@ export class OutlineGeneratorTool implements WritingTool {
 }
 ```
 
-## 🔄 CLI 交互界面
+## 🔄 CLI Interactive Interface
 
 ```typescript
 // src/cli/index.ts
@@ -824,23 +822,23 @@ export class WriteFlowCLI {
   }
 
   async start(): Promise<void> {
-    // 显示启动信息
-    console.log(chalk.cyan("WriteFlow AI 写作助手 v1.0.0"))
-    console.log(chalk.gray("基于 Claude Code 架构 | Node.js 22.x + TypeScript"))
+    // Display startup information
+    console.log(chalk.cyan("WriteFlow AI Writing Assistant v1.0.0"))
+    console.log(chalk.gray("Based on Claude Code Architecture | Node.js 22.x + TypeScript"))
     console.log("")
-    console.log("可用命令:")
-    console.log("  /outline <主题>     - 生成文章大纲")
-    console.log("  /rewrite <风格>     - 智能改写内容") 
-    console.log("  /research <主题>    - 深度主题研究")
-    console.log("  /publish <平台>     - 发布到平台")
-    console.log("  /settings          - 打开设置")
-    console.log("  /help              - 显示帮助")
+    console.log("Available commands:")
+    console.log("  /outline <topic>     - Generate an article outline")
+    console.log("  /rewrite <style>     - Intelligently rewrite content")
+    console.log("  /research <topic>    - In-depth topic research")
+    console.log("  /publish <platform>     - Publish to a platform")
+    console.log("  /settings          - Open settings")
+    console.log("  /help              - Show help")
     console.log("")
 
-    // 启动 Agent 引擎
+    // Start the Agent engine
     const agentStream = this.agent.run()
     
-    // 启动交互式命令行
+    // Start the interactive command line session
     await this.startInteractiveSession(agentStream)
   }
 
@@ -855,7 +853,7 @@ export class WriteFlowCLI {
     this.isInteractive = true
     rl.prompt()
 
-    // 处理用户输入
+    // Handle user input
     rl.on('line', async (line: string) => {
       const trimmed = line.trim()
       if (!trimmed) {
@@ -864,10 +862,10 @@ export class WriteFlowCLI {
       }
 
       try {
-        // 记录输入历史
+        // Record input history
         this.inputHistory.push(trimmed)
 
-        // 发送消息到 Agent
+        // Send a message to the Agent
         await this.agent.messageQueue.enqueue({
           id: this.generateMessageId(),
           type: MessageType.UserInput,
@@ -877,19 +875,19 @@ export class WriteFlowCLI {
           source: 'cli'
         })
 
-        // 处理 Agent 响应
+        // Handle Agent responses
         await this.handleAgentResponses(agentStream, rl)
 
       } catch (error) {
-        console.error(chalk.red("错误:"), error.message)
+        console.error(chalk.red("Error:"), error.message)
       }
 
       rl.prompt()
     })
 
-    // 优雅关闭
+    // Graceful shutdown
     rl.on('SIGINT', () => {
-      console.log(chalk.yellow("\n正在关闭 WriteFlow..."))
+      console.log(chalk.yellow("\nShutting down WriteFlow..."))
       rl.close()
       process.exit(0)
     })
@@ -915,64 +913,64 @@ export class WriteFlowCLI {
           break
           
         case 'progress':
-          // 显示进度信息
+          // Show progress information
           process.stdout.write(chalk.yellow("⟳ ") + value.content + "\r")
           break
           
         case 'prompt':
-          // AI 正在思考，显示加载动画
-          const spinner = ora(chalk.blue("AI 正在思考...")).start()
-          // 等待完成后停止
+          // AI is thinking, show a loading animation
+          const spinner = ora(chalk.blue("AI is thinking...")).start()
+          // Stop after a delay
           setTimeout(() => spinner.stop(), 100)
           break
           
         case 'component':
-          // 渲染 React 组件（用于设置界面等）
+          // Render a React component (for settings UI, etc.)
           await this.renderInteractiveComponent(value.jsx, rl)
           break
       }
     } catch (error) {
-      console.error(chalk.red("Agent 响应处理错误:"), error.message)
+      console.error(chalk.red("Error handling Agent response:"), error.message)
     }
   }
 
   private async renderInteractiveComponent(jsx: React.ReactElement, rl: any): Promise<void> {
-    // 简化的 React 组件渲染（用于设置等交互界面）
-    console.log(chalk.cyan("📋 打开交互界面..."))
+    // Simplified React component rendering (for settings and other interactive UIs)
+    console.log(chalk.cyan("📋 Opening interactive interface..."))
     
-    // 这里可以集成 ink.js 来渲染 React 组件到命令行
-    // 或者使用简化的文本界面替代
+    // Can integrate ink.js here to render React components to the command line
+    // Or use a simplified text-based interface instead
     const inquirer = await import('enquirer')
-    // ... 具体实现
+    // ... specific implementation
   }
 }
 ```
 
-## 📝 配置管理
+## 📝 Configuration Management
 
-### CLAUDE.md 兼容的配置格式
+### CLAUDE.md Compatible Configuration Format
 
 ```yaml
-# CLAUDE.md - WriteFlow 配置文件（复刻 Claude Code 格式）
+# CLAUDE.md - WriteFlow Configuration File (replicates Claude Code format)
 
-输出中文
+Output in English
 
-# 写作设定
+# Writing settings
 writing:
-  default_style: "技术性文章"
+  default_style: "Technical article"
   target_length: 2000
   auto_outline: true
   grammar_check: true
   fact_check: true
 
-# AI 模型配置
+# AI model configuration
 ai:
   provider: "anthropic"
   model: "claude-3-opus-20240229"
   temperature: 0.7
   max_tokens: 4000
 
-# 发布平台
+# Publishing platforms
 platforms:
   wechat:
     auto_format: true
@@ -985,21 +983,21 @@ platforms:
     add_tags: true
     format_style: "medium"
 
-# 研究设置
+# Research settings
 research:
   max_sources: 10
   fact_check_threshold: 0.8
   auto_citation: true
-  preferred_languages: ["zh", "en"]
+  preferred_languages: ["en", "zh"]
 
-# 性能设置  
+# Performance settings
 performance:
   message_queue_size: 10000
   context_compression_threshold: 0.92
   tool_timeout: 120000
   max_concurrent_tools: 5
 
-# 安全设置
+# Security settings
 security:
   content_filter: true
   malicious_detection: true
@@ -1009,4 +1007,4 @@ security:
 
 ---
 
-*本实现完全基于 Claude Code 的真实技术栈：Node.js 22.x + TypeScript，保留其核心架构优势*
+*This implementation is fully based on the actual technology stack of Claude Code: Node.js 22.x + TypeScript, retaining its core architectural advantages.*

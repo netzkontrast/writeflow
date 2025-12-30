@@ -1,148 +1,148 @@
-# 📖 WriteFlow 使用指南
+# 📖 WriteFlow User Guides
 
-欢迎使用 WriteFlow！这里汇集了所有使用指南和教程，帮助您快速掌握 WriteFlow 的强大功能。
+Welcome to WriteFlow! Here you will find all the user guides and tutorials to help you quickly master the powerful features of WriteFlow.
 
-## 🚀 快速开始
+## 🚀 Getting Started
 
-### [快速开始指南](./quick-start.md)
-5分钟快速上手 WriteFlow，了解基本功能和使用方法。
+### [Quick Start Guide](./quick-start.md)
+Get started with WriteFlow in 5 minutes, and learn about its basic features and usage.
 
-### [AI 提供商设置](./ai-providers-setup.md)
-配置不同的 AI 模型提供商，包括 Claude、DeepSeek、Qwen、GLM 等。
+### [AI Provider Setup](./ai-providers-setup.md)
+Configure different AI model providers, including Claude, DeepSeek, Qwen, GLM, and more.
 
-### [部署指南](./deployment-guide.md)
-详细的安装部署指南，包括环境要求、配置步骤和故障排除。
+### [Deployment Guide](./deployment-guide.md)
+A detailed installation and deployment guide, including environmental requirements, configuration steps, and troubleshooting.
 
-## 📝 核心功能
+## 📝 Core Features
 
-### [斜杠命令指南](./slash-commands.md)
-详细介绍 WriteFlow 的所有斜杠命令，包括写作、研究、发布等功能。
+### [Slash Command Guide](./slash-commands.md)
+A detailed introduction to all of WriteFlow's slash commands, including features for writing, research, publishing, and more.
 
-### [Slidev PPT 使用手册](./slidev-ppt-guide.md) 🆕
-**全新功能！** 使用 AI 创建专业的技术演示文稿，支持 Markdown 到 PPT 的智能转换。
+### [Slidev PPT User Manual](./slidev-ppt-guide.md) 🆕
+**New Feature!** Use AI to create professional technical presentations, with support for intelligent conversion from Markdown to PPT.
 
-## 🎯 功能分类
+## 🎯 Feature Categories
 
-### 写作功能
-- **大纲生成** (`/outline`) - AI 生成文章大纲
-- **内容改写** (`/rewrite`) - 智能改写文章风格
-- **语法检查** (`/grammar`) - 检查语法错误
-- **风格调整** (`/style`) - 调整写作风格
+### Writing Features
+- **Outline Generation** (`/outline`) - AI generates an article outline.
+- **Content Rewriting** (`/rewrite`) - Intelligently rewrites the style of an article.
+- **Grammar Check** (`/grammar`) - Checks for grammatical errors.
+- **Style Adjustment** (`/style`) - Adjusts the writing style.
 
-### PPT 创作功能
-- **创建演示文稿** (`/slide create`) - 根据主题生成完整 PPT
-- **文章转换** (`/slide convert`) - 将 Markdown 转换为演示文稿
-- **生成大纲** (`/slide outline`) - 生成演讲大纲
-- **优化演示** (`/slide optimize`) - 优化现有演示文稿
+### PPT Creation Features
+- **Create a Presentation** (`/slide create`) - Generate a complete PPT based on a topic.
+- **Article Conversion** (`/slide convert`) - Convert a Markdown article into a presentation.
+- **Generate an Outline** (`/slide outline`) - Generate a presentation outline.
+- **Optimize a Presentation** (`/slide optimize`) - Optimize an existing presentation.
 
-### 研究功能
-- **网络搜索** (`/research`) - 深度主题研究
-- **事实核查** (`/fact-check`) - 验证信息准确性
-- **引用管理** (`/cite`) - 管理参考文献
+### Research Features
+- **Web Search** (`/research`) - In-depth topic research.
+- **Fact-Checking** (`/fact-check`) - Verify the accuracy of information.
+- **Citation Management** (`/cite`) - Manage bibliographic references.
 
-### 发布功能
-- **格式转换** (`/publish`) - 多平台格式转换
-- **微信排版** (`/wechat`) - 微信公众号排版
-- **HTML 生成** (`/html`) - 生成 HTML 格式
+### Publishing Features
+- **Format Conversion** (`/publish`) - Convert to various platform formats.
+- **WeChat Formatting** (`/wechat`) - Format for WeChat Official Accounts.
+- **HTML Generation** (`/html`) - Generate in HTML format.
 
-## 📚 深入学习
+## 📚 In-Depth Learning
 
-### 系统架构
-了解 WriteFlow 的技术架构和设计理念：
-- [系统架构设计](../architecture/system-architecture.md)
-- [技术实现详解](../architecture/technical-implementation.md)
-- [写作工具集](../architecture/writing-tools.md)
+### System Architecture
+Learn about WriteFlow's technical architecture and design philosophy:
+- [System Architecture Design](../architecture/system-architecture.md)
+- [Technical Implementation Details](../architecture/technical-implementation.md)
+- [Writing Toolset](../architecture/writing-tools.md)
 
-### 功能文档
-深入了解各项功能的详细设计：
-- [Slidev PPT 功能需求文档](../features/slidev-ppt-feature.md)
-- 更多功能文档即将推出...
+### Feature Documents
+Get an in-depth understanding of the detailed design of each feature:
+- [Slidev PPT Feature Requirements Document](../features/slidev-ppt-feature.md)
+- More feature documents are coming soon...
 
-## 🔧 配置与定制
+## 🔧 Configuration and Customization
 
-### Agent 配置
-了解如何配置和定制 Agent：
-- Agent 配置文件位置：`.writeflow/agents/`
-- 查看 [Agent 配置说明](../../.writeflow/agents/README.md)
+### Agent Configuration
+Learn how to configure and customize Agents:
+- Agent configuration file location: `.writeflow/agents/`
+- See the [Agent Configuration Instructions](../../.writeflow/agents/README.md)
 
-### 模板系统
-自定义模板以满足个性化需求：
-- 模板目录：`src/templates/`
-- 支持 Handlebars 语法
+### Template System
+Customize templates to meet your individual needs:
+- Template directory: `src/templates/`
+- Supports Handlebars syntax.
 
-## 💡 使用技巧
+## 💡 Usage Tips
 
-### 提高效率的小技巧
+### Tips for Improving Efficiency
 
-1. **使用别名**：多数命令都有简短别名，如 `/ol` 代替 `/outline`
-2. **批量处理**：支持批量转换多个文件
-3. **命令组合**：可以组合使用多个命令完成复杂任务
-4. **模板复用**：创建自定义模板提高效率
+1. **Use Aliases**: Most commands have short aliases, such as `/ol` for `/outline`.
+2. **Bulk Processing**: Supports batch conversion of multiple files.
+3. **Command Combination**: You can combine multiple commands to complete complex tasks.
+4. **Template Reuse**: Create custom templates to improve efficiency.
 
-### 常见使用场景
+### Common Use Cases
 
-| 场景 | 推荐命令组合 | 说明 |
-|-----|------------|-----|
-| 技术博客写作 | `/outline` → `/research` → `/rewrite` | 先定大纲，再研究，最后润色 |
-| 演讲准备 | `/slide outline` → `/slide create` → `/slide optimize` | 从大纲到完整演示文稿 |
-| 文章转演讲 | `/slide convert` → `/slide optimize` | 快速将文章转为 PPT |
-| 多平台发布 | `/publish` → `/wechat` | 一文多发，适配不同平台 |
+| Scenario               | Recommended Command Combination             | Description                                       |
+| ---------------------- | ------------------------------------------- | ------------------------------------------------- |
+| Technical Blog Writing | `/outline` → `/research` → `/rewrite`       | First, create an outline, then research, and finally, polish. |
+| Presentation Preparation | `/slide outline` → `/slide create` → `/slide optimize` | From an outline to a complete presentation.       |
+| Article to Presentation | `/slide convert` → `/slide optimize`        | Quickly convert an article into a PPT.            |
+| Multi-Platform Publishing | `/publish` → `/wechat`                      | Write once, publish everywhere, adapted for different platforms. |
 
-## 🆘 获取帮助
+## 🆘 Getting Help
 
-### 常见问题
-- 查看各指南中的「常见问题」章节
-- 访问 [GitHub Issues](https://github.com/writeflow/writeflow/issues)
+### Common Problems
+- See the "Common Problems" section in each guide.
+- Visit [GitHub Issues](https://github.com/writeflow/writeflow/issues).
 
-### 社区支持
+### Community Support
 - [GitHub Discussions](https://github.com/writeflow/writeflow/discussions)
-- [官方文档站](https://writeflow.app/docs)
+- [Official Documentation Site](https://writeflow.app/docs)
 
-### 反馈建议
-我们欢迎您的反馈和建议：
-- 提交 Issue：[GitHub Issues](https://github.com/writeflow/writeflow/issues/new)
-- 贡献代码：[Contributing Guide](../../CONTRIBUTING.md)
+### Feedback and Suggestions
+We welcome your feedback and suggestions:
+- Submit an Issue: [GitHub Issues](https://github.com/writeflow/writeflow/issues/new)
+- Contribute Code: [Contributing Guide](../../CONTRIBUTING.md)
 
-## 📈 更新日志
+## 📈 Changelog
 
 ### v2.9.3 (2025-01-03)
-- 🎉 新增 Slidev PPT 创作功能
-- 📚 完善使用文档和指南
-- 🔧 优化 Agent 加载机制
-- 🐛 修复已知问题
+- 🎉 Added the Slidev PPT creation feature.
+- 📚 Improved user documentation and guides.
+- 🔧 Optimized the Agent loading mechanism.
+- 🐛 Fixed known issues.
 
-### v2.9.2 
-- 增强引导流程
-- 修复配置系统问题
+### v2.9.2
+- Enhanced the onboarding process.
+- Fixed issues with the configuration system.
 
 ### v2.9.1
-- 初始版本发布
+- Initial version release.
 
 ---
 
-## 快速导航
+## Quick Navigation
 
-### 📖 使用指南
-- [快速开始](./quick-start.md)
-- [AI 提供商设置](./ai-providers-setup.md)
-- [部署指南](./deployment-guide.md)
-- [斜杠命令](./slash-commands.md)
-- [Slidev PPT 指南](./slidev-ppt-guide.md) 🔥
+### 📖 User Guides
+- [Quick Start](./quick-start.md)
+- [AI Provider Setup](./ai-providers-setup.md)
+- [Deployment Guide](./deployment-guide.md)
+- [Slash Commands](./slash-commands.md)
+- [Slidev PPT Guide](./slidev-ppt-guide.md) 🔥
 
-### 🏗️ 架构文档
-- [系统架构](../architecture/system-architecture.md)
-- [技术实现](../architecture/technical-implementation.md)
-- [写作工具](../architecture/writing-tools.md)
+### 🏗️ Architecture Documents
+- [System Architecture](../architecture/system-architecture.md)
+- [Technical Implementation](../architecture/technical-implementation.md)
+- [Writing Tools](../architecture/writing-tools.md)
 
-### 🎯 功能文档
-- [Slidev 功能](../features/slidev-ppt-feature.md)
+### 🎯 Feature Documents
+- [Slidev Feature](../features/slidev-ppt-feature.md)
 
-### 🔍 其他资源
-- [项目 README](../../README.md)
-- [贡献指南](../../CONTRIBUTING.md)
-- [更新日志](../../CHANGELOG.md)
+### 🔍 Other Resources
+- [Project README](../../README.md)
+- [Contributing Guide](../../CONTRIBUTING.md)
+- [Changelog](../../CHANGELOG.md)
 
 ---
 
-*最后更新：2025-01-03*  
+*Last updated: 2025-01-03*
 *WriteFlow Team*

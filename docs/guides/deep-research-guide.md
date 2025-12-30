@@ -1,217 +1,217 @@
-# 📊 WriteFlow 智能调研功能使用指南
+# 📊 WriteFlow Intelligent Research Feature User Guide
 
-## 🎯 功能简介
+## 🎯 Feature Introduction
 
-WriteFlow 的 `/deep-research` 命令可以帮你快速生成专业级的调研报告，类似于 DeepResearch 等专业研究工具。这个功能会自动收集信息、分析数据、生成结构化报告，大大提升研究效率。
+WriteFlow's `/deep-research` command helps you quickly generate professional-grade research reports, similar to professional research tools like DeepResearch. This feature automatically collects information, analyzes data, and generates a structured report, significantly improving your research efficiency.
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 基础用法
-
-```bash
-# 最简单的使用方式
-/deep-research "人工智能发展现状"
-
-# 系统会自动：
-# 1. 搜索相关信息
-# 2. 分析和整理内容  
-# 3. 生成专业调研报告
-```
-
-### 高级选项
+### Basic Usage
 
 ```bash
-# 深度调研，学术格式，20个信息源
-/deep-research "区块链技术发展趋势" --depth=深入 --format=学术 --sources=20
+# The simplest way to use it
+/deep-research "The current state of artificial intelligence development"
 
-# 商业分析格式
-/deep-research "新能源汽车市场" --format=商业 --sources=15
-
-# 快速调研（适合时间紧迫的情况）
-/deep-research "5G技术应用" --depth=快速
+# The system will automatically:
+# 1. Search for relevant information
+# 2. Analyze and organize the content
+# 3. Generate a professional research report
 ```
 
-## 📋 参数详解
+### Advanced Options
 
-### 调研深度 (--depth)
-- **快速**: 15-30分钟，基础信息收集
-- **标准**: 1-2小时，全面分析（默认）
-- **深入**: 2-4小时，详尽研究
-
-### 报告格式 (--format)
-- **学术**: 学术研究格式，包含详细方法论
-- **商业**: 商业分析格式，突出市场价值
-- **技术**: 技术分析格式，深入技术细节
-- **综合**: 综合性分析（默认）
-
-### 其他选项
-- **--sources=数量**: 信息源数量，默认15个
-- **--time=范围**: 时间范围，如"最近一年"
-- **--lang=语言**: 语言偏好，如"中英文"
-
-## 💡 使用场景示例
-
-### 1. 技术调研
 ```bash
-/deep-research "ChatGPT技术原理和应用" --format=技术 --depth=深入
-```
-**适用于**: 技术分析、产品设计、技术选型
+# In-depth research, academic format, 20 information sources
+/deep-research "Blockchain technology development trends" --depth=deep --format=academic --sources=20
 
-### 2. 市场分析  
+# Business analysis format
+/deep-research "New energy vehicle market" --format=business --sources=15
+
+# Quick research (for when time is tight)
+/deep-research "5G technology applications" --depth=quick
+```
+
+## 📋 Parameter Details
+
+### Research Depth (`--depth`)
+- **Quick**: 15-30 minutes, basic information collection.
+- **Standard**: 1-2 hours, comprehensive analysis (default).
+- **Deep**: 2-4 hours, detailed research.
+
+### Report Format (`--format`)
+- **Academic**: Academic research format, including a detailed methodology.
+- **Business**: Business analysis format, highlighting market value.
+- **Technical**: Technical analysis format, delving into technical details.
+- **Comprehensive**: A comprehensive analysis (default).
+
+### Other Options
+- **`--sources=<number>`**: The number of information sources, default is 15.
+- **`--time=<range>`**: The time range, such as "last year".
+- **`--lang=<language>`**: The language preference, such as "English and Chinese".
+
+## 💡 Use Case Examples
+
+### 1. Technical Research
 ```bash
-/deep-research "电动汽车市场前景" --format=商业 --sources=20
+/deep-research "The technical principles and applications of ChatGPT" --format=technical --depth=deep
 ```
-**适用于**: 投资决策、商业计划、市场进入策略
+**Suitable for**: Technical analysis, product design, technology selection.
 
-### 3. 学术研究
+### 2. Market Analysis
 ```bash
-/deep-research "人工智能伦理问题" --format=学术 --depth=深入
+/deep-research "Market prospects for electric vehicles" --format=business --sources=20
 ```
-**适用于**: 论文写作、学术研究、理论分析
+**Suitable for**: Investment decisions, business plans, market entry strategies.
 
-### 4. 快速了解
+### 3. Academic Research
 ```bash
-/deep-research "元宇宙概念" --depth=快速
+/deep-research "Ethical issues in artificial intelligence" --format=academic --depth=deep
 ```
-**适用于**: 快速学习、背景了解、概念梳理
+**Suitable for**: Thesis writing, academic research, theoretical analysis.
 
-## 📊 输出报告结构
+### 4. Quick Overview
+```bash
+/deep-research "The concept of the metaverse" --depth=quick
+```
+**Suitable for**: Quick learning, background understanding, concept clarification.
 
-每份调研报告都包含以下标准结构：
+## 📊 Output Report Structure
+
+Each research report includes the following standard structure:
 
 ```markdown
-## 📊 [主题] 深度调研报告
+## 📊 [Topic] In-Depth Research Report
 
-### 📋 执行摘要
-- 核心发现和关键洞察
-- 重要数据和统计信息
-- 主要结论和行动建议
+### 📋 Executive Summary
+- Core findings and key insights
+- Important data and statistics
+- Main conclusions and actionable recommendations
 
-### 🎯 研究背景与意义
-- 问题定义和研究范围
-- 研究价值和意义说明
+### 🎯 Research Background and Significance
+- Problem definition and research scope
+- Explanation of the value and significance of the research
 
-### 📈 现状全面分析
-- 发展历程回顾
-- 当前发展状况
-- 关键影响因素
+### 📈 Comprehensive Analysis of the Current Situation
+- Review of the development history
+- Current state of development
+- Key influencing factors
 
-### 🔍 深度分析与洞察
-- 技术发展分析
-- 市场机会与挑战
-- 典型应用案例
+### 🔍 In-Depth Analysis and Insights
+- Analysis of technological developments
+- Market opportunities and challenges
+- Typical application cases
 
-### 🚀 未来发展预测
-- 短期展望 (1-2年)
-- 中期趋势 (3-5年)
-- 长期愿景 (5-10年)
+### 🚀 Future Development Forecast
+- Short-term outlook (1-2 years)
+- Mid-term trends (3-5 years)
+- Long-term vision (5-10 years)
 
-### 💡 结论与建议
-- 核心结论
-- 差异化观点
-- 针对性行动建议
+### 💡 Conclusions and Recommendations
+- Core conclusions
+- Differentiated viewpoints
+- Targeted actionable recommendations
 
-### 📚 信息来源与参考资料
-- 权威信息源清单
-- 引用链接和访问时间
+### 📚 Information Sources and References
+- A list of authoritative information sources
+- Citation links and access times
 ```
 
-## 🔍 工作原理
+## 🔍 How It Works
 
-### 阶段1: 智能信息收集 (20%)
-- 多源搜索：搜索引擎、学术数据库、新闻媒体
-- 关键词扩展：AI智能生成相关搜索词
-- 权威性评估：自动评估信息源可信度
+### Phase 1: Intelligent Information Collection (20%)
+- Multi-source search: search engines, academic databases, news media.
+- Keyword expansion: AI intelligently generates related search terms.
+- Authority assessment: Automatically assesses the credibility of information sources.
 
-### 阶段2: 深度内容分析 (50%)
-- 观点提取：识别核心观点和不同立场
-- 数据验证：交叉验证关键数据
-- 趋势分析：识别发展趋势和变化
+### Phase 2: In-Depth Content Analysis (50%)
+- Viewpoint extraction: Identifies core viewpoints and different stances.
+- Data validation: Cross-verifies key data.
+- Trend analysis: Identifies development trends and changes.
 
-### 阶段3: 报告生成 (30%)
-- 结构组织：按逻辑结构组织内容
-- 格式优化：生成专业格式报告
-- 引用管理：自动生成参考文献
+### Phase 3: Report Generation (30%)
+- Structure organization: Organizes content in a logical structure.
+- Format optimization: Generates a professionally formatted report.
+- Citation management: Automatically generates a bibliography.
 
-## 📚 实用技巧
+## 📚 Practical Tips
 
-### 1. 主题选择建议
-- **具体明确**: "人工智能在医疗诊断中的应用" > "人工智能"
-- **范围适中**: 避免过于宽泛或过于狭窄的主题
-- **时效性**: 选择有发展动态的热门话题
+### 1. Suggestions for Choosing a Topic
+- **Be Specific and Clear**: "The application of artificial intelligence in medical diagnosis" > "Artificial intelligence".
+- **Keep the Scope Moderate**: Avoid topics that are too broad or too narrow.
+- **Timeliness**: Choose popular topics with ongoing developments.
 
-### 2. 参数组合建议
+### 2. Suggestions for Parameter Combinations
 ```bash
-# 投资分析
-/deep-research "新能源产业投资机会" --format=商业 --depth=深入 --sources=25
+# Investment analysis
+/deep-research "Investment opportunities in the new energy industry" --format=business --depth=deep --sources=25
 
-# 技术选型
-/deep-research "微服务架构优缺点" --format=技术 --depth=标准
+# Technology selection
+/deep-research "The pros and cons of microservices architecture" --format=technical --depth=standard
 
-# 快速学习
-/deep-research "Web3概念解析" --depth=快速 --format=综合
+# Quick learning
+/deep-research "An explanation of the Web3 concept" --depth=quick --format=comprehensive
 ```
 
-### 3. 结果优化
-- **多次运行**: 对复杂主题可以多次调研，从不同角度分析
-- **参数调整**: 根据需求调整深度和格式参数
-- **后续处理**: 结合 `/rewrite`、`/polish` 等命令进一步优化
+### 3. Optimizing the Results
+- **Multiple Runs**: For complex topics, you can conduct research multiple times from different angles.
+- **Parameter Adjustment**: Adjust the depth and format parameters according to your needs.
+- **Post-Processing**: Further optimize the report using commands like `/rewrite` and `/polish`.
 
-## ⚠️ 注意事项
+## ⚠️ Important Notes
 
-### 信息准确性
-- 系统会自动验证信息，但仍建议人工确认关键数据
-- 对于专业性强的内容，建议咨询领域专家
-- 注意信息的时效性，特别是快速变化的领域
+### Information Accuracy
+- The system automatically verifies information, but it is still recommended to manually confirm key data.
+- For highly specialized content, it is advisable to consult with domain experts.
+- Pay attention to the timeliness of the information, especially in rapidly changing fields.
 
-### 使用建议
-- 网络状况良好时使用，确保信息收集质量
-- 复杂主题建议选择"深入"模式
-- 可以先用"快速"模式了解，再用"深入"模式详细分析
+### Usage Recommendations
+- Use when you have a good network connection to ensure the quality of information collection.
+- For complex topics, it is recommended to choose the "deep" mode.
+- You can first use the "quick" mode for a general understanding, and then use the "deep" mode for a detailed analysis.
 
-### 版权和引用
-- 报告中会自动标注信息来源
-- 商业使用时请注意版权问题
-- 学术使用时请按规范引用参考文献
+### Copyright and Citations
+- The report will automatically cite the sources of information.
+- Please be mindful of copyright issues for commercial use.
+- For academic use, please cite the references according to the proper standards.
 
-## 🔧 故障排除
+## 🔧 Troubleshooting
 
-### 常见问题
+### Common Problems
 
-**Q: 报告内容不够深入怎么办？**
-A: 尝试使用 `--depth=深入` 参数，或增加信息源数量 `--sources=30`
+**Q: What if the report content is not deep enough?**
+A: Try using the `--depth=deep` parameter, or increase the number of information sources with `--sources=30`.
 
-**Q: 某个领域的信息不准确？**
-A: 可以使用 `/check` 命令进行事实核查，或手动验证关键信息
+**Q: What if the information in a certain field is inaccurate?**
+A: You can use the `/check` command for fact-checking, or manually verify key information.
 
-**Q: 生成时间过长？**
-A: 选择 `--depth=快速` 或减少信息源数量
+**Q: What if the generation time is too long?**
+A: Choose `--depth=quick` or reduce the number of information sources.
 
-**Q: 需要特定格式的报告？**
-A: 使用 `--format=` 参数选择合适格式，或后续用 `/rewrite` 调整
+**Q: What if I need a report in a specific format?**
+A: Use the `--format=` parameter to select a suitable format, or adjust it later with `/rewrite`.
 
-### 获取帮助
+### Getting Help
 ```bash
-# 查看命令帮助
+# View command help
 /help deep-research
 
-# 查看所有命令
+# View all commands
 /help
 
-# 系统状态检查
+# System status check
 /status
 ```
 
-## 🎉 开始使用
+## 🎉 Get Started
 
-现在就试试你的第一个调研报告吧：
+Now, try generating your first research report:
 
 ```bash
-/deep-research "你感兴趣的任何主题"
+/deep-research "any topic you are interested in"
 ```
 
-WriteFlow 将成为你最得力的研究助手！
+WriteFlow will become your most capable research assistant!
 
 ---
 
-*需要更多帮助？查看 [完整功能文档](../features/intelligent-research-system.md) 或在项目中提交 issue。*
+*Need more help? Check out the [complete feature documentation](../features/intelligent-research-system.md) or submit an issue in the project.*

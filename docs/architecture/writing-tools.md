@@ -1,24 +1,24 @@
-# 🛠️ WriteFlow 写作工具集
+# 🛠️ WriteFlow Writing Toolset
 
-基于 Claude Code MH1 工具引擎的写作专用工具实现
+An implementation of writing-specific tools based on the Claude Code MH1 tool engine.
 
-## 🎯 工具设计理念
+## 🎯 Tool Design Philosophy
 
-完全复刻 Claude Code 的工具架构，将编程工具转换为写作工具：
-- **强制读取机制**：编辑文章前必须先读取（复刻 Edit 工具逻辑）
-- **六层安全验证**：每个工具调用都经过完整安全检查
-- **批量操作支持**：单次响应支持多工具并发执行
-- **工具替代强制**：禁用传统文本命令，强制使用专用工具
+A complete replica of the Claude Code tool architecture, converting programming tools into writing tools:
+- **Forced Read Mechanism**: An article must be read before it can be edited (replicating the Edit tool logic).
+- **Six-Layer Security Verification**: Every tool call undergoes a complete security check.
+- **Bulk Operation Support**: A single response supports the concurrent execution of multiple tools.
+- **Forced Tool Substitution**: Disables traditional text commands, forcing the use of specialized tools.
 
-## 📝 核心文章操作工具
+## 📝 Core Article Operation Tools
 
-### ReadArticle 工具（复刻 Read 工具）
+### ReadArticle Tool (Replicates the Read tool)
 
 ```typescript
 // src/tools/base/read-article.ts
 export class ReadArticleTool implements WritingTool {
   name = "read_article"
-  description = "读取文章内容，支持多种格式"
+  description = "Reads the content of an article, supporting multiple formats"
   securityLevel = "read-only"
   
   inputSchema = {
@@ -26,48 +26,48 @@ export class ReadArticleTool implements WritingTool {
     properties: {
       file_path: {
         type: "string",
-        description: "文章文件的绝对路径"
+        description: "The absolute path to the article file"
       },
       limit: {
         type: "number", 
-        description: "读取行数限制，默认2000行"
+        description: "The maximum number of lines to read, default is 2000"
       },
       offset: {
         type: "number",
-        description: "开始读取的行号"
+        description: "The line number to start reading from"
       }
     },
     required: ["file_path"]
   }
 
   async execute(input: ReadArticleInput): Promise<ToolResult> {
-    // 安全验证
+    // Security validation
     await this.validateSecurity(input)
     
-    // 路径规范化（必须是绝对路径）
+    // Path normalization (must be an absolute path)
     const absolutePath = path.resolve(input.file_path)
     
     try {
-      // 读取文件内容
+      // Read file content
       const content = await fs.readFile(absolutePath, 'utf-8')
       const lines = content.split('\n')
       
-      // 处理分页（复刻 Read 工具的分页逻辑）
+      // Handle pagination (replicating the pagination logic of the Read tool)
       const offset = input.offset || 0
       const limit = input.limit || 2000
       const pageLines = lines.slice(offset, offset + limit)
       const pageContent = pageLines.join('\n')
       
-      // 检测文章格式
+      // Detect article format
       const format = this.detectFileFormat(absolutePath, content)
       
-      // 提取文章元数据
+      // Extract article metadata
       const metadata = this.extractArticleMetadata(content, format)
       
-      // 自动恶意内容检测（复刻 tG5 机制）
+      // Automatic malicious content detection (replicating the tG5 mechanism)
       const securityWarning = await this.checkMaliciousContent(content)
       
-      // 统计信息
+      // Statistics
       const stats = this.calculateArticleStats(content)
       
       return {
@@ -90,7 +90,7 @@ export class ReadArticleTool implements WritingTool {
     } catch (error) {
       return {
         success: false,
-        error: `读取文章失败: ${error.message}`
+        error: `Failed to read article: ${error.message}`
       }
     }
   }
@@ -110,7 +110,7 @@ export class ReadArticleTool implements WritingTool {
       case '.docx':
         return 'docx'
       default:
-        // 通过内容特征检测
+        // Detect by content features
         if (content.includes('# ') || content.includes('## ')) {
           return 'markdown'
         }
@@ -122,18 +122,18 @@ export class ReadArticleTool implements WritingTool {
     const metadata: ArticleMetadata = {}
     
     if (format === 'markdown') {
-      // 解析 Markdown 前置数据
+      // Parse Markdown front matter
       const frontMatterMatch = content.match(/^---\n([\s\S]*?)\n---/)
       if (frontMatterMatch) {
         try {
           const yaml = require('yaml')
           metadata.frontMatter = yaml.parse(frontMatterMatch[1])
         } catch (error) {
-          // 忽略解析错误
+          // Ignore parsing errors
         }
       }
       
-      // 提取标题
+      // Extract title
       const titleMatch = content.match(/^#\s+(.+)$/m)
       if (titleMatch) {
         metadata.title = titleMatch[1]
@@ -154,72 +154,72 @@ export class ReadArticleTool implements WritingTool {
       englishWords: englishWords.length,
       totalWords: words.length,
       paragraphs: content.split(/\n\s*\n/).filter(p => p.trim()).length,
-      estimatedReadingTime: Math.ceil(words.length / 200) // 按200字/分钟估算
+      estimatedReadingTime: Math.ceil(words.length / 200) // Estimated at 200 words/minute
     }
   }
 }
 ```
 
-### WriteArticle 工具（复刻 Write 工具）
+### WriteArticle Tool (Replicates the Write tool)
 
 ```typescript
 // src/tools/base/write-article.ts
 export class WriteArticleTool implements WritingTool {
   name = "write_article"
-  description = "写入文章内容到文件"
+  description = "Writes article content to a file"
   securityLevel = "write"
   
   inputSchema = {
     type: "object",
     properties: {
-      file_path: { type: "string", description: "文章文件的绝对路径" },
-      content: { type: "string", description: "文章内容" },
-      format: { type: "string", enum: ["markdown", "html", "txt"], description: "文件格式" },
-      metadata: { type: "object", description: "文章元数据" },
-      backup: { type: "boolean", description: "是否创建备份" }
+      file_path: { type: "string", description: "The absolute path to the article file" },
+      content: { type: "string", description: "The content of the article" },
+      format: { type: "string", enum: ["markdown", "html", "txt"], description: "The file format" },
+      metadata: { type: "object", description: "The article metadata" },
+      backup: { type: "boolean", description: "Whether to create a backup" }
     },
     required: ["file_path", "content"]
   }
 
   async execute(input: WriteArticleInput): Promise<ToolResult> {
-    // 安全验证
+    // Security validation
     await this.validateSecurity(input)
     
     const absolutePath = path.resolve(input.file_path)
     
     try {
-      // 检查是否覆盖现有文件（复刻 Write 工具的读取前置机制）
+      // Check if overwriting an existing file (replicating the pre-read mechanism of the Write tool)
       const fileExists = await this.checkFileExists(absolutePath)
       if (fileExists && !input.force) {
-        // 强制要求先读取现有文件
-        throw new Error(`文件已存在: ${absolutePath}。请先使用 read_article 工具读取文件内容，或使用 edit_article 工具进行编辑。`)
+        // Force reading the existing file first
+        throw new Error(`File already exists: ${absolutePath}. Please use the read_article tool to read the file content first, or use the edit_article tool to edit it.`)
       }
       
-      // 创建备份
+      // Create a backup
       if (fileExists && input.backup !== false) {
         const backupPath = `${absolutePath}.backup.${Date.now()}`
         await fs.copyFile(absolutePath, backupPath)
       }
       
-      // 确保目录存在
+      // Ensure the directory exists
       const dir = path.dirname(absolutePath)
       await fs.mkdir(dir, { recursive: true })
       
-      // 处理文章内容
+      // Process article content
       let finalContent = input.content
       
-      // 添加元数据（如果是 Markdown 格式）
+      // Add metadata (if in Markdown format)
       if (input.format === 'markdown' && input.metadata) {
         const frontMatter = this.generateFrontMatter(input.metadata)
         finalContent = `---\n${frontMatter}\n---\n\n${input.content}`
       }
       
-      // 写入文件（原子性操作）
+      // Write to file (atomic operation)
       const tempPath = `${absolutePath}.tmp.${process.pid}`
       await fs.writeFile(tempPath, finalContent, 'utf-8')
       await fs.rename(tempPath, absolutePath)
       
-      // 计算统计信息
+      // Calculate statistics
       const stats = this.calculateArticleStats(finalContent)
       
       return {
@@ -236,7 +236,7 @@ export class WriteArticleTool implements WritingTool {
     } catch (error) {
       return {
         success: false,
-        error: `写入文章失败: ${error.message}`
+        error: `Failed to write article: ${error.message}`
       }
     }
   }
@@ -258,13 +258,13 @@ export class WriteArticleTool implements WritingTool {
 }
 ```
 
-### EditArticle 工具（复刻 Edit 工具的强制读取机制）
+### EditArticle Tool (Replicates the forced read mechanism of the Edit tool)
 
 ```typescript
 // src/tools/base/edit-article.ts
 export class EditArticleTool implements WritingTool {
   name = "edit_article"
-  description = "精确编辑文章内容"
+  description = "Precisely edits article content"
   securityLevel = "write"
   
   private fileStateTracker: FileStateTracker = new FileStateTracker()
@@ -272,10 +272,10 @@ export class EditArticleTool implements WritingTool {
   inputSchema = {
     type: "object",
     properties: {
-      file_path: { type: "string", description: "文章文件的绝对路径" },
-      old_string: { type: "string", description: "要替换的文本（必须完全匹配）" },
-      new_string: { type: "string", description: "新的文本内容" },
-      replace_all: { type: "boolean", description: "是否替换所有匹配项" }
+      file_path: { type: "string", description: "The absolute path to the article file" },
+      old_string: { type: "string", description: "The text to be replaced (must be an exact match)" },
+      new_string: { type: "string", description: "The new text content" },
+      replace_all: { type: "boolean", description: "Whether to replace all occurrences" }
     },
     required: ["file_path", "old_string", "new_string"]
   }
@@ -283,53 +283,53 @@ export class EditArticleTool implements WritingTool {
   async execute(input: EditArticleInput): Promise<ToolResult> {
     const absolutePath = path.resolve(input.file_path)
     
-    // 强制读取验证（复刻 Claude Code 的核心机制）
+    // Forced read validation (replicating the core mechanism of Claude Code)
     const fileState = this.fileStateTracker.getFileState(absolutePath)
     if (!fileState) {
-      throw new Error(`文件 ${absolutePath} 尚未读取。请先使用 read_article 工具读取文件内容。`)
+      throw new Error(`File ${absolutePath} has not been read. Please use the read_article tool to read the file content first.`)
     }
     
-    // 验证文件内容未被外部修改
+    // Verify that the file content has not been modified externally
     const currentContent = await fs.readFile(absolutePath, 'utf-8')
     if (this.calculateHash(currentContent) !== fileState.hash) {
-      throw new Error(`文件 ${absolutePath} 已被外部修改。请重新使用 read_article 工具读取最新内容。`)
+      throw new Error(`File ${absolutePath} has been modified externally. Please use the read_article tool to read the latest content again.`)
     }
     
     try {
-      // 执行字符串替换（完全复刻 Edit 工具逻辑）
+      // Perform string replacement (fully replicating the Edit tool logic)
       let newContent: string
       
       if (input.replace_all) {
-        // 全部替换
+        // Replace all
         newContent = currentContent.replaceAll(input.old_string, input.new_string)
         const replaceCount = (currentContent.match(new RegExp(escapeRegex(input.old_string), 'g')) || []).length
         
         if (replaceCount === 0) {
-          throw new Error(`未找到要替换的文本: "${input.old_string}"`)
+          throw new Error(`Text to be replaced not found: "${input.old_string}"`)
         }
         
       } else {
-        // 单次替换 - 确保唯一性
+        // Single replacement - ensure uniqueness
         const matches = currentContent.split(input.old_string)
         if (matches.length === 1) {
-          throw new Error(`未找到要替换的文本: "${input.old_string}"`)
+          throw new Error(`Text to be replaced not found: "${input.old_string}"`)
         }
         if (matches.length > 2) {
-          throw new Error(`文本不唯一，找到${matches.length - 1}处匹配。请提供更大的上下文或使用 replace_all 参数。`)
+          throw new Error(`Text is not unique, found ${matches.length - 1} matches. Please provide more context or use the replace_all parameter.`)
         }
         
         newContent = currentContent.replace(input.old_string, input.new_string)
       }
       
-      // 原子性写入
+      // Atomic write
       const tempPath = `${absolutePath}.tmp.${process.pid}`
       await fs.writeFile(tempPath, newContent, 'utf-8')
       await fs.rename(tempPath, absolutePath)
       
-      // 更新文件状态追踪
+      // Update file state tracking
       this.fileStateTracker.updateFileState(absolutePath, newContent)
       
-      // 计算变更统计
+      // Calculate change statistics
       const changeStats = this.calculateChangeStats(currentContent, newContent)
       
       return {
@@ -349,12 +349,12 @@ export class EditArticleTool implements WritingTool {
     } catch (error) {
       return {
         success: false,
-        error: `编辑文章失败: ${error.message}`
+        error: `Failed to edit article: ${error.message}`
       }
     }
   }
 
-  // 文件状态追踪器（复刻 readFileState 机制）
+  // File state tracker (replicating the readFileState mechanism)
   private class FileStateTracker {
     private fileStates: Map<string, FileState> = new Map()
     
@@ -388,21 +388,21 @@ export class EditArticleTool implements WritingTool {
 }
 ```
 
-## ✍️ 高级写作工具
+## ✍️ Advanced Writing Tools
 
-### OutlineGenerator 工具
+### OutlineGenerator Tool
 
 ```typescript
 // src/tools/writing/outline-generator.ts
 export class OutlineGeneratorTool implements WritingTool {
   name = "generate_outline"
-  description = "AI 生成文章大纲"
+  description = "AI-generates an article outline"
   securityLevel = "ai-powered"
   
   async execute(input: OutlineGeneratorInput): Promise<ToolResult> {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
     
-    // 构建提示词
+    // Build the prompt
     const prompt = this.buildOutlinePrompt(input)
     
     const response = await anthropic.messages.create({
@@ -415,10 +415,10 @@ export class OutlineGeneratorTool implements WritingTool {
       }]
     })
     
-    // 解析生成的大纲
+    // Parse the generated outline
     const outline = this.parseOutlineFromAI(response.content[0].text)
     
-    // 生成文件建议
+    // Generate file suggestions
     const fileSuggestions = this.generateFileSuggestions(input.topic, outline)
     
     return {
@@ -437,63 +437,63 @@ export class OutlineGeneratorTool implements WritingTool {
   }
 
   private buildOutlinePrompt(input: OutlineGeneratorInput): string {
-    return `请为主题"${input.topic}"生成详细的文章大纲。
+    return `Please generate a detailed article outline for the topic "${input.topic}".
 
-文章参数：
-- 目标读者：${input.audience || "技术读者"}
-- 文章类型：${input.articleType || "技术文章"}
-- 目标长度：${input.targetLength || 2000}字
-- 写作风格：${input.style || "技术性"}
-- 特殊要求：${input.requirements || "无"}
+Article parameters:
+- Target audience: ${input.audience || "Technical readers"}
+- Article type: ${input.articleType || "Technical article"}
+- Target length: ${input.targetLength || 2000} words
+- Writing style: ${input.style || "Technical"}
+- Special requirements: ${input.requirements || "None"}
 
-请生成以下结构的大纲：
+Please generate an outline with the following structure:
 
-## 1. 标题建议
-提供3个不同角度的标题选项，要求吸引人且准确。
+## 1. Title Suggestions
+Provide 3 title options from different angles that are attractive and accurate.
 
-## 2. 文章结构
-### 引言部分 (10-15%)
-- 问题引入或背景介绍
-- 文章价值和读者收益
-- 预估字数：XXX字
+## 2. Article Structure
+### Introduction (10-15%)
+- Problem introduction or background
+- Value of the article and benefits to the reader
+- Estimated word count: XXX words
 
-### 主体部分 (70-80%)
-#### 第一章节：[章节标题]
-- 核心论点：
-- 关键内容：
-- 支撑材料：
-- 预估字数：XXX字
+### Body (70-80%)
+#### Chapter 1: [Chapter Title]
+- Core argument:
+- Key content:
+- Supporting materials:
+- Estimated word count: XXX words
 
-#### 第二章节：[章节标题]
-- 核心论点：
-- 关键内容：
-- 支撑材料：
-- 预估字数：XXX字
+#### Chapter 2: [Chapter Title]
+- Core argument:
+- Key content:
+- Supporting materials:
+- Estimated word count: XXX words
 
-[继续其他章节...]
+[Continue with other chapters...]
 
-### 结论部分 (10-15%)
-- 要点总结
-- 深度思考或展望
-- 行动建议（如适用）
-- 预估字数：XXX字
+### Conclusion (10-15%)
+- Summary of key points
+- Deeper thoughts or outlook
+- Call to action (if applicable)
+- Estimated word count: XXX words
 
-## 3. 写作建议
-- 关键信息来源建议
-- 可能的难点和解决方案
-- 读者互动点设计
-- SEO 优化建议
+## 3. Writing Suggestions
+- Suggestions for key information sources
+- Potential difficulties and solutions
+- Design for reader interaction points
+- SEO optimization suggestions
 
-## 4. 相关资料
-- 必需的背景资料
-- 权威参考来源
-- 数据统计需求
+## 4. Related Materials
+- Necessary background materials
+- Authoritative reference sources
+- Statistical data requirements
 
-请确保大纲逻辑清晰，易于执行。`
+Please ensure the outline is logical, clear, and easy to execute.`
   }
 
   private parseOutlineFromAI(text: string): OutlineStructure {
-    // 智能解析 AI 生成的大纲结构
+    // Intelligently parse the AI-generated outline structure
     const sections: OutlineSection[] = []
     const lines = text.split('\n')
     
@@ -504,7 +504,7 @@ export class OutlineGeneratorTool implements WritingTool {
       const trimmed = line.trim()
       
       if (trimmed.match(/^##\s+\d+\.\s+(.+)/)) {
-        // 主要章节
+        // Main chapter
         const title = trimmed.match(/^##\s+\d+\.\s+(.+)/)?.[1] || ''
         currentSection = {
           level: 1,
@@ -515,7 +515,7 @@ export class OutlineGeneratorTool implements WritingTool {
         sections.push(currentSection)
         
       } else if (trimmed.match(/^###\s+(.+)/)) {
-        // 子章节
+        // Sub-chapter
         const title = trimmed.match(/^###\s+(.+)/)?.[1] || ''
         currentSubsection = {
           level: 2,
@@ -528,7 +528,7 @@ export class OutlineGeneratorTool implements WritingTool {
         }
         
       } else if (trimmed.match(/^####\s+(.+)/)) {
-        // 子子章节
+        // Sub-sub-chapter
         const title = trimmed.match(/^####\s+(.+)/)?.[1] || ''
         if (currentSubsection) {
           currentSubsection.content.push({
@@ -539,7 +539,7 @@ export class OutlineGeneratorTool implements WritingTool {
         }
         
       } else if (trimmed.startsWith('- ') && currentSubsection) {
-        // 要点列表
+        // List of points
         const content = trimmed.slice(2)
         if (content.includes('：') || content.includes(':')) {
           const [label, description] = content.split(/[:：]/)
@@ -555,9 +555,9 @@ export class OutlineGeneratorTool implements WritingTool {
           })
         }
         
-      } else if (trimmed.match(/预估字数：(\d+)字/)) {
-        // 提取字数估算
-        const wordCount = parseInt(trimmed.match(/预估字数：(\d+)字/)?.[1] || '0')
+      } else if (trimmed.match(/Estimated word count: (\d+) words/)) {
+        // Extract word count estimate
+        const wordCount = parseInt(trimmed.match(/Estimated word count: (\d+) words/)?.[1] || '0')
         if (currentSubsection) {
           currentSubsection.estimatedWords = wordCount
         } else if (currentSection) {
@@ -579,22 +579,22 @@ export class OutlineGeneratorTool implements WritingTool {
 }
 ```
 
-### ContentRewriter 工具
+### ContentRewriter Tool
 
 ```typescript
 // src/tools/writing/content-rewriter.ts 
 export class ContentRewriterTool implements WritingTool {
   name = "rewrite_content"
-  description = "智能改写和优化文章内容"
+  description = "Intelligently rewrites and optimizes article content"
   securityLevel = "ai-powered"
   
   async execute(input: ContentRewriterInput): Promise<ToolResult> {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
     
-    // 分析原文特征
+    // Analyze original content features
     const originalStats = this.analyzeContent(input.originalContent)
     
-    // 构建改写提示
+    // Build rewrite prompt
     const prompt = this.buildRewritePrompt(input, originalStats)
     
     const response = await anthropic.messages.create({
@@ -609,7 +609,7 @@ export class ContentRewriterTool implements WritingTool {
     
     const rewrittenContent = response.content[0].text
     
-    // 分析改写结果
+    // Analyze rewrite result
     const rewrittenStats = this.analyzeContent(rewrittenContent)
     const qualityMetrics = this.assessRewriteQuality(
       input.originalContent, 
@@ -635,40 +635,40 @@ export class ContentRewriterTool implements WritingTool {
 
   private buildRewritePrompt(input: ContentRewriterInput, stats: ContentStats): string {
     const styleGuides = {
-      "通俗": "使用简单词汇，避免专业术语，多用生活化比喻，语言亲切自然",
-      "正式": "用词规范严谨，句式完整，逻辑结构清晰，避免口语化表达",  
-      "技术": "使用准确的技术术语，逻辑严密，提供充分的技术细节和实例",
-      "学术": "遵循学术写作规范，用词精确，论证严密，引用规范",
-      "营销": "具有说服力，突出价值和益处，使用有力的词汇，引导行动",
-      "故事": "采用叙事手法，情节生动，场景描述丰富，具有代入感"
+      "Casual": "Use simple vocabulary, avoid jargon, use everyday analogies, and have a friendly and natural tone.",
+      "Formal": "Use formal and precise language, complete sentence structures, clear logical flow, and avoid colloquialisms.",
+      "Technical": "Use accurate technical terms, maintain strict logic, and provide sufficient technical details and examples.",
+      "Academic": "Follow academic writing standards, use precise terminology, provide rigorous arguments, and cite sources properly.",
+      "Marketing": "Be persuasive, highlight value and benefits, use powerful language, and include a call to action.",
+      "Storytelling": "Use a narrative style with vivid plots, rich scene descriptions, and an immersive feel."
     }
 
     const targetGuide = styleGuides[input.targetStyle] || input.targetStyle
 
-    return `请将以下内容改写为"${input.targetStyle}"风格：
+    return `Please rewrite the following content in a "${input.targetStyle}" style:
 
-🎯 目标风格说明：${targetGuide}
+🎯 Target Style Description: ${targetGuide}
 
-📊 原文分析：
-- 字数：${stats.wordCount}字
-- 段落：${stats.paragraphCount}个
-- 专业术语：${stats.technicalTerms}个
-- 可读性等级：${stats.readabilityLevel}
+📊 Original Content Analysis:
+- Word count: ${stats.wordCount} words
+- Paragraphs: ${stats.paragraphCount}
+- Technical terms: ${stats.technicalTerms}
+- Readability level: ${stats.readabilityLevel}
 
-📝 原文内容：
+📝 Original Content:
 ${input.originalContent}
 
-🔄 改写要求：
-1. **风格转换**：严格按照"${input.targetStyle}"风格特点进行改写
-2. **信息保持**：保留所有核心信息和观点，不能遗漏重要内容
-3. **逻辑优化**：优化段落结构和逻辑流程，提高可读性
-4. **长度控制**：${input.targetLength ? `控制在${input.targetLength}字左右` : '保持与原文相近的长度'}
-5. **质量提升**：改进表达方式，消除冗余，增强表现力
+🔄 Rewrite Requirements:
+1. **Style Conversion**: Strictly adhere to the characteristics of the "${input.targetStyle}" style.
+2. **Information Preservation**: Retain all core information and ideas, without omitting important content.
+3. **Logical Optimization**: Optimize paragraph structure and logical flow to improve readability.
+4. **Length Control**: ${input.targetLength ? `Keep it around ${input.targetLength} words` : 'Maintain a similar length to the original'}.
+5. **Quality Improvement**: Enhance expression, eliminate redundancy, and improve impact.
 
-${input.preserveStructure ? '📋 **结构保持**：保持原文的章节结构和标题层级' : ''}
-${input.audienceLevel ? `👥 **读者水平**：针对${input.audienceLevel}水平的读者` : ''}
+${input.preserveStructure ? '📋 **Structure Preservation**: Maintain the original chapter structure and heading levels.' : ''}
+${input.audienceLevel ? `👥 **Audience Level**: Target readers at a ${input.audienceLevel} level.` : ''}
 
-请提供完整的改写结果，确保符合目标风格要求。`
+Please provide the complete rewritten result, ensuring it meets the target style requirements.`
   }
 
   private assessRewriteQuality(
@@ -681,21 +681,21 @@ ${input.audienceLevel ? `👥 **读者水平**：针对${input.audienceLevel}水
       readabilityImprovement: this.calculateReadabilityImprovement(original, rewritten),
       informationRetention: this.calculateInformationRetention(original, rewritten),
       languageQuality: this.assessLanguageQuality(rewritten),
-      overallScore: 0 // 将根据上述指标计算
+      overallScore: 0 // Will be calculated based on the above metrics
     }
   }
 }
 ```
 
-## 🔍 研究工具系统
+## 🔍 Research Tool System
 
-### WebSearch 工具（复刻 WebSearch）
+### WebSearch Tool (Replicates WebSearch)
 
 ```typescript
 // src/tools/research/web-search.ts
 export class WebSearchTool implements WritingTool {
   name = "web_search"
-  description = "网络搜索相关主题资料"
+  description = "Searches the web for information on a given topic"
   securityLevel = "network"
   
   private searchEngines = {
@@ -707,23 +707,23 @@ export class WebSearchTool implements WritingTool {
   async execute(input: WebSearchInput): Promise<ToolResult> {
     const engine = this.searchEngines[input.engine || 'google']
     if (!engine) {
-      throw new Error(`不支持的搜索引擎: ${input.engine}`)
+      throw new Error(`Unsupported search engine: ${input.engine}`)
     }
     
     try {
       const results = await engine.search({
         query: input.query,
         limit: input.limit || 10,
-        language: input.language || 'zh',
+        language: input.language || 'en',
         region: input.region,
         timeRange: input.timeRange
       })
       
-      // 过滤和排序结果
+      // Filter and sort results
       const filteredResults = this.filterSearchResults(results, input.filters)
       const rankedResults = this.rankByRelevance(filteredResults, input.query)
       
-      // 提取关键信息
+      // Extract key information
       const insights = this.extractSearchInsights(rankedResults)
       
       return {
@@ -736,7 +736,7 @@ export class WebSearchTool implements WritingTool {
           metadata: {
             totalResults: results.total,
             searchTime: results.duration,
-            language: input.language || 'zh'
+            language: input.language || 'en'
           }
         }
       }
@@ -744,7 +744,7 @@ export class WebSearchTool implements WritingTool {
     } catch (error) {
       return {
         success: false,
-        error: `搜索失败: ${error.message}`
+        error: `Search failed: ${error.message}`
       }
     }
   }
@@ -755,16 +755,16 @@ export class WebSearchTool implements WritingTool {
     const topics = new Set<string>()
     
     for (const result of results) {
-      // 统计域名分布
+      // Tally domain distribution
       const domain = new URL(result.url).hostname
       domains.set(domain, (domains.get(domain) || 0) + 1)
       
-      // 收集发布时间
+      // Collect publication times
       if (result.publishTime) {
         publishTimes.push(new Date(result.publishTime))
       }
       
-      // 提取主题词
+      // Extract topic keywords
       const resultTopics = this.extractTopics(result.title + ' ' + result.description)
       resultTopics.forEach(topic => topics.add(topic))
     }
@@ -782,20 +782,20 @@ export class WebSearchTool implements WritingTool {
 }
 ```
 
-### FactChecker 工具
+### FactChecker Tool
 
 ```typescript
 // src/tools/research/fact-checker.ts
 export class FactCheckerTool implements WritingTool {
   name = "fact_checker" 
-  description = "事实核查和信息验证"
+  description = "Fact-checks and verifies information"
   securityLevel = "ai-powered"
   
   async execute(input: FactCheckerInput): Promise<ToolResult> {
     const statements = this.extractStatements(input.content)
     const factChecks: FactCheckResult[] = []
     
-    // 并发检查多个陈述
+    // Concurrently check multiple statements
     const checkPromises = statements.map(async (statement, index) => {
       const result = await this.checkSingleStatement(statement, input.sources)
       return { index, result }
@@ -809,7 +809,7 @@ export class FactCheckerTool implements WritingTool {
         factChecks[index] = result
       } else {
         factChecks.push({
-          statement: statements[factChecks.length] || '未知陈述',
+          statement: statements[factChecks.length] || 'Unknown statement',
           confidence: 0,
           status: 'error',
           error: promiseResult.reason.message
@@ -817,7 +817,7 @@ export class FactCheckerTool implements WritingTool {
       }
     }
     
-    // 生成总体报告
+    // Generate an overall report
     const overallAssessment = this.generateOverallAssessment(factChecks)
     
     return {
@@ -838,20 +838,20 @@ export class FactCheckerTool implements WritingTool {
   ): Promise<FactCheckResult> {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
     
-    const prompt = `请对以下陈述进行事实核查：
+    const prompt = `Please fact-check the following statement:
 
-陈述：${statement}
+Statement: ${statement}
 
-请提供：
-1. 事实性评估（正确/部分正确/错误/无法验证）
-2. 置信度（0-1之间的数值）
-3. 支持或反驳的证据
-4. 权威信息来源
-5. 修正建议（如有必要）
+Please provide:
+1. Factual assessment (Correct/Partially Correct/Incorrect/Unverifiable)
+2. Confidence level (a value between 0 and 1)
+3. Evidence to support or refute the statement
+4. Authoritative sources
+5. Correction suggestions (if necessary)
 
-${sources ? `\n参考来源：\n${sources.join('\n')}` : ''}
+${sources ? `\nReference sources:\n${sources.join('\n')}` : ''}
 
-请以JSON格式返回结果。`
+Please return the result in JSON format.`
 
     const response = await anthropic.messages.create({
       model: "claude-3-opus-20240229",
@@ -874,36 +874,36 @@ ${sources ? `\n参考来源：\n${sources.join('\n')}` : ''}
         statement,
         confidence: 0.5,
         status: 'unknown',
-        error: '解析AI响应失败'
+        error: 'Failed to parse AI response'
       }
     }
   }
 }
 ```
 
-## 📤 发布工具系统
+## 📤 Publishing Tool System
 
-### WeChatConverter 工具
+### WeChatConverter Tool
 
 ```typescript
 // src/tools/publish/wechat-converter.ts
 export class WeChatConverterTool implements WritingTool {
   name = "convert_wechat"
-  description = "转换为微信公众号格式"
+  description = "Converts to WeChat Official Account format"
   securityLevel = "format-conversion"
   
   async execute(input: WeChatConverterInput): Promise<ToolResult> {
     try {
-      // 解析 Markdown 内容
+      // Parse Markdown content
       const parsed = this.parseMarkdown(input.markdown)
       
-      // 应用微信样式
+      // Apply WeChat styling
       const styled = this.applyWeChatStyling(parsed, input.theme || 'default')
       
-      // 生成 HTML
+      // Generate HTML
       const html = this.generateWeChatHTML(styled)
       
-      // 优化图片
+      // Optimize images
       const optimizedImages = await this.optimizeImagesForWeChat(styled.images)
       
       return {
@@ -924,7 +924,7 @@ export class WeChatConverterTool implements WritingTool {
     } catch (error) {
       return {
         success: false,
-        error: `微信格式转换失败: ${error.message}`
+        error: `WeChat format conversion failed: ${error.message}`
       }
     }
   }
@@ -975,4 +975,4 @@ export class WeChatConverterTool implements WritingTool {
 
 ---
 
-*所有工具完全基于 Claude Code 的 MH1 工具引擎架构，确保架构一致性*
+*All tools are fully based on the Claude Code MH1 tool engine architecture to ensure architectural consistency.*

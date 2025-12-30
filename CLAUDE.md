@@ -1,57 +1,57 @@
 # CLAUDE.md
 
-## Claude Code 九荣九耻
+## Claude Code's Nine Honors and Nine Shames
 
-- 以瞎猜接口为耻，以认真查询为荣。
-- 以模糊执行为耻，以寻求确认为荣。
-- 以臆想业务为耻，以复用现有为荣。
-- 以创造接口为耻，以主动测试为荣。
-- 以跳过验证为耻，以人类确认为荣。
-- 以破坏架构为耻，以遵循规范为荣。
-- 以假装理解为耻，以诚实无知为荣。
-- 以盲目修改为耻，以谨慎重构为荣。
-- 以画蛇添足为耻，以按需实现为荣。
+- It is a shame to guess at interfaces, an honor to inquire carefully.
+- It is a shame to execute vaguely, an honor to seek confirmation.
+- It is a shame to imagine business needs, an honor to reuse what exists.
+- It is a shame to create interfaces, an honor to test proactively.
+- It is a shame to skip validation, an honor to have human confirmation.
+- It is a shame to break the architecture, an honor to follow the specification.
+- It is a shame to pretend to understand, an honor to be honestly ignorant.
+- It is a shame to modify blindly, an honor to refactor cautiously.
+- It is a shame to gild the lily, an honor to implement as needed.
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-输出中文
+Output in English
 
 # WriteFlow AI Writing Assistant
 
-WriteFlow 是基于 Claude Code 核心架构的 AI 写作助手，专为技术型作家设计的 CLI 工具。
+WriteFlow is an AI writing assistant based on the core architecture of Claude Code, a CLI tool designed specifically for technical writers.
 
-## 🎯 核心理念
+## 🎯 Core Philosophy
 
-WriteFlow 实现了 GitHub Spec Kit 的"规范驱动"理念在写作场景的应用，通过 `specify → plan → task → write` 完整工作流，解决传统"氛围写作"问题，实现规范驱动的精确写作。
+WriteFlow applies the "specification-driven" philosophy of the GitHub Spec Kit to the writing process. Through a complete workflow of `specify → plan → task → write`, it solves the problem of traditional "ambient writing" and achieves precise, specification-driven writing.
 
-测试参考：WRITEFLOW_DEBUG=true echo "请分析这个项目" | npm run dev
+For testing reference: `WRITEFLOW_DEBUG=true echo "Please analyze this project" | npm run dev`
 
-# 孤儿代码清理指南
+# Orphaned Code Cleanup Guide
 
-## 孤儿代码检测工具
+## Orphaned Code Detection Tools
 
-WriteFlow 已集成以下死代码检测工具：
+WriteFlow has integrated the following dead code detection tools:
 
-### 可用命令
-- `npm run dead-code:detect` - 使用 ts-prune 检测未使用的导出
-- `npm run dead-code:analyze` - 使用 knip 全面分析未使用代码
-- `npm run dead-code:clean` - 检测死代码并运行 lint 修复
-- `npm run pre-commit-check` - 运行完整的预提交检查（类型检查 + 死代码检测 + lint）
+### Available Commands
+- `npm run dead-code:detect` - Use ts-prune to detect unused exports
+- `npm run dead-code:analyze` - Use knip for a comprehensive analysis of unused code
+- `npm run dead-code:clean` - Detect dead code and run lint to fix it
+- `npm run pre-commit-check` - Run a full pre-commit check (type check + dead code detection + lint)
 
-### 预防策略
-1. **Git hooks 自动化**：每次提交前自动运行死代码检测
-2. **TypeScript 严格模式**：启用 `noUnusedLocals` 和 `noUnusedParameters`
-3. **定期清理**：建议每周运行一次 `npm run dead-code:analyze`
+### Prevention Strategies
+1. **Git hooks automation**: Automatically run dead code detection before each commit
+2. **TypeScript strict mode**: Enable `noUnusedLocals` and `noUnusedParameters`
+3. **Regular cleanup**: It is recommended to run `npm run dead-code:analyze` once a week
 
-### 安全清理流程
-1. 运行 `npm run dead-code:detect` 获取详细报告
-2. 手动审查输出，确认代码确实未使用
-3. 分批删除，每次提交只删除少量文件
-4. 运行测试确保没有破坏功能
-5. 提交时使用描述性消息如 "clean: remove unused exports"
+### Safe Cleanup Process
+1. Run `npm run dead-code:detect` to get a detailed report
+2. Manually review the output to confirm that the code is indeed unused
+3. Delete in batches, committing only a few file deletions at a time
+4. Run tests to ensure no functionality is broken
+5. Use descriptive commit messages like "clean: remove unused exports"
 
-### 清理时的注意事项
-- 谨慎删除 public API 导出
-- 保留可能被外部工具使用的代码
-- 检查动态导入和字符串引用
-- 保留类型定义和接口声明
+### Cautions During Cleanup
+- Be cautious when deleting public API exports
+- Retain code that may be used by external tools
+- Check for dynamic imports and string references
+- Preserve type definitions and interface declarations

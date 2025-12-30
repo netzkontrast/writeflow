@@ -1,154 +1,154 @@
-# 🏗️ WriteFlow 架构文档
+# 🏗️ WriteFlow Architecture Documents
 
-欢迎来到 WriteFlow 架构文档中心。这里详细介绍了 WriteFlow 的技术架构、设计理念和实现细节。
+Welcome to the WriteFlow Architecture Documentation Center. Here you will find detailed information about WriteFlow's technical architecture, design philosophy, and implementation details.
 
-## 📚 文档列表
+## 📚 Document List
 
-### [系统架构设计](./system-architecture.md)
-WriteFlow 的整体系统架构设计，包括：
-- 核心架构理念
-- 模块化设计
-- 系统组件关系
-- 技术栈选择
-- 性能优化策略
+### [System Architecture Design](./system-architecture.md)
+The overall system architecture design of WriteFlow, including:
+- Core architectural concepts
+- Modular design
+- System component relationships
+- Technology stack selection
+- Performance optimization strategies
 
-### [技术实现详解](./technical-implementation.md)
-深入的技术实现细节，包括：
-- Agent 系统实现
-- 工具加载机制
-- 命令处理流程
-- 模板引擎集成
-- API 调用优化
+### [Technical Implementation Details](./technical-implementation.md)
+In-depth technical implementation details, including:
+- Agent system implementation
+- Tool loading mechanism
+- Command processing flow
+- Template engine integration
+- API call optimization
 
-### [写作工具系统](./writing-tools.md)
-写作工具的架构设计，包括：
-- 工具分类体系
-- 工具接口定义
-- 工具调用流程
-- 扩展机制设计
-- 性能考虑
+### [Writing Tool System](./writing-tools.md)
+The architectural design of the writing tools, including:
+- Tool classification system
+- Tool interface definitions
+- Tool calling process
+- Extension mechanism design
+- Performance considerations
 
-### [状态管理系统](./status-system.md)
-动态状态提示系统架构，包括：
-- 状态系统设计理念
-- UI 组件架构
-- 场景识别机制
-- 视觉效果实现
-- 智能建议系统
+### [Status Management System](./status-system.md)
+The architecture of the dynamic status prompt system, including:
+- Status system design philosophy
+- UI component architecture
+- Scene recognition mechanism
+- Visual effect implementation
+- Intelligent suggestion system
 
-## 🎯 核心设计原则
+## 🎯 Core Design Principles
 
-### 1. 模块化架构
-- **独立性**: 每个模块独立开发、测试和部署
-- **可组合**: 模块之间通过标准接口组合
-- **可替换**: 支持模块的灵活替换和升级
+### 1. Modular Architecture
+- **Independence**: Each module is developed, tested, and deployed independently.
+- **Composability**: Modules are combined through standard interfaces.
+- **Replaceability**: Supports flexible replacement and upgrading of modules.
 
-### 2. 按需加载
-- **Agent 系统**: 工具按需动态加载
-- **上下文优化**: 减少 LLM 上下文消耗
-- **延迟初始化**: 仅在使用时初始化资源
+### 2. On-Demand Loading
+- **Agent System**: Tools are dynamically loaded on demand.
+- **Context Optimization**: Reduces LLM context consumption.
+- **Lazy Initialization**: Resources are initialized only when used.
 
-### 3. 扩展性设计
-- **插件机制**: 支持第三方插件
-- **自定义工具**: 用户可添加自定义工具
-- **模板系统**: 灵活的模板扩展
+### 3. Extensibility Design
+- **Plugin Mechanism**: Supports third-party plugins.
+- **Custom Tools**: Users can add custom tools.
+- **Template System**: Flexible template extensions.
 
-### 4. 性能优化
-- **缓存策略**: 多级缓存机制
-- **并发处理**: 异步任务处理
-- **资源管理**: 智能资源分配
+### 4. Performance Optimization
+- **Caching Strategy**: Multi-level caching mechanism.
+- **Concurrency Handling**: Asynchronous task processing.
+- **Resource Management**: Intelligent resource allocation.
 
-## 🔧 技术栈
+## 🔧 Technology Stack
 
-### 核心技术
-- **运行时**: Node.js 22+
-- **语言**: TypeScript 5.5+
-- **框架**: Commander.js (CLI)
+### Core Technologies
+- **Runtime**: Node.js 22+
+- **Language**: TypeScript 5.5+
+- **Framework**: Commander.js (CLI)
 - **AI SDK**: Anthropic SDK, OpenAI SDK
 
-### 工具链
-- **构建**: esbuild
-- **测试**: Jest
-- **代码质量**: ESLint, Prettier
-- **文档**: Markdown, Slidev
+### Toolchain
+- **Build**: esbuild
+- **Testing**: Jest
+- **Code Quality**: ESLint, Prettier
+- **Documentation**: Markdown, Slidev
 
-## 📊 架构演进
+## 📊 Architecture Evolution
 
-### v2.9.x - Agent 架构
-- 引入 Agent 系统
-- 实现工具动态加载
-- 优化上下文管理
+### v2.9.x - Agent Architecture
+- Introduced the Agent system.
+- Implemented dynamic tool loading.
+- Optimized context management.
 
-### v2.8.x - 工具系统重构
-- 统一工具接口
-- 标准化工具调用流程
-- 增强错误处理
+### v2.8.x - Tool System Refactoring
+- Unified tool interfaces.
+- Standardized the tool calling process.
+- Enhanced error handling.
 
-### v2.7.x - 性能优化
-- 实施缓存策略
-- 优化 API 调用
-- 改进响应速度
+### v2.7.x - Performance Optimization
+- Implemented caching strategies.
+- Optimized API calls.
+- Improved response speed.
 
-## 🚀 最佳实践
+## 🚀 Best Practices
 
-### 开发新功能
-1. 遵循现有架构模式
-2. 使用 Agent 系统管理工具
-3. 实现标准工具接口
-4. 编写完整测试用例
-5. 更新相关文档
+### Developing New Features
+1. Follow existing architectural patterns.
+2. Use the Agent system to manage tools.
+3. Implement standard tool interfaces.
+4. Write complete test cases.
+5. Update relevant documentation.
 
-### 性能优化
-1. 使用缓存减少重复计算
-2. 实施延迟加载策略
-3. 优化 API 调用频率
-4. 监控资源使用情况
+### Performance Optimization
+1. Use caching to reduce redundant calculations.
+2. Implement lazy loading strategies.
+3. Optimize the frequency of API calls.
+4. Monitor resource usage.
 
-### 维护建议
-1. 定期更新依赖包
-2. 保持文档同步
-3. 遵循代码规范
-4. 重视用户反馈
+### Maintenance Suggestions
+1. Regularly update dependencies.
+2. Keep documentation synchronized.
+3. Follow code specifications.
+4. Value user feedback.
 
-## 📖 延伸阅读
+## 📖 Further Reading
 
-### 相关指南
-- [快速开始指南](../guides/quick-start.md)
-- [部署指南](../guides/deployment-guide.md)
-- [斜杠命令指南](../guides/slash-commands.md)
+### Related Guides
+- [Quick Start Guide](../guides/quick-start.md)
+- [Deployment Guide](../guides/deployment-guide.md)
+- [Slash Command Guide](../guides/slash-commands.md)
 
-### 功能文档
-- [Slidev PPT 功能](../features/slidev-ppt-feature.md)
+### Feature Documents
+- [Slidev PPT Feature](../features/slidev-ppt-feature.md)
 
-### 外部资源
-- [Claude API 文档](https://docs.anthropic.com)
-- [TypeScript 最佳实践](https://www.typescriptlang.org/docs/)
-- [Node.js 性能优化](https://nodejs.org/en/docs/guides/)
+### External Resources
+- [Claude API Documentation](https://docs.anthropic.com)
+- [TypeScript Best Practices](https://www.typescriptlang.org/docs/)
+- [Node.js Performance Optimization](https://nodejs.org/en/docs/guides/)
 
-## 🤝 贡献架构改进
+## 🤝 Contributing to Architectural Improvements
 
-欢迎贡献架构改进建议：
+We welcome contributions to architectural improvements:
 
-1. **提出建议**: 在 [GitHub Issues](https://github.com/writeflow/writeflow/issues) 提出架构改进建议
-2. **讨论方案**: 参与 [Discussions](https://github.com/writeflow/writeflow/discussions) 讨论
-3. **提交 PR**: 实现改进并提交 Pull Request
-4. **更新文档**: 同步更新架构文档
+1. **Propose Suggestions**: Propose architectural improvement suggestions in [GitHub Issues](https://github.com/writeflow/writeflow/issues).
+2. **Discuss Solutions**: Participate in discussions in [Discussions](https://github.com/writeflow/writeflow/discussions).
+3. **Submit a PR**: Implement the improvement and submit a Pull Request.
+4. **Update Documents**: Synchronously update the architecture documents.
 
-## 📝 文档维护
+## 📝 Document Maintenance
 
-### 更新原则
-- 架构变更必须更新文档
-- 保持示例代码可运行
-- 添加版本变更说明
-- 及时更新依赖信息
+### Update Principles
+- Architectural changes must be documented.
+- Keep example code runnable.
+- Add version change descriptions.
+- Update dependency information in a timely manner.
 
-### 文档规范
-- 使用 Markdown 格式
-- 包含代码示例
-- 提供架构图表
-- 添加相关链接
+### Document Standards
+- Use Markdown format.
+- Include code examples.
+- Provide architecture diagrams.
+- Add relevant links.
 
 ---
 
-*最后更新：2025-01-03*  
+*Last updated: 2025-01-03*
 *WriteFlow Architecture Team*

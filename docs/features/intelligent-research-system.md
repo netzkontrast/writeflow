@@ -1,66 +1,66 @@
-# 🔍 WriteFlow 智能调研报告系统
+# 🔍 WriteFlow Intelligent Research Report System
 
-## 📖 功能概述
+## 📖 Feature Overview
 
-WriteFlow 智能调研报告系统是一个基于AI的深度研究工具，能够自动收集、分析和整理信息，生成专业级调研报告。该系统类似于 DeepResearch 等专业研究工具，但完全集成在 WriteFlow CLI 中。
+The WriteFlow Intelligent Research Report System is an AI-based deep research tool that can automatically collect, analyze, and organize information to generate professional-grade research reports. This system is similar to professional research tools like DeepResearch but is fully integrated into the WriteFlow CLI.
 
-## 🎯 核心价值
+## 🎯 Core Value
 
-- **效率革命**: 将传统需要数天的调研工作压缩到数小时
-- **专业品质**: 生成符合学术和商业标准的结构化报告
-- **多源整合**: 自动整合网络搜索、学术资料、官方文档等多种信息源
-- **智能分析**: 不仅搜集信息，更进行深度分析和趋势判断
+- **Efficiency Revolution**: Compresses research work that traditionally takes days into a matter of hours.
+- **Professional Quality**: Generates structured reports that meet academic and business standards.
+- **Multi-Source Integration**: Automatically integrates multiple information sources such as web searches, academic materials, and official documents.
+- **Intelligent Analysis**: Not only collects information but also performs in-depth analysis and trend judgment.
 
-## 🚀 功能特性
+## 🚀 Features
 
-### 1. 智能信息收集
+### 1. Intelligent Information Collection
 
-- **多源搜索**: 自动从搜索引擎、学术数据库、新闻源等收集信息
-- **关键词扩展**: AI智能扩展搜索关键词，确保信息覆盖全面
-- **时效性筛选**: 优先收集最新、最相关的信息
-- **权威性评估**: 自动评估信息源的可信度和权威性
+- **Multi-Source Search**: Automatically collects information from search engines, academic databases, news sources, etc.
+- **Keyword Expansion**: AI intelligently expands search keywords to ensure comprehensive information coverage.
+- **Timeliness Filtering**: Prioritizes the collection of the latest and most relevant information.
+- **Authority Assessment**: Automatically assesses the credibility and authority of information sources.
 
-### 2. 深度内容分析
+### 2. In-Depth Content Analysis
 
-- **观点提取**: 识别和提取不同来源的核心观点
-- **数据验证**: 交叉验证关键数据和统计信息
-- **趋势识别**: 分析历史数据，识别发展趋势
-- **冲突检测**: 发现不同信息源间的矛盾和冲突
+- **Viewpoint Extraction**: Identifies and extracts core viewpoints from different sources.
+- **Data Verification**: Cross-verifies key data and statistical information.
+- **Trend Identification**: Analyzes historical data to identify development trends.
+- **Conflict Detection**: Discovers contradictions and conflicts between different information sources.
 
-### 3. 结构化报告生成
+### 3. Structured Report Generation
 
-- **自动大纲**: 根据研究内容生成逻辑清晰的报告结构
-- **章节分配**: 智能分配内容到合适的章节
-- **引用管理**: 自动生成符合学术标准的参考文献
-- **格式优化**: 确保报告格式专业、易读
+- **Automatic Outlining**: Generates a logically clear report structure based on the research content.
+- **Chapter Allocation**: Intelligently allocates content to appropriate chapters.
+- **Citation Management**: Automatically generates bibliographies that meet academic standards.
+- **Format Optimization**: Ensures the report format is professional and easy to read.
 
-## 🛠️ 技术架构
+## 🛠️ Technical Architecture
 
-### 命令接口设计
+### Command Interface Design
 
 ```bash
-# 基础调研命令
-/deep-research <研究主题>
+# Basic research command
+/deep-research <research topic>
 
-# 高级选项
-/deep-research <主题> --depth=<深入|标准|快速> --format=<学术|商业|技术> --sources=<数量>
+# Advanced options
+/deep-research <topic> --depth=<deep|standard|quick> --format=<academic|business|technical> --sources=<number>
 
-# 示例使用
-/deep-research "人工智能在教育领域的应用现状" --depth=深入 --format=学术 --sources=20
-/deep-research "区块链技术发展趋势" --format=商业 --sources=15
+# Example usage
+/deep-research "The current state of AI applications in education" --depth=deep --format=academic --sources=20
+/deep-research "Blockchain technology development trends" --format=business --sources=15
 ```
 
-### 核心组件
+### Core Components
 
-#### 1. 调研引擎 (ResearchEngine)
+#### 1. ResearchEngine
 
-负责协调整个调研流程：
-- 解析用户输入的研究主题
-- 制定调研策略和搜索计划
-- 协调各个工具模块的工作
-- 监控调研进度和质量
+Responsible for coordinating the entire research process:
+- Parses the user-input research topic.
+- Formulates a research strategy and search plan.
+- Coordinates the work of various tool modules.
+- Monitors research progress and quality.
 
-#### 2. 多源数据采集器 (MultiSourceCollector)
+#### 2. MultiSourceCollector
 
 ```typescript
 interface DataSource {
@@ -71,98 +71,98 @@ interface DataSource {
 }
 ```
 
-#### 3. 内容分析器 (ContentAnalyzer)
+#### 3. ContentAnalyzer
 
-- 语义理解和关键信息提取
-- 观点分类和立场识别
-- 数据准确性验证
-- 内容质量评估
+- Semantic understanding and key information extraction.
+- Viewpoint classification and stance identification.
+- Data accuracy verification.
+- Content quality assessment.
 
-#### 4. 报告生成器 (ReportGenerator)
+#### 4. ReportGenerator
 
-- 结构化内容组织
-- 多格式输出支持
-- 引用和参考文献管理
-- 图表和可视化建议
+- Structured content organization.
+- Support for multiple output formats.
+- Citation and bibliography management.
+- Suggestions for charts and visualizations.
 
-### 工作流程
+### Workflow
 
 ```mermaid
 graph TD
-    A[用户输入研究主题] --> B[主题分析和关键词扩展]
-    B --> C[制定搜索策略]
-    C --> D[多源并行搜索]
-    D --> E[内容收集和初步筛选]
-    E --> F[深度内容分析]
-    F --> G[信息整合和验证]
-    G --> H[报告结构设计]
-    H --> I[内容组织和排版]
-    I --> J[生成最终报告]
+    A[User inputs research topic] --> B[Topic analysis and keyword expansion]
+    B --> C[Formulate search strategy]
+    C --> D[Parallel multi-source search]
+    D --> E[Content collection and preliminary screening]
+    E --> F[In-depth content analysis]
+    F --> G[Information integration and verification]
+    G --> H[Report structure design]
+    H --> I[Content organization and layout]
+    I --> J[Generate final report]
 ```
 
-## 📊 输出格式
+## 📊 Output Format
 
-### 标准调研报告结构
+### Standard Research Report Structure
 
 ```markdown
-# [研究主题] 深度调研报告
+# [Research Topic] In-Depth Research Report
 
-## 📋 执行摘要
-- 核心发现
-- 关键洞察
-- 主要结论
+## 📋 Executive Summary
+- Core findings
+- Key insights
+- Main conclusions
 
-## 🎯 研究背景
-- 研究问题定义
-- 研究意义和价值
-- 研究方法说明
+## 🎯 Research Background
+- Definition of the research problem
+- Significance and value of the research
+- Explanation of the research methodology
 
-## 📈 现状分析
-### 3.1 发展历程
-### 3.2 当前状况
-### 3.3 主要参与者
-### 3.4 市场规模
+## 📈 Current Status Analysis
+### 3.1 Development History
+### 3.2 Current Situation
+### 3.3 Main Participants
+### 3.4 Market Size
 
-## 🔍 关键发现
-### 4.1 技术发展
-### 4.2 市场趋势
-### 4.3 挑战与机遇
-### 4.4 案例分析
+## 🔍 Key Findings
+### 4.1 Technological Development
+### 4.2 Market Trends
+### 4.3 Challenges and Opportunities
+### 4.4 Case Studies
 
-## 🚀 趋势预测
-### 5.1 短期趋势 (1-2年)
-### 5.2 中期展望 (3-5年)
-### 5.3 长期愿景 (5-10年)
+## 🚀 Trend Forecast
+### 5.1 Short-Term Trends (1-2 years)
+### 5.2 Mid-Term Outlook (3-5 years)
+### 5.3 Long-Term Vision (5-10 years)
 
-## 💡 结论与建议
-### 6.1 核心结论
-### 6.2 行动建议
-### 6.3 风险提示
+## 💡 Conclusions and Recommendations
+### 6.1 Core Conclusions
+### 6.2 Actionable Recommendations
+### 6.3 Risk Warnings
 
-## 📚 参考资料
-[自动生成的参考文献列表]
+## 📚 References
+[Automatically generated list of references]
 
-## 📊 数据附录
-[相关图表和数据表格]
+## 📊 Data Appendix
+[Relevant charts and data tables]
 ```
 
-### 多格式支持
+### Multi-Format Support
 
-1. **学术格式**: 符合学术论文标准，包含详细的方法论和参考文献
-2. **商业格式**: 面向决策者，突出商业价值和行动建议
-3. **技术格式**: 深入技术细节，适合技术团队使用
-4. **简报格式**: 精简版本，适合快速阅读和汇报
+1. **Academic Format**: Meets academic paper standards, including a detailed methodology and bibliography.
+2. **Business Format**: Aimed at decision-makers, highlighting business value and actionable recommendations.
+3. **Technical Format**: Delves into technical details, suitable for technical teams.
+4. **Briefing Format**: A condensed version, suitable for quick reading and reporting.
 
-## 🎛️ 配置选项
+## 🎛️ Configuration Options
 
-### 调研深度级别
-- **快速 (Quick)**: 15-30分钟，基础信息收集
-- **标准 (Standard)**: 1-2小时，全面信息分析
-- **深入 (Deep)**: 2-4小时，深度研究和分析
+### Research Depth Levels
+- **Quick**: 15-30 minutes, basic information collection.
+- **Standard**: 1-2 hours, comprehensive information analysis.
+- **Deep**: 2-4 hours, in-depth research and analysis.
 
-### 信息源配置
+### Information Source Configuration
 ```yaml
-# 可配置的信息源
+# Configurable information sources
 data_sources:
   web_search:
     enabled: true
@@ -180,158 +180,158 @@ data_sources:
     max_results: 30
     
   social:
-    enabled: false  # 可选启用社交媒体数据
+    enabled: false  # Optionally enable social media data
     platforms: ['twitter', 'linkedin']
 ```
 
-## 🔧 实现计划
+## 🔧 Implementation Plan
 
-### 阶段1: 核心框架搭建 (1周) ✅ 已完成
+### Phase 1: Core Framework Setup (1 week) ✅ Completed
 
-- [x] 在 `core-commands.ts` 中添加 `/deep-research` 命令 ✅
-- [x] 实现基础的调研工作流 ✅
-- [x] 集成现有的搜索和分析工具 ✅
-- [x] 创建基础报告模板 ✅
+- [x] Add the `/deep-research` command in `core-commands.ts` ✅
+- [x] Implement the basic research workflow ✅
+- [x] Integrate existing search and analysis tools ✅
+- [x] Create a basic report template ✅
 
-**完成情况**: 100% - 核心功能已全部实现并通过测试
+**Completion Status**: 100% - All core features have been implemented and tested.
 
-### 阶段2: 功能完善 (2周) 🔄 基础完成
+### Phase 2: Feature Enhancement (2 weeks) 🔄 Basic implementation complete
 
-- [x] 增强多源数据采集能力 ✅ (基础实现完成)
-- [x] 优化内容分析算法 ✅ (AI驱动分析已集成)
-- [x] 完善报告生成格式 ✅ (4种格式支持完成)
-- [x] 添加质量控制机制 ✅ (参数验证和错误处理已实现)
+- [x] Enhance multi-source data collection capabilities ✅ (Basic implementation complete)
+- [x] Optimize content analysis algorithms ✅ (AI-driven analysis is integrated)
+- [x] Refine report generation formats ✅ (Support for 4 formats is complete)
+- [x] Add quality control mechanisms ✅ (Parameter validation and error handling are implemented)
 
-**完成情况**: 85% - 核心功能已实现，可进行高级优化
+**Completion Status**: 85% - Core features are implemented, ready for advanced optimization.
 
-### 阶段3: 用户体验优化 (1周) 🔄 部分完成
+### Phase 3: User Experience Optimization (1 week) 🔄 Partially complete
 
-- [ ] 添加实时进度显示 (待实现)
-- [x] 优化错误处理和用户反馈 ✅ (基础错误处理已实现)
-- [x] 完善帮助文档和使用示例 ✅ (完整文档和指南已完成)
-- [x] 进行用户测试和反馈收集 ✅ (功能测试已通过10/10项测试)
+- [ ] Add real-time progress display (To be implemented)
+- [x] Optimize error handling and user feedback ✅ (Basic error handling is implemented)
+- [x] Improve help documentation and usage examples ✅ (Complete documentation and guides are finished)
+- [x] Conduct user testing and feedback collection ✅ (Functional tests passed 10/10)
 
-**完成情况**: 75% - 基础体验已优化，可添加高级交互功能
+**Completion Status**: 75% - Basic experience is optimized, ready for advanced interactive features.
 
-## 🧪 测试策略
+## 🧪 Testing Strategy
 
-### 功能测试用例
-1. **基础调研**: 测试简单主题的调研能力
-2. **复杂主题**: 测试多层次、跨领域主题的处理
-3. **数据验证**: 验证信息准确性和引用正确性
-4. **格式输出**: 确保各种格式的报告质量
-5. **性能测试**: 测试不同深度级别的处理时间
+### Functional Test Cases
+1. **Basic Research**: Test the research capabilities on a simple topic.
+2. **Complex Topics**: Test the handling of multi-layered, cross-disciplinary topics.
+3. **Data Validation**: Verify the accuracy of information and the correctness of citations.
+4. **Format Output**: Ensure the quality of reports in various formats.
+5. **Performance Testing**: Test the processing time for different depth levels.
 
-### 测试命令示例
+### Example Test Commands
 ```bash
-# 基础功能测试
-/deep-research "人工智能发展现状"
+# Basic functionality test
+/deep-research "Current state of AI development"
 
-# 高级选项测试  
-/deep-research "区块链技术" --depth=深入 --format=学术 --sources=20
+# Advanced options test
+/deep-research "Blockchain technology" --depth=deep --format=academic --sources=20
 
-# 不同领域测试
-/deep-research "量子计算商业化" --format=商业
-/deep-research "新能源汽车政策" --format=综合
+# Different domain tests
+/deep-research "Commercialization of quantum computing" --format=business
+/deep-research "New energy vehicle policies" --format=comprehensive
 
-# 快速调研测试
-/deep-research "5G技术应用" --depth=快速
+# Quick research test
+/deep-research "5G technology applications" --depth=quick
 ```
 
-### 质量保证
-- 信息准确性验证机制
-- 重复内容检测和去除
-- 引用格式标准化
-- 报告逻辑性检查
-- 用户反馈收集和持续改进
+### Quality Assurance
+- Information accuracy verification mechanism.
+- Duplicate content detection and removal.
+- Standardization of citation formats.
+- Logical consistency check of the report.
+- Collection of user feedback and continuous improvement.
 
-## 📈 成功指标与达成情况
+## 📈 Success Metrics and Achievement
 
-### 效率指标
+### Efficiency Metrics
 
-- ✅ 调研时间从数天缩短到数小时 (目标: 数小时，实际: 2-4小时完成深度调研)
-- ✅ 信息收集覆盖度提升80% (目标: 80%，实际: 支持15+信息源，全面覆盖)
-- ✅ 报告生成自动化率95% (目标: 95%，实际: 100%自动化生成)
+- ✅ Research time reduced from days to hours (Target: hours, Actual: 2-4 hours for deep research).
+- ✅ Information collection coverage increased by 80% (Target: 80%, Actual: Supports 15+ sources, comprehensive coverage).
+- ✅ Report generation automation rate of 95% (Target: 95%, Actual: 100% automated generation).
 
-### 质量指标
+### Quality Metrics
 
-- ✅ 信息准确率 > 95% (目标: >95%，实际: 集成事实核查和交叉验证)
-- ✅ 用户满意度 > 4.5/5 (目标: >4.5，实际: 功能测试10/10通过)
-- ✅ 报告专业度显著提升 (目标: 显著提升，实际: 4种专业格式支持)
+- ✅ Information accuracy > 95% (Target: >95%, Actual: Integrated fact-checking and cross-validation).
+- ✅ User satisfaction > 4.5/5 (Target: >4.5, Actual: 10/10 functional tests passed).
+- ✅ Significant improvement in report professionalism (Target: Significant improvement, Actual: Support for 4 professional formats).
 
-### 技术指标 🆕
+### Technical Metrics 🆕
 
-- ✅ 命令集成成功率: 100% (10/10项功能测试通过)
-- ✅ 参数解析准确率: 100% (支持深度、格式、信息源等多参数)
-- ✅ 错误处理覆盖率: 100% (完整的参数验证和错误提示)
-- ✅ 帮助文档完整度: 100% (完整的使用指南和示例)
+- ✅ Command integration success rate: 100% (10/10 functional tests passed).
+- ✅ Parameter parsing accuracy: 100% (Supports multiple parameters like depth, format, and sources).
+- ✅ Error handling coverage: 100% (Complete parameter validation and error messages).
+- ✅ Help documentation completeness: 100% (Complete user guide and examples).
 
-## 🤝 与现有系统集成
+## 🤝 Integration with Existing Systems
 
-### 利用现有工具
-- `web_search`: 网络搜索功能
-- `fact_checker`: 事实验证
-- `citation_manager`: 引用管理
-- `content_analyzer`: 内容分析
-- `write_article`: 报告写入
+### Utilizing Existing Tools
+- `web_search`: Web search functionality.
+- `fact_checker`: Fact verification.
+- `citation_manager`: Citation management.
+- `content_analyzer`: Content analysis.
+- `write_article`: Writing the report.
 
-### 扩展现有命令
-可以与其他写作命令结合使用：
+### Extending Existing Commands
+Can be combined with other writing commands:
 ```bash
-# 先调研，再写作
-/deep-research "AI发展趋势" --format=标准
-/write "基于刚才调研结果写一篇技术文章"
+# First research, then write
+/deep-research "AI development trends" --format=standard
+/write "Write a technical article based on the research results"
 
-# 调研后优化已有内容
-/deep-research "区块链应用" --depth=深入
-/rewrite 学术 ./my-article.md  # 基于调研结果优化文章
+# Optimize existing content after research
+/deep-research "Blockchain applications" --depth=deep
+/rewrite academic ./my-article.md  # Optimize the article based on the research results
 ```
 
-## 🔮 未来扩展
+## 🔮 Future Extensions
 
-### 高级功能规划
-- **对比分析**: 支持多个主题的对比研究
-- **持续跟踪**: 定期更新研究报告
-- **协作研究**: 支持团队协作调研
-- **可视化**: 自动生成图表和数据可视化
+### Advanced Feature Planning
+- **Comparative Analysis**: Support for comparative research on multiple topics.
+- **Continuous Tracking**: Regularly update research reports.
+- **Collaborative Research**: Support for team-based collaborative research.
+- **Visualization**: Automatically generate charts and data visualizations.
 
-### 专业化定制
-- **行业模板**: 针对不同行业的专业报告模板
-- **法规遵循**: 特定行业的法规和合规要求检查
-- **多语言**: 支持多语言调研和报告生成
+### Specialization and Customization
+- **Industry Templates**: Professional report templates for different industries.
+- **Regulatory Compliance**: Checks for industry-specific regulations and compliance requirements.
+- **Multilingual**: Support for multilingual research and report generation.
 
-## 🎯 实现状态总结
+## 🎯 Implementation Status Summary
 
-**总体完成度**: 85% ✅
+**Overall Completion**: 85% ✅
 
-### 已完成功能
-- ✅ `/deep-research` 核心命令已完全实现
-- ✅ 4种专业报告格式支持 (学术、商业、技术、综合)
-- ✅ 完整参数系统 (深度、格式、信息源、时间范围等)
-- ✅ 智能调研工作流 (信息收集→分析→报告生成)
-- ✅ 完整的错误处理和参数验证
-- ✅ 全面的文档和使用指南
-- ✅ 10项功能测试全部通过
+### Completed Features
+- ✅ The core `/deep-research` command is fully implemented.
+- ✅ Support for 4 professional report formats (academic, business, technical, comprehensive).
+- ✅ A complete parameter system (depth, format, sources, time range, etc.).
+- ✅ An intelligent research workflow (information collection → analysis → report generation).
+- ✅ Complete error handling and parameter validation.
+- ✅ Comprehensive documentation and user guides.
+- ✅ All 10 functional tests have passed.
 
-### 核心特性
-- **命令别名**: 支持中文别名 (`调研`, `dr`, `研究报告`, `深度调研`)
-- **工具集成**: 集成 web_search, fact_checker, citation_manager 等8个工具
-- **帮助系统**: 完整的help命令支持和使用示例
-- **CLI集成**: 完美集成到WriteFlow CLI，支持exec和交互模式
+### Core Characteristics
+- **Command Aliases**: Supports Chinese aliases (`research`, `dr`, `research report`, `deep research`).
+- **Tool Integration**: Integrates 8 tools, including `web_search`, `fact_checker`, and `citation_manager`.
+- **Help System**: Full support for the `help` command with usage examples.
+- **CLI Integration**: Perfectly integrated into the WriteFlow CLI, supporting both `exec` and interactive modes.
 
-### 待优化项目
-- 🔄 实时进度显示功能
-- 🔄 高级可视化和图表建议
-- 🔄 协作和版本控制功能
+### Items to be Optimized
+- 🔄 Real-time progress display feature.
+- 🔄 Advanced visualization and chart suggestions.
+- 🔄 Collaboration and version control features.
 
-**结论**: 智能调研系统已成功实现并可投入使用，核心功能完备，用户体验良好。
+**Conclusion**: The intelligent research system has been successfully implemented and is ready for use. Its core functionalities are complete, and the user experience is good.
 
 ---
 
-*WriteFlow 智能调研报告系统现已成功实现并集成到 WriteFlow CLI 中。该系统显著提升了 WriteFlow 的实用价值，使其从简单的写作工具演进为专业的研究助手平台。*
+*The WriteFlow Intelligent Research Report System has now been successfully implemented and integrated into the WriteFlow CLI. This system significantly enhances the practical value of WriteFlow, evolving it from a simple writing tool to a professional research assistant platform.*
 
-**文档版本**: v1.1  
-**创建日期**: 2025-01-09  
-**最后更新**: 2025-01-09  
-**实现完成**: 2025-01-09  
-**负责人**: WriteFlow Team
+**Document Version**: v1.1
+**Creation Date**: 2025-01-09
+**Last Updated**: 2025-01-09
+**Implementation Complete**: 2025-01-09
+**Responsible**: WriteFlow Team

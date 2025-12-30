@@ -1,61 +1,61 @@
-# WriteFlow 流式适配器系统
+# WriteFlow Streaming Adapter System
 
-为 WriteFlow 提供统一的多厂商 AI 模型流式响应处理能力。
+Provides unified multi-vendor AI model streaming response handling for WriteFlow.
 
-## 🎯 核心功能
+## 🎯 Core Features
 
-- **多厂商支持**: OpenAI、Anthropic Claude、DeepSeek、Google Gemini、智谱 AI (GLM)、Kimi/Moonshot、Qwen/通义千问
-- **协议无关**: 统一接口隐藏各厂商 SSE 协议差异
-- **自动检测**: 根据模型名称或响应格式自动选择适配器
-- **高性能**: 支持增量解析和缓冲解析两种策略
-- **企业级特性**: 错误处理、重试机制、配置管理、状态监控
-- **完整类型**: TypeScript 完整类型定义
+- **Multi-Vendor Support**: OpenAI, Anthropic Claude, DeepSeek, Google Gemini, Zhipu AI (GLM), Kimi/Moonshot, Qwen/Tongyi Qianwen
+- **Protocol Agnostic**: A unified interface hides the SSE protocol differences of various vendors.
+- **Automatic Detection**: Automatically selects an adapter based on the model name or response format.
+- **High Performance**: Supports both incremental parsing and buffered parsing strategies.
+- **Enterprise-Grade Features**: Error handling, retry mechanisms, configuration management, status monitoring.
+- **Fully Typed**: Complete TypeScript type definitions.
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 基础使用
+### Basic Usage
 
 ```typescript
 import { getStreamingService } from './index.js'
 
-// 获取流式服务
+// Get the streaming service
 const streamingService = getStreamingService()
 
-// 监听流式数据块
+// Listen for streaming data chunks
 streamingService.on('chunk', (response) => {
-  console.log(response.content)        // 文本内容
-  console.log(response.reasoning)      // 推理内容（如 DeepSeek）
-  console.log(response.usage)          // Token 使用统计
-  console.log(response.done)           // 是否完成
+  console.log(response.content)        // Text content
+  console.log(response.reasoning)      // Reasoning content (e.g., from DeepSeek)
+  console.log(response.usage)          // Token usage statistics
+  console.log(response.done)           // Whether the stream is finished
 })
 
-// 监听完成事件
+// Listen for the complete event
 streamingService.on('complete', (response) => {
-  console.log('✅ 流式完成!')
-  console.log(`📊 使用统计: ${response.usage?.inputTokens}→${response.usage?.outputTokens} tokens`)
-  console.log(`💰 成本: $${response.cost?.toFixed(6)}`)
+  console.log('✅ Stream complete!')
+  console.log(`📊 Usage stats: ${response.usage?.inputTokens}→${response.usage?.outputTokens} tokens`)
+  console.log(`💰 Cost: $${response.cost?.toFixed(6)}`)
 })
 
-// 开始流式请求
+// Start a streaming request
 await streamingService.startStream({
-  prompt: "请简洁地解释什么是 TypeScript。",
+  prompt: "Please explain what TypeScript is in a concise way.",
   model: 'claude-3-sonnet',
   maxTokens: 200,
   temperature: 0.7
 })
 ```
 
-### 兼容性使用
+### Compatibility Usage
 
 ```typescript
 import { getWriteFlowAIService } from '../ai/WriteFlowAIService.js'
 
 const aiService = getWriteFlowAIService()
 
-// 现有代码，只需添加 stream: true
+// Existing code, just add stream: true
 const response = await aiService.processRequest({
-  prompt: "写一段关于 AI 的介绍",
-  stream: true,  // 启用流式
+  prompt: "Write an introduction to AI",
+  stream: true,  // Enable streaming
   model: 'deepseek-chat',
   maxTokens: 150
 })
@@ -63,162 +63,162 @@ const response = await aiService.processRequest({
 console.log(response.content)
 ```
 
-### 便捷函数
+### Convenience Function
 
 ```typescript
 import { askAIStreamComplete } from './index.js'
 
-// 等待完整响应的流式请求
-const response = await askAIStreamComplete("什么是微服务架构？", {
+// A streaming request that waits for the complete response
+const response = await askAIStreamComplete("What is a microservices architecture?", {
   model: 'deepseek-reasoner',
   maxTokens: 150,
   temperature: 0.3
 })
 
 console.log(response.content)
-console.log(`Token 使用: ${response.usage.inputTokens}→${response.usage.outputTokens}`)
+console.log(`Token usage: ${response.usage.inputTokens}→${response.usage.outputTokens}`)
 ```
 
-## 📚 支持的模型
+## 📚 Supported Models
 
-### OpenAI 模型
+### OpenAI Models
 ```typescript
 const openai = getStreamingService()
 await openai.startStream({ 
-  prompt: "任务", 
+  prompt: "task",
   model: 'gpt-4o' 
 })
 ```
 
-### Anthropic Claude 模型  
+### Anthropic Claude Models
 ```typescript
 const claude = getStreamingService()
 await claude.startStream({ 
-  prompt: "任务", 
+  prompt: "task",
   model: 'claude-3-sonnet' 
 })
 ```
 
-### DeepSeek 模型（支持推理内容）
+### DeepSeek Models (with reasoning content support)
 ```typescript
 const deepseek = getStreamingService()
 deepseek.on('chunk', (response) => {
   if (response.reasoning) {
-    console.log('💭 推理:', response.reasoning)
+    console.log('💭 Reasoning:', response.reasoning)
   }
-  console.log('📝 回答:', response.content)
+  console.log('📝 Answer:', response.content)
 })
 
 await deepseek.startStream({ 
-  prompt: "任务", 
+  prompt: "task",
   model: 'deepseek-reasoner' 
 })
 ```
 
-### Google Gemini 模型
+### Google Gemini Models
 ```typescript
 const gemini = getStreamingService()
 await gemini.startStream({ 
-  prompt: "任务", 
+  prompt: "task",
   model: 'gemini-pro' 
 })
 ```
 
-### 智谱 AI (GLM) 模型
+### Zhipu AI (GLM) Models
 ```typescript
 const zhipu = getStreamingService()
 await zhipu.startStream({ 
-  prompt: "任务", 
+  prompt: "task",
   model: 'glm-4.5' 
 })
 ```
 
-### Kimi/Moonshot 模型（长文本）
+### Kimi/Moonshot Models (long context)
 ```typescript
 const kimi = getStreamingService()
 await kimi.startStream({ 
-  prompt: "任务", 
-  model: 'moonshot-v1-128k'  // 支持 128k 上下文
+  prompt: "task",
+  model: 'moonshot-v1-128k'  // Supports 128k context
 })
 ```
 
-### Qwen/通义千问 模型
+### Qwen/Tongyi Qianwen Models
 ```typescript
 const qwen = getStreamingService()
 await qwen.startStream({ 
-  prompt: "任务", 
+  prompt: "task",
   model: 'qwen-turbo' 
 })
 ```
 
-## 🔧 高级配置
+## 🔧 Advanced Configuration
 
-### 错误处理和重试
+### Error Handling and Retries
 
 ```typescript
 import { getStreamingService } from './index.js'
 
 const streamingService = getStreamingService({
-  maxRetries: 5,           // 最大重试次数
-  retryDelay: 2000,        // 重试延时（指数退避）
-  timeout: 120000,         // 超时时间（2分钟）
-  bufferSize: 16384,       // 缓冲区大小
-  enableReconnect: true    // 启用自动重连
+  maxRetries: 5,           // Maximum number of retries
+  retryDelay: 2000,        // Retry delay (exponential backoff)
+  timeout: 120000,         // Timeout (2 minutes)
+  bufferSize: 16384,       // Buffer size
+  enableReconnect: true    // Enable automatic reconnection
 })
 
 streamingService.on('error', (error) => {
-  console.error('流式错误:', error.message)
+  console.error('Streaming error:', error.message)
   
-  // 检查是否会自动重试
+  // Check if it will be retried automatically
   const status = streamingService.getStreamingStatus()
   if (status.retryCount < 5) {
-    console.log(`将进行第 ${status.retryCount + 1} 次重试`)
+    console.log(`Will attempt retry #${status.retryCount + 1}`)
   }
 })
 ```
 
-### 状态监控
+### Status Monitoring
 
 ```typescript
-// 监控流式状态
+// Monitor streaming status
 const status = streamingService.getStreamingStatus()
-console.log('是否正在流式:', status.isStreaming)
-console.log('重试次数:', status.retryCount)
-console.log('配置参数:', status.config)
+console.log('Is streaming:', status.isStreaming)
+console.log('Retry count:', status.retryCount)
+console.log('Configuration:', status.config)
 
-// 动态更新配置
+// Dynamically update configuration
 streamingService.updateConfig({
-  timeout: 180000,  // 增加超时时间到3分钟
-  maxRetries: 10    // 增加最大重试次数
+  timeout: 180000,  // Increase timeout to 3 minutes
+  maxRetries: 10    // Increase max retries
 })
 ```
 
-### 性能优化
+### Performance Optimization
 
 ```typescript
-// 大文本场景使用更大缓冲区
+// Use a larger buffer for large text scenarios
 const service = getStreamingService({
-  bufferSize: 32768,        // 32KB 缓冲区
-  parseStrategy: 'buffered' // 缓冲解析策略
+  bufferSize: 32768,        // 32KB buffer
+  parseStrategy: 'buffered' // Buffered parsing strategy
 })
 
-// 实时场景使用增量解析
+// Use incremental parsing for real-time scenarios
 const realtimeService = getStreamingService({
-  bufferSize: 4096,           // 4KB 缓冲区
-  parseStrategy: 'incremental' // 增量解析策略
+  bufferSize: 4096,           // 4KB buffer
+  parseStrategy: 'incremental' // Incremental parsing strategy
 })
 ```
 
-## 📈 协议格式
+## 📈 Protocol Formats
 
-### OpenAI 格式
+### OpenAI Format
 ```
 data: {"choices":[{"delta":{"content":"Hello"}}]}
 data: {"choices":[{"delta":{"content":" World"}}]}
 data: [DONE]
 ```
 
-### Anthropic Claude 格式
+### Anthropic Claude Format
 ```
 event: content_block_delta
 data: {"type":"content_block_delta","delta":{"type":"text_delta","text":"Hello"}}
@@ -227,80 +227,80 @@ event: message_stop
 data: {"type":"message_stop"}
 ```
 
-### DeepSeek 格式（扩展 OpenAI）
+### DeepSeek Format (extends OpenAI)
 ```
 data: {"choices":[{"delta":{"reasoning_content":"Let me think..."}}]}
 data: {"choices":[{"delta":{"content":"Hello World"}}]}
 data: [DONE]
 ```
 
-### Gemini 格式
+### Gemini Format
 ```json
 {"candidates":[{"content":{"parts":[{"text":"Hello World"}]},"finishReason":"STOP"}]}
 ```
 
-## 🧪 测试和示例
+## 🧪 Testing and Examples
 
 ```bash
-# 运行功能测试
+# Run functional tests
 npx tsx src/services/streaming/test.ts
 
-# 运行使用示例
+# Run usage examples
 npx tsx src/services/streaming/examples.ts
 ```
 
-## 📁 文件结构
+## 📁 File Structure
 
 ```
 src/services/streaming/
-├── StreamAdapter.ts          # 基础适配器接口
-├── OpenAIStreamAdapter.ts    # OpenAI 协议适配器
-├── ClaudeStreamAdapter.ts    # Anthropic 协议适配器
-├── DeepSeekStreamAdapter.ts  # DeepSeek 协议适配器
-├── GeminiStreamAdapter.ts    # Gemini 协议适配器
-├── ZhipuStreamAdapter.ts     # 智谱 AI 协议适配器
-├── UniversalOpenAIAdapter.ts # 通用 OpenAI 兼容适配器
-├── StreamAdapterFactory.ts   # 工厂模式和自动检测
-├── StreamingService.ts       # 统一流式服务
-├── StreamingAIService.ts     # 兼容性服务封装
-├── examples.ts               # 使用示例
-├── test.ts                   # 功能测试
-└── index.ts                  # 模块导出
+├── StreamAdapter.ts          # Base adapter interface
+├── OpenAIStreamAdapter.ts    # OpenAI protocol adapter
+├── ClaudeStreamAdapter.ts    # Anthropic protocol adapter
+├── DeepSeekStreamAdapter.ts  # DeepSeek protocol adapter
+├── GeminiStreamAdapter.ts    # Gemini protocol adapter
+├── ZhipuStreamAdapter.ts     # Zhipu AI protocol adapter
+├── UniversalOpenAIAdapter.ts # Universal OpenAI compatible adapter
+├── StreamAdapterFactory.ts   # Factory pattern and auto-detection
+├── StreamingService.ts       # Unified streaming service
+├── StreamingAIService.ts     # Compatibility service wrapper
+├── examples.ts               # Usage examples
+├── test.ts                   # Functional tests
+└── index.ts                  # Module exports
 ```
 
-## ✅ 特性矩阵
+## ✅ Feature Matrix
 
-| 厂商 | 基础流式 | 推理内容 | 缓存统计 | 工具调用 | 视觉输入 | 长文本 |
-|------|----------|----------|----------|----------|----------|--------|
-| OpenAI | ✅ | ❌ | ❌ | 🔄 计划中 | 🔄 计划中 | ❌ |
-| Anthropic | ✅ | ❌ | ✅ | 🔄 计划中 | 🔄 计划中 | ✅ |
-| DeepSeek | ✅ | ✅ | ✅ | 🔄 计划中 | ❌ | ❌ |
-| Gemini | ✅ | ❌ | ❌ | 🔄 计划中 | 🔄 计划中 | ❌ |
-| 智谱 AI (GLM) | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ |
-| Kimi/Moonshot | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ |
-| Qwen/通义千问 | ✅ | ❌ | ❌ | ✅ | ❌ | ✅ |
+| Vendor        | Basic Streaming | Reasoning Content | Usage Stats | Tool Calls | Vision Input | Long Context |
+|---------------|-----------------|-------------------|-------------|------------|--------------|--------------|
+| OpenAI        | ✅              | ❌                | ❌          | 🔄 Planned | 🔄 Planned   | ❌           |
+| Anthropic     | ✅              | ❌                | ✅          | 🔄 Planned | 🔄 Planned   | ✅           |
+| DeepSeek      | ✅              | ✅                | ✅          | 🔄 Planned | ❌           | ❌           |
+| Gemini        | ✅              | ❌                | ❌          | 🔄 Planned | 🔄 Planned   | ❌           |
+| Zhipu AI (GLM)| ✅              | ❌                | ❌          | ✅         | ✅           | ✅           |
+| Kimi/Moonshot | ✅              | ❌                | ❌          | ✅         | ❌           | ✅           |
+| Qwen/Tongyi   | ✅              | ❌                | ❌          | ✅         | ❌           | ✅           |
 
-## 🔄 扩展新厂商
+## 🔄 Extending for New Vendors
 
-要添加新的厂商支持：
+To add support for a new vendor:
 
-1. 继承 `StreamAdapter` 基类
-2. 实现 `parseStream()` 和 `isStreamEnd()` 方法
-3. 在 `StreamAdapterFactory` 中添加检测逻辑
-4. 更新 `modelCapabilities.ts` 添加模型配置
+1. Inherit from the `StreamAdapter` base class.
+2. Implement the `parseStream()` and `isStreamEnd()` methods.
+3. Add detection logic in `StreamAdapterFactory`.
+4. Update `modelCapabilities.ts` to add model configuration.
 
 ```typescript
 export class NewProviderStreamAdapter extends StreamAdapter {
   parseStream(data: string): StreamChunk[] {
-    // 实现协议解析逻辑
+    // Implement protocol parsing logic
   }
   
   isStreamEnd(data: string): boolean {
-    // 实现结束检测逻辑
+    // Implement end-of-stream detection logic
   }
 }
 ```
 
-## 📄 许可证
+## 📄 License
 
-本项目使用与 WriteFlow 相同的许可证。
+This project uses the same license as WriteFlow.

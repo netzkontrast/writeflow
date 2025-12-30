@@ -1,353 +1,353 @@
-# 📚 WriteFlow Slidev 智能PPT系统 - 完整使用手册
+# 📚 WriteFlow Slidev Intelligent PPT System - Complete User Manual
 
-> 从想法到演示，一条命令搞定！WriteFlow 2.11+ 全新智能PPT生成系统
+> From idea to presentation, get it done with a single command! WriteFlow 2.11+ introduces a brand new intelligent PPT generation system.
 
-## 🆕 v2.11+ 新功能亮点
+## 🆕 v2.11+ New Feature Highlights
 
-- 🧠 **智能生成**: 基于完整Slidev知识库的AI驱动内容创作
-- 🚀 **一步到位**: 主题输入即可生成演示文稿，无需复杂子命令
-- 📋 **智能指导**: 详细的操作步骤和文件命名建议
-- ⚡ **系统精简**: 从13个命令精简至5个核心命令，提升用户体验
+- 🧠 **Intelligent Generation**: AI-driven content creation based on the complete Slidev knowledge base.
+- 🚀 **One-Step Process**: Input a topic to generate a presentation, no complex subcommands needed.
+- 📋 **Intelligent Guidance**: Detailed operational steps and file naming suggestions.
+- ⚡ **System Streamlining**: Reduced from 13 commands to 5 core commands to improve user experience.
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### ⚡ 一分钟体验（推荐）
+### ⚡ One-Minute Experience (Recommended)
 
-最简单的方式 - 主命令直接生成：
-
-```bash
-# 直接输入主题，智能生成演示
-/slide "Vue 3 响应式原理"
-
-# 商业汇报主题
-/slide "Q4业务增长报告"
-
-# 学术演示主题  
-/slide "机器学习最新进展"
-```
-
-**就是这么简单！** 🎉 系统会自动：
-
-1. 🧠 识别您输入的是主题而非子命令
-2. ⚙️ 智能生成专业PPT内容
-3. 📋 提供详细的保存和预览指导
-4. 🚀 支持一键预览体验
-
-### 🎯 传统方式（分步操作）
-
-如果你喜欢更多控制，可以分步执行：
-
-#### 步骤1: 智能生成内容
+The simplest way - generate directly with the main command:
 
 ```bash
-# 生成智能PPT内容（会显示详细的操作指导）
-/slide-intelligent "深度学习在计算机视觉中的应用" --style=academic --duration=40 --audience=researchers
+# Directly input a topic to intelligently generate a presentation
+/slide "The principles of reactivity in Vue 3"
+
+# A business report topic
+/slide "Q4 Business Growth Report"
+
+# An academic presentation topic
+/slide "The latest advancements in machine learning"
 ```
 
-#### 步骤2: 保存和预览
+**It's that simple!** 🎉 The system will automatically:
 
-按照生成后的指导操作：
+1. 🧠 Recognize that you have entered a topic, not a subcommand.
+2. ⚙️ Intelligently generate professional PPT content.
+3. 📋 Provide detailed guidance for saving and previewing.
+4. 🚀 Support a one-click preview experience.
 
-1. 复制生成的Markdown内容
-2. 保存为推荐的文件名（如：`深度学习在计算机视觉中的应用-slides.md`）
-3. 执行预览命令：
+### 🎯 Traditional Method (Step-by-Step Operation)
+
+If you prefer more control, you can perform the steps individually:
+
+#### Step 1: Intelligently Generate Content
+
+```bash
+# Generate intelligent PPT content (will display detailed operational guidance)
+/slide-intelligent "The application of deep learning in computer vision" --style=academic --duration=40 --audience=researchers
+```
+
+#### Step 2: Save and Preview
+
+Follow the guidance provided after generation:
+
+1. Copy the generated Markdown content.
+2. Save it with the recommended file name (e.g., `The-application-of-deep-learning-in-computer-vision-slides.md`).
+3. Execute the preview command:
 
    ```bash
-   /slide-preview 深度学习在计算机视觉中的应用-slides.md
+   /slide-preview The-application-of-deep-learning-in-computer-vision-slides.md
    ```
 
-## 📖 完整命令列表 - 精简至5个核心命令
+## 📖 Complete Command List - Streamlined to 5 Core Commands
 
-### 🎯 主命令
+### 🎯 Main Command
 
-| 命令 | 功能 | 示例 |
-|------|------|------|
-| `/slide` | 智能主命令，支持直接主题生成 | `/slide "React Hooks"` |
+| Command  | Function                                   | Example                  |
+| -------- | ------------------------------------------ | ------------------------ |
+| `/slide` | An intelligent main command that supports direct topic generation | `/slide "React Hooks"` |
 
-### 🧠 智能生成命令
+### 🧠 Intelligent Generation Command
 
-| 命令 | 功能 | 示例 |
-|------|------|------|
-| `/slide-intelligent` | 智能生成PPT（显示操作指导） | `/slide-intelligent "React Hooks" --style=technical` |
+| Command              | Function                                 | Example                                          |
+| -------------------- | ---------------------------------------- | ------------------------------------------------ |
+| `/slide-intelligent` | Intelligently generate a PPT (displays operational guidance) | `/slide-intelligent "React Hooks" --style=technical` |
 
-### 🚀 预览命令
+### 🚀 Preview Command
 
-| 命令 | 功能 | 示例 |
-|------|------|------|
-| `/slide-preview` | 预览演示文稿 | `/slide-preview slides.md` |
-| `/slide-preview --list` | 查看可用的演示文稿 | `/slide-preview -l` |
-| `/slide-preview --recent` | 查看最近的演示历史 | `/slide-preview -r` |
+| Command            | Function                         | Example                  |
+| ------------------ | -------------------------------- | ------------------------ |
+| `/slide-preview`   | Preview a presentation           | `/slide-preview slides.md` |
+| `/slide-preview --list` | View available presentations     | `/slide-preview -l`      |
+| `/slide-preview --recent` | View recent presentation history | `/slide-preview -r`      |
 
-### 🛠️ 创建和转换命令
+### 🛠️ Creation and Conversion Commands
 
-| 命令 | 功能 | 示例 |
-|------|------|------|
-| `/slide-create` | 创建演示文稿（支持依赖检查） | `/slide-create "我的主题" --theme=seriph` |
-| `/slide-convert` | 文章转换为演示（支持依赖检查） | `/slide-convert article.md --style=technical` |
+| Command          | Function                                    | Example                                       |
+| ---------------- | ------------------------------------------- | --------------------------------------------- |
+| `/slide-create`  | Create a presentation (supports dependency checks) | `/slide-create "My Topic" --theme=seriph`       |
+| `/slide-convert` | Convert an article into a presentation (supports dependency checks) | `/slide-convert article.md --style=technical` |
 
-## 💡 参数说明
+## 💡 Parameter Descriptions
 
-### 核心参数
+### Core Parameters
 
-- `--style`: 演示风格
-  - `academic` - 学术研究风格
-  - `business` - 商业汇报风格
-  - `technical` - 技术分享风格
-  - `creative` - 创意展示风格
-  - `professional` - 专业演示风格（默认）
+- `--style`: The style of the presentation
+  - `academic` - Academic research style
+  - `business` - Business report style
+  - `technical` - Technical presentation style
+  - `creative` - Creative showcase style
+  - `professional` - Professional presentation style (default)
 
-- `--duration`: 演示时长（分钟），影响幻灯片数量规划
-- `--audience`: 目标受众，影响内容深度
-  - `researchers` - 研究人员
-  - `developers` - 开发者  
-  - `investors` - 投资者
-  - `students` - 学生
-  - `mixed` - 混合受众（默认）
+- `--duration`: The duration of the presentation (in minutes), which influences the planning of the number of slides.
+- `--audience`: The target audience, which influences the depth of the content.
+  - `researchers` - Researchers
+  - `developers` - Developers
+  - `investors` - Investors
+  - `students` - Students
+  - `mixed` - A mixed audience (default)
 
-- `--theme`: Slidev主题
-  - `seriph` - 优雅风格（默认）
-  - `default` - 标准风格
-  - `apple-basic` - 苹果风格
-  - `carbon` - 碳纤维风格
+- `--theme`: The Slidev theme
+  - `seriph` - An elegant style (default)
+  - `default` - The standard style
+  - `apple-basic` - An Apple-like style
+  - `carbon` - A carbon fiber style
 
-### 预览参数
+### Preview Parameters
 
-- `--port`: 指定预览端口（默认3030）
-- `--no-open`: 不自动打开浏览器
-- `--list` / `-l`: 列出可用文件
-- `--recent` / `-r`: 显示最近记录
-- `--help` / `-h`: 显示帮助
+- `--port`: Specify the preview port (default is 3030).
+- `--no-open`: Do not automatically open the browser.
+- `--list` / `-l`: List available files.
+- `--recent` / `-r`: Show recent records.
+- `--help` / `-h`: Show help.
 
-## ✨ 使用示例
+## ✨ Usage Examples
 
-### 🏫 学术演示
+### 🏫 Academic Presentation
 
 ```bash
-# 学术研究演示 - 主命令方式
-/slide "机器学习在医疗诊断中的应用研究"
+# An academic research presentation - using the main command
+/slide "A study on the application of machine learning in medical diagnosis"
 
-# 或使用智能生成命令获取详细指导
-/slide-intelligent "机器学习在医疗诊断中的应用研究" \
+# Or use the intelligent generation command for detailed guidance
+/slide-intelligent "A study on the application of machine learning in medical diagnosis" \
   --style=academic \
   --duration=40 \
   --audience=researchers \
   --theme=seriph
 ```
 
-**特点**: 严谨的学术格式、数据驱动的内容结构、专业的图表和公式支持
+**Characteristics**: A rigorous academic format, a data-driven content structure, and support for professional charts and formulas.
 
-### 💼 商业汇报
+### 💼 Business Report
 
 ```bash
-# 商业汇报演示 - 主命令方式
-/slide "Q4业务增长报告"
+# A business report presentation - using the main command
+/slide "Q4 Business Growth Report"
 
-# 或使用智能生成命令获取详细指导
-/slide-intelligent "Q4业务增长报告" \
+# Or use the intelligent generation command for detailed guidance
+/slide-intelligent "Q4 Business Growth Report" \
   --style=business \
   --duration=25 \
   --audience=executives \
   --theme=apple-basic
 ```
 
-**特点**: 商业智能的视觉设计、KPI数据突出显示、决策导向的内容组织
+**Characteristics**: A visual design for business intelligence, highlighting of KPI data, and a decision-oriented content organization.
 
-### 👨‍💻 技术分享
+### 👨‍💻 Technical Presentation
 
 ```bash
-# 技术分享演示 - 主命令方式
-/slide "React 18 并发特性深度解析"
+# A technical presentation - using the main command
+/slide "An in-depth analysis of the concurrency features in React 18"
 
-# 或使用智能生成命令获取详细指导
-/slide-intelligent "React 18 并发特性深度解析" \
+# Or use the intelligent generation command for detailed guidance
+/slide-intelligent "An in-depth analysis of the concurrency features in React 18" \
   --style=technical \
   --duration=50 \
   --audience=developers
 ```
 
-**特点**: 代码示例丰富、实战导向的内容、技术细节深度讲解
+**Characteristics**: Rich with code examples, practical-oriented content, and in-depth explanations of technical details.
 
-### 🎨 创意展示
+### 🎨 Creative Showcase
 
 ```bash
-# 创意展示 - 主命令方式
-/slide "设计系统构建方法论"
+# A creative showcase - using the main command
+/slide "A methodology for building a design system"
 
-# 或使用智能生成命令获取详细指导
-/slide-intelligent "设计系统构建方法论" \
+# Or use the intelligent generation command for detailed guidance
+/slide-intelligent "A methodology for building a design system" \
   --style=creative \
   --duration=60 \
   --theme=carbon
 ```
 
-**特点**: 视觉创新的设计、交互性强的展示、创意思维的引导
+**Characteristics**: A visually innovative design, a highly interactive presentation, and guidance for creative thinking.
 
-## 🎯 操作指导详解
+## 🎯 Detailed Operational Guidance
 
-### 智能生成后的操作步骤
+### Steps After Intelligent Generation
 
-使用 `/slide-intelligent` 后，系统会显示：
+After using `/slide-intelligent`, the system will display:
 
 ```
-🎉 演示文稿生成完成！
+🎉 Presentation generated successfully!
 
-## 📋 下一步操作指南
+## 📋 Next Steps
 
-### 步骤1: 保存文件 📁
-请将上述Markdown内容保存为文件：
-**推荐文件名**: `你的主题-slides.md`
+### Step 1: Save the File 📁
+Please save the Markdown content above as a file:
+**Recommended file name**: `your-topic-slides.md`
 
-### 步骤2: 立即预览 🚀
-保存文件后，复制并执行以下命令：
+### Step 2: Preview Immediately 🚀
+After saving the file, copy and execute the following command:
 
 ```bash
-/slide-preview 你的主题-slides.md
+/slide-preview your-topic-slides.md
 ```
 
-### 备选方案
-如果遇到问题，也可以使用：
-- /slide-preview（自动查找文件）
-- npx @slidev/cli 你的主题-slides.md --open
+### Alternative
+If you encounter any issues, you can also use:
+- `/slide-preview` (to automatically find the file)
+- `npx @slidev/cli your-topic-slides.md --open`
 ```
 
-### 预览成功标志
+### Indication of a Successful Preview
 
-看到以下信息说明启动成功：
+Seeing the following information means it has started successfully:
 
 ```
-●■▲ Slidev v52.x.x 
+●■▲ Slidev v52.x.x
 public slide show > http://localhost:3030/
 presenter mode    > http://localhost:3030/presenter/
 slides overview   > http://localhost:3030/overview/
 ```
 
-## ❓ 常见问题
+## ❓ Common Questions
 
-### Q: 如何选择合适的演示风格？
+### Q: How do I choose the right presentation style?
 
-**A**: 根据场合和受众选择：
-- **学术会议**: `--style=academic`
-- **公司汇报**: `--style=business`  
-- **技术分享**: `--style=technical`
-- **创意展示**: `--style=creative`
-- **通用演示**: `--style=professional`（默认）
+**A**: Choose based on the occasion and the audience:
+- **Academic Conference**: `--style=academic`
+- **Company Report**: `--style=business`
+- **Technical Presentation**: `--style=technical`
+- **Creative Showcase**: `--style=creative`
+- **General Presentation**: `--style=professional` (default)
 
-### Q: 预览启动失败怎么办？
+### Q: What should I do if the preview fails to start?
 
-**A**: 系统会自动检查依赖并提供解决方案：
+**A**: The system will automatically check for dependencies and provide a solution:
 
-1. 检查Slidev CLI是否安装：`npm install -g @slidev/cli`
-2. 使用备用命令：`npx @slidev/cli your-file.md --open`
-3. 查看错误提示获取具体解决方案
+1. Check if the Slidev CLI is installed: `npm install -g @slidev/cli`
+2. Use the alternative command: `npx @slidev/cli your-file.md --open`
+3. Check the error message for a specific solution.
 
-### Q: 如何修改生成的PPT？
+### Q: How can I modify the generated PPT?
 
-**A**: 有几种方式：
-- 直接编辑生成的`.md`文件（Slidev会实时更新预览）
-- 使用 `/slide-intelligent` 重新生成优化内容
-- 参考 [Slidev官方文档](https://sli.dev) 了解高级特性
+**A**: There are several ways:
+- Directly edit the generated `.md` file (Slidev will update the preview in real-time).
+- Use the `/slide-intelligent` command to regenerate the optimized content.
+- Refer to the [official Slidev documentation](https://sli.dev) to learn about advanced features.
 
-### Q: 文件保存在哪里？
+### Q: Where is the file saved?
 
-**A**: 
-- 使用 `/slide "主题"`：系统会生成内容并提供保存指导
-- 使用 `/slide-intelligent`：需要手动保存到当前目录
-- 查看最近文件：`/slide-preview --recent`
+**A**:
+- Using `/slide "topic"`: The system will generate the content and provide guidance for saving.
+- Using `/slide-intelligent`: You need to manually save it to the current directory.
+- To see recent files: `/slide-preview --recent`
 
-### Q: 如何查看所有可用的演示文稿？
+### Q: How can I see all available presentations?
 
-**A**: 使用 `/slide-preview --list` 或 `/slide-preview -l`
+**A**: Use `/slide-preview --list` or `/slide-preview -l`.
 
-## 🔧 进阶功能
+## 🔧 Advanced Features
 
-### 批量操作
+### Bulk Operations
 
 ```bash
-# 查看当前目录所有Markdown文件
+# View all Markdown files in the current directory
 /slide-preview --list
 
-# 预览最近使用的演示文稿
+# Preview the most recently used presentation
 /slide-preview --recent
 
-# 使用特定端口预览（避免冲突）
+# Preview on a specific port (to avoid conflicts)
 /slide-preview slides.md --port=3031
 ```
 
-### 文件管理
+### File Management
 
 ```bash
-# 自动查找并预览（优先级：slides.md > presentation.md > deck.md）
+# Automatically find and preview (Priority: slides.md > presentation.md > deck.md)
 /slide-preview
 
-# 不自动打开浏览器
+# Do not automatically open the browser
 /slide-preview slides.md --no-open
 ```
 
-### 快捷键
+### Keyboard Shortcuts
 
-预览时可用的快捷键：
+Available shortcuts during preview:
 
-- **方向键/空格**: 翻页
-- **f**: 全屏模式  
-- **o**: 演示大纲
-- **e**: 编辑模式
-- **g**: 跳转到指定页面
-- **Ctrl+C**: 停止服务
+- **Arrow keys/Spacebar**: Navigate through slides
+- **f**: Fullscreen mode
+- **o**: Presentation outline
+- **e**: Edit mode
+- **g**: Go to a specific page
+- **Ctrl+C**: Stop the service
 
-## 🏆 最佳实践
+## 🏆 Best Practices
 
-### 1. 主题描述技巧
+### 1. Tips for Describing the Topic
 
-- **具体明确**: "Vue 3 Composition API" 比 "Vue.js" 更好
-- **包含关键词**: 提及重要概念和技术栈
-- **说明背景**: "面向初学者的..." 或 "企业级..."
+- **Be Specific and Clear**: "Vue 3 Composition API" is better than "Vue.js".
+- **Include Keywords**: Mention important concepts and technology stacks.
+- **Provide Context**: "For beginners..." or "Enterprise-level...".
 
-### 2. 参数配置建议
+### 2. Suggestions for Parameter Configuration
 
-- **duration**: 按 1-2分钟/页 规划
-- **style**: 根据场合选择合适风格
-- **audience**: 准确描述听众特征
-- **theme**: seriph适合正式场合，default适合技术分享
+- **`--duration`**: Plan for 1-2 minutes per page.
+- **`--style`**: Choose a style appropriate for the occasion.
+- **`--audience`**: Accurately describe the characteristics of the audience.
+- **`--theme`**: `seriph` is suitable for formal occasions, while `default` is good for technical presentations.
 
-### 3. 内容优化提示
+### 3. Tips for Content Optimization
 
-- **结构化描述**: "包含背景、方法、结果、结论"
-- **明确重点**: "重点讲解算法原理和性能对比"
-- **实用性**: "需要代码示例和实战案例"
+- **Structured Description**: "Include background, methods, results, and conclusion".
+- **Clarify the Focus**: "Focus on the algorithm principles and performance comparison".
+- **Practicality**: "Need code examples and practical case studies".
 
-### 4. 工作流程建议
+### 4. Recommended Workflow
 
-推荐的PPT创作流程：
+A recommended workflow for creating a PPT:
 
-1. **规划阶段**: 确定主题、受众、时长
-2. **生成阶段**: 使用 `/slide "主题"` 或 `/slide-intelligent` 生成内容
-3. **保存阶段**: 按照系统指导保存为 `.md` 文件
-4. **预览阶段**: 使用 `/slide-preview` 查看效果
-5. **优化阶段**: 根据需要编辑文件或重新生成
-6. **演示阶段**: 使用全屏模式和快捷键
+1. **Planning Phase**: Determine the topic, audience, and duration.
+2. **Generation Phase**: Use `/slide "topic"` or `/slide-intelligent` to generate the content.
+3. **Saving Phase**: Save as a `.md` file according to the system's guidance.
+4. **Previewing Phase**: Use `/slide-preview` to see the result.
+5. **Optimization Phase**: Edit the file or regenerate as needed.
+6. **Presentation Phase**: Use fullscreen mode and keyboard shortcuts.
 
-## 📈 版本更新历史
+## 📈 Version Update History
 
-### v2.11.0 (最新) - 系统精简优化
-- ✅ **主命令智能化**: `/slide` 支持直接主题输入，自动识别并生成演示
-- ✅ **系统大幅精简**: 从13个命令精简至5个核心命令，提升用户体验
-- ✅ **依赖检查优化**: `create` 和 `convert` 命令支持自动依赖检查和安装指导
-- ✅ **用户交互增强**: 所有核心命令支持三选项用户交互模式
-- ✅ **文档全面更新**: 重新梳理用户指南，突出简化的使用方式
+### v2.11.0 (Latest) - System Streamlining and Optimization
+- ✅ **Intelligent Main Command**: `/slide` supports direct topic input, automatically recognizing and generating the presentation.
+- ✅ **Major System Streamlining**: Reduced from 13 commands to 5 core commands to improve user experience.
+- ✅ **Optimized Dependency Checks**: The `create` and `convert` commands support automatic dependency checks and installation guidance.
+- ✅ **Enhanced User Interaction**: All core commands support a three-option user interaction mode.
+- ✅ **Comprehensive Documentation Update**: Reorganized the user guide to highlight the simplified usage.
 
 ### v2.10.1
-- ✅ 集成完整 Slidev 知识库
-- ✅ 实现智能生成命令 `/slide-intelligent`
-- ✅ 支持多种演示风格和主题选择
-- ✅ 创建详细文档和使用指南
+- ✅ Integrated the complete Slidev knowledge base.
+- ✅ Implemented the intelligent generation command `/slide-intelligent`.
+- ✅ Supports a variety of presentation styles and theme selections.
+- ✅ Created detailed documentation and user guides.
 
-## 🤝 获取帮助
+## 🤝 Getting Help
 
-- **命令帮助**: 使用 `--help` 参数查看具体命令帮助
-- **错误排查**: 系统会提供详细的错误信息和解决方案
-- **功能建议**: 通过GitHub Issues提出改进建议
-- **技术支持**: 参考项目文档或联系开发团队
+- **Command Help**: Use the `--help` parameter to view help for a specific command.
+- **Error Troubleshooting**: The system will provide detailed error messages and solutions.
+- **Feature Suggestions**: Propose improvements via GitHub Issues.
+- **Technical Support**: Refer to the project documentation or contact the development team.
 
 ---
 
-**WriteFlow Slidev智能PPT系统让每个想法都能成为精彩演示！** 🚀
+**The WriteFlow Slidev Intelligent PPT System turns every idea into a brilliant presentation!** 🚀
