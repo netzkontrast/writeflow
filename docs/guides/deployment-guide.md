@@ -1,8 +1,8 @@
-# WriteFlow 部署和配置指南
+# WriteFlow Deployment and Configuration Guide
 
-## 快速开始
+## Quick Start
 
-### 环境要求
+### Environmental Requirements
 
 ```json
 {
@@ -12,29 +12,29 @@
 }
 ```
 
-### 安装步骤
+### Installation Steps
 
 ```bash
-# 克隆项目
+# Clone the project
 git clone <your-writeflow-repo>
 cd writeflow
 
-# 安装依赖
+# Install dependencies
 npm install
 
-# 构建项目
+# Build the project
 npm run build
 
-# 全局安装CLI
+# Install the CLI globally
 npm install -g .
 
-# 或使用npm link进行开发
+# Or use npm link for development
 npm link
 ```
 
-## 配置管理
+## Configuration Management
 
-### 配置文件结构
+### Configuration File Structure
 
 ```typescript
 // ~/.writeflow/config.json
@@ -68,21 +68,21 @@ npm link
 }
 ```
 
-### 环境变量配置
+### Environment Variable Configuration
 
 ```bash
-# ~/.bashrc 或 ~/.zshrc
+# ~/.bashrc or ~/.zshrc
 export WRITEFLOW_HOME="$HOME/.writeflow"
 export ANTHROPIC_API_KEY="sk-..."
 export OPENAI_API_KEY="sk-..."
 
-# 可选：自定义配置路径
+# Optional: custom configuration path
 export WRITEFLOW_CONFIG_PATH="/custom/path/config.json"
 ```
 
-## 核心组件部署
+## Core Component Deployment
 
-### 1. h2A 消息队列配置
+### 1. h2A Message Queue Configuration
 
 ```typescript
 // config/queue.config.ts
@@ -103,7 +103,7 @@ export const queueConfig = {
 }
 ```
 
-### 2. nO Agent 引擎配置
+### 2. nO Agent Engine Configuration
 
 ```typescript
 // config/agent.config.ts
@@ -123,7 +123,7 @@ export const agentConfig = {
 }
 ```
 
-### 3. MH1 工具引擎配置
+### 3. MH1 Tool Engine Configuration
 
 ```typescript
 // config/tools.config.ts
@@ -140,30 +140,30 @@ export const toolsConfig = {
   },
   caching: {
     enabled: true,
-    ttl: 900000, // 15分钟
+    ttl: 900000, // 15 minutes
     maxSize: 1000
   }
 }
 ```
 
-## 部署架构
+## Deployment Architecture
 
-### 本地开发环境
+### Local Development Environment
 
 ```bash
-# 开发服务器启动
+# Start the development server
 writeflow dev --port 3000 --watch
 
-# 或使用调试模式
+# Or use debug mode
 DEBUG=writeflow:* writeflow dev
 ```
 
-### 生产环境部署
+### Production Environment Deployment
 
-#### 方式1: 单机部署
+#### Method 1: Single-Machine Deployment
 
 ```bash
-# 系统服务配置 (systemd)
+# System service configuration (systemd)
 # /etc/systemd/system/writeflow.service
 [Unit]
 Description=WriteFlow CLI Service
@@ -183,7 +183,7 @@ RestartSec=10
 WantedBy=multi-user.target
 ```
 
-#### 方式2: 容器化部署
+#### Method 2: Containerized Deployment
 
 ```dockerfile
 # Dockerfile
@@ -217,12 +217,12 @@ services:
     restart: unless-stopped
 ```
 
-## 性能优化配置
+## Performance Optimization Configuration
 
-### h2A 队列调优
+### h2A Queue Tuning
 
 ```typescript
-// 高吞吐量配置
+// High-throughput configuration
 const highThroughputConfig = {
   bufferSize: 50000,
   flushInterval: 100,
@@ -230,7 +230,7 @@ const highThroughputConfig = {
   batchSize: 100
 }
 
-// 低延迟配置  
+// Low-latency configuration
 const lowLatencyConfig = {
   bufferSize: 1000,
   flushInterval: 10,
@@ -239,10 +239,10 @@ const lowLatencyConfig = {
 }
 ```
 
-### 内存管理
+### Memory Management
 
 ```typescript
-// 内存优化配置
+// Memory optimization configuration
 const memoryConfig = {
   gcInterval: 60000,
   maxHeapSize: "2gb",
@@ -254,20 +254,20 @@ const memoryConfig = {
 }
 ```
 
-## 安全配置
+## Security Configuration
 
-### API密钥管理
+### API Key Management
 
 ```bash
-# 使用密钥管理工具
+# Use a key management tool
 writeflow config set-key anthropic --secure
 writeflow config set-key openai --secure
 
-# 验证配置
+# Validate the configuration
 writeflow config validate
 ```
 
-### 权限控制
+### Permission Control
 
 ```typescript
 // security.config.ts
@@ -297,9 +297,9 @@ export const securityConfig = {
 }
 ```
 
-## 监控和日志
+## Monitoring and Logging
 
-### 日志配置
+### Logging Configuration
 
 ```typescript
 // logging.config.ts
@@ -321,10 +321,10 @@ export const loggingConfig = {
 }
 ```
 
-### 性能监控
+### Performance Monitoring
 
 ```typescript
-// 内置性能监控
+// Built-in performance monitoring
 const metrics = {
   h2aQueueThroughput: "10,247 msg/sec",
   nOProcessingTime: "156ms avg",
@@ -334,148 +334,148 @@ const metrics = {
 }
 ```
 
-## 故障排除
+## Troubleshooting
 
-### 常见问题
+### Common Problems
 
-#### 1. h2A 队列阻塞
+#### 1. h2A Queue Blockage
 
 ```bash
-# 诊断队列状态
+# Diagnose queue status
 writeflow debug queue --stats
 
-# 清理队列缓存
+# Clear the queue cache
 writeflow debug queue --flush
 
-# 重启队列服务
+# Restart the queue service
 writeflow restart queue
 ```
 
-#### 2. nO Agent 超时
+#### 2. nO Agent Timeout
 
 ```bash
-# 检查Agent状态
+# Check Agent health
 writeflow debug agent --health
 
-# 调整超时配置
+# Adjust the timeout configuration
 writeflow config set agent.timeout 60000
 
-# 重启Agent引擎
+# Restart the Agent engine
 writeflow restart agent
 ```
 
-#### 3. 工具执行失败
+#### 3. Tool Execution Failure
 
 ```bash
-# 检查工具状态
+# Check tool status
 writeflow debug tools --validate
 
-# 重新加载工具
+# Reload tools
 writeflow tools reload
 
-# 查看工具日志
+# View tool logs
 writeflow logs tools --tail
 ```
 
-### 调试模式
+### Debug Mode
 
 ```bash
-# 启用详细调试
-DEBUG=writeflow:* writeflow /outline "AI编程助手发展趋势"
+# Enable detailed debugging
+DEBUG=writeflow:* writeflow /outline "Development trends of AI programming assistants"
 
-# 特定组件调试
+# Debug specific components
 DEBUG=writeflow:h2a,writeflow:nO writeflow daemon
 
-# 性能分析
+# Performance analysis
 writeflow profile --duration 60 --output profile.json
 ```
 
-## 集成测试
+## Integration Testing
 
-### 基础功能测试
+### Basic Functional Testing
 
 ```bash
-# 测试CLI基础功能
+# Test basic CLI functionality
 npm test
 
-# 测试h2A队列
+# Test the h2A queue
 npm run test:queue
 
-# 测试nO引擎
+# Test the nO engine
 npm run test:agent
 
-# 测试工具引擎
+# Test the tool engine
 npm run test:tools
 
-# 端到端测试
+# End-to-end testing
 npm run test:e2e
 ```
 
-### 性能基准测试
+### Performance Benchmarking
 
 ```bash
-# h2A吞吐量测试
+# h2A throughput test
 writeflow benchmark queue --messages 100000
 
-# nO处理性能测试
+# nO processing performance test
 writeflow benchmark agent --tasks 1000
 
-# 整体系统压力测试
+# Overall system stress test
 writeflow benchmark system --duration 300
 ```
 
-## 升级和维护
+## Upgrades and Maintenance
 
-### 版本升级
+### Version Upgrades
 
 ```bash
-# 检查可用更新
+# Check for available updates
 writeflow version --check
 
-# 升级到最新版本
+# Upgrade to the latest version
 npm update -g writeflow
 
-# 备份配置
+# Backup the configuration
 writeflow config backup
 
-# 恢复配置
+# Restore the configuration
 writeflow config restore backup-20240829.json
 ```
 
-### 数据维护
+### Data Maintenance
 
 ```bash
-# 清理缓存
+# Clear the cache
 writeflow cache clear
 
-# 压缩日志
+# Compress logs
 writeflow logs compress --older-than 30d
 
-# 备份文章数据
+# Backup article data
 writeflow backup articles --output ~/backup/articles-$(date +%Y%m%d).tar.gz
 ```
 
-## 高级配置
+## Advanced Configuration
 
-### 自定义工具开发
+### Custom Tool Development
 
 ```typescript
 // tools/custom/MyCustomTool.ts
 export class MyCustomTool implements Tool {
   name = "my-custom-tool"
-  description = "自定义工具说明"
+  description = "A description of the custom tool"
   
   async execute(params: any): Promise<any> {
-    // 实现自定义逻辑
+    // Implement custom logic
     return result
   }
 }
 
-// 注册自定义工具
+// Register the custom tool
 writeflow tools register ./tools/custom/MyCustomTool.js
 ```
 
-### 插件系统
+### Plugin System
 
 ```typescript
 // plugins/example-plugin/index.ts
@@ -484,52 +484,52 @@ export class ExamplePlugin implements Plugin {
   version = "1.0.0"
   
   install() {
-    // 插件安装逻辑
+    // Plugin installation logic
   }
   
   uninstall() {
-    // 插件卸载逻辑
+    // Plugin uninstallation logic
   }
 }
 ```
 
-### API服务模式
+### API Service Mode
 
 ```typescript
-// 启用HTTP API服务
+// Enable the HTTP API service
 writeflow serve --port 8080 --api-version v1
 
-// API端点示例
+// Example API endpoints
 POST /api/v1/outline
-POST /api/v1/rewrite  
+POST /api/v1/rewrite
 POST /api/v1/research
 POST /api/v1/publish
 ```
 
-## 技术支持
+## Technical Support
 
-### 社区资源
+### Community Resources
 
-- GitHub仓库: https://github.com/your-org/writeflow
-- 文档站点: https://writeflow.docs
-- 问题报告: https://github.com/your-org/writeflow/issues
+- GitHub Repository: https://github.com/your-org/writeflow
+- Documentation Site: https://writeflow.docs
+- Issue Reporting: https://github.com/your-org/writeflow/issues
 
-### 最佳实践
+### Best Practices
 
-1. **定期备份配置和数据**
-2. **监控h2A队列性能指标**
-3. **保持Node.js和依赖库更新**
-4. **使用版本控制管理文章内容**
-5. **设置适当的资源限制**
+1. **Regularly back up your configuration and data.**
+2. **Monitor the h2A queue performance metrics.**
+3. **Keep Node.js and dependencies updated.**
+4. **Use version control to manage your article content.**
+5. **Set appropriate resource limits.**
 
-### 性能基准
+### Performance Benchmarks
 
-- **h2A队列吞吐量**: >10,000 msg/sec
-- **nO处理延迟**: <200ms p95
-- **工具执行时间**: <500ms avg
-- **内存使用**: <512MB 峰值
-- **启动时间**: <3秒
+- **h2A Queue Throughput**: >10,000 msg/sec
+- **nO Processing Latency**: <200ms p95
+- **Tool Execution Time**: <500ms avg
+- **Memory Usage**: <512MB peak
+- **Startup Time**: <3 seconds
 
 ---
 
-**注意**: 本部署指南基于Claude Code的实际技术架构设计，使用Node.js 22.x + TypeScript实现，确保与现代AI Agent开发生态系统完全兼容。
+**Note**: This deployment guide is designed based on the actual technical architecture of Claude Code, implemented with Node.js 22.x + TypeScript, ensuring full compatibility with the modern AI Agent development ecosystem.

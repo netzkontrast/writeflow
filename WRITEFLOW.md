@@ -1,52 +1,52 @@
 # WriteFlow AI Assistant Guide
 
-WriteFlow 是专为技术型作家设计的 AI 写作助手，提供专业级的写作工具和任务管理系统。
+WriteFlow is an AI writing assistant designed for technical writers, providing professional-grade writing tools and a task management system.
 
-## TodoList 系统使用规范
+## TodoList System Usage Guidelines
 
-### 核心理念
-WriteFlow 的 TodoList 系统是一个智能任务管理工具，帮助 AI 助手组织和追踪复杂的写作任务。该系统基于 Claude Code v1.0.33 的核心设计理念，专门为写作场景优化。
+### Core Philosophy
+WriteFlow's TodoList system is an intelligent task management tool that helps AI assistants organize and track complex writing tasks. The system is based on the core design principles of Claude Code v1.0.33, specifically optimized for writing scenarios.
 
-### 自动触发场景
-AI 助手应在以下情况下主动创建和使用 TodoList：
+### Automatic Trigger Scenarios
+The AI assistant should proactively create and use a TodoList in the following situations:
 
-#### 1. 复杂多步骤写作任务
-- 任务包含 3 个或更多写作步骤时，自动创建 TodoList
-- 例如：技术博客（研究 → 大纲 → 撰写 → 校对 → 优化）
-- 例如：营销文案（需求分析 → 创意构思 → 文案撰写 → 效果优化）
+#### 1. Complex Multi-Step Writing Tasks
+- Automatically create a TodoList when a task involves 3 or more writing steps.
+- Example: Technical blog (Research → Outline → Draft → Proofread → Optimize)
+- Example: Marketing copy (Requirement analysis → Brainstorming → Copywriting → Performance optimization)
 
-#### 2. 多篇内容创作
-- 用户提供多个写作任务（如"写三篇文章"）
-- 批量内容创作（如产品介绍系列、教程系列）
-- 不同风格的同类内容（正式版、简化版、社交媒体版）
+#### 2. Multiple Content Creation
+- When the user provides multiple writing tasks (e.g., "write three articles").
+- Bulk content creation (e.g., product introduction series, tutorial series).
+- Similar content in different styles (formal version, simplified version, social media version).
 
-#### 3. 结构化写作项目
-- 需要规划复杂写作流程的项目
-- 学术论文、技术文档、商业计划书等
-- 需要多轮修订和优化的内容
+#### 3. Structured Writing Projects
+- Projects that require planning a complex writing process.
+- Academic papers, technical documentation, business plans, etc.
+- Content that requires multiple rounds of revision and optimization.
 
-#### 4. 用户明确要求
-- 用户直接要求使用任务列表进行管理
-- 用户需要查看写作进度和状态
+#### 4. Explicit User Request
+- When the user directly asks to use a task list for management.
+- When the user needs to see the writing progress and status.
 
-### 工具使用详解
+### Tool Usage Details
 
-#### todo_write - 任务列表管理工具
-**功能**：更新和管理当前的写作任务列表
-**使用时机**：
-- 接到新的写作任务时立即创建
-- 开始执行任务前标记为 in_progress
-- 完成任务后立即标记为 completed
-- 发现新的子任务时添加到列表
+#### todo_write - Task List Management Tool
+**Function**: Updates and manages the current list of writing tasks.
+**When to use**:
+- Immediately upon receiving a new writing task.
+- Mark as `in_progress` before starting to execute a task.
+- Mark as `completed` immediately after finishing a task.
+- Add new sub-tasks to the list when they are identified.
 
-**输入格式**：
+**Input Format**:
 ```json
 {
   "todos": [
     {
       "id": "todo-1234-5678",
-      "content": "研究人工智能最新发展趋势",
-      "activeForm": "正在研究人工智能发展趋势",
+      "content": "Research the latest trends in artificial intelligence",
+      "activeForm": "Researching the latest trends in artificial intelligence",
       "status": "pending",
       "priority": "high"
     }
@@ -54,219 +54,219 @@ AI 助手应在以下情况下主动创建和使用 TodoList：
 }
 ```
 
-#### todo_read - 任务状态查询工具
-**功能**：读取当前写作任务的状态和进度
-**使用时机**：
-- 需要了解当前写作进度时
-- 为用户提供状态更新时
-- 决定下一步写作方向时
+#### todo_read - Task Status Query Tool
+**Function**: Reads the status and progress of the current writing tasks.
+**When to use**:
+- When you need to know the current writing progress.
+- When providing a status update to the user.
+- When deciding on the next writing direction.
 
-**输入格式**：空对象 `{}`（无需参数）
+**Input Format**: Empty object `{}` (no parameters required).
 
-### 状态管理规则
+### State Management Rules
 
-#### 1. 任务状态定义
-- **pending**：任务尚未开始，等待执行
-- **in_progress**：任务正在进行中（同时只能有一个）
-- **completed**：任务已完成
+#### 1. Task Status Definitions
+- **pending**: The task has not yet started and is awaiting execution.
+- **in_progress**: The task is currently being worked on (only one at a time).
+- **completed**: The task has been finished.
 
-#### 2. 双重描述系统
-每个任务必须包含两种描述：
-- **content**：命令式描述，说明需要做什么
-  - 示例："撰写产品介绍文案"
-- **activeForm**：进行时描述，显示当前在做什么
-  - 示例："正在撰写产品介绍文案"
+#### 2. Dual Description System
+Each task must include two types of descriptions:
+- **content**: An imperative description stating what needs to be done.
+  - Example: "Write product introduction copy"
+- **activeForm**: a progressive tense description showing what is currently being done.
+  - Example: "Writing product introduction copy"
 
-#### 3. 单一活跃原则
-- **关键规则**：同时只能有一个任务处于 in_progress 状态
-- 开始新任务前必须先完成或暂停当前任务
-- 这确保了写作焦点的集中和任务执行的有序性
+#### 3. Single Active Principle
+- **Key Rule**: Only one task can be in the `in_progress` state at any given time.
+- Before starting a new task, the current one must be completed or paused.
+- This ensures a focused writing process and orderly task execution.
 
-#### 4. 即时更新原则
-- 完成任务后立即标记为 completed
-- 不要批量更新状态
-- 遇到阻塞时保持 in_progress，创建新的解决方案任务
+#### 4. Immediate Update Principle
+- Mark a task as `completed` immediately after finishing it.
+- Do not update statuses in bulk.
+- If a task is blocked, keep it as `in_progress` and create a new task to resolve the issue.
 
-### 写作场景示例
+### Writing Scenario Examples
 
-#### 场景 1：技术博客创作
-用户："帮我写一篇关于 AI 发展的技术博客，包括背景介绍、技术分析、应用案例和未来展望"
+#### Scenario 1: Technical Blog Creation
+User: "Help me write a technical blog post about the development of AI, including background, technical analysis, application cases, and future outlook."
 
-AI 应该创建以下任务列表：
+The AI should create the following task list:
 ```
-1. [pending] 研究 AI 发展背景和最新趋势
-2. [pending] 撰写技术分析章节
-3. [pending] 收集和编写应用案例
-4. [pending] 分析并撰写未来展望
-5. [pending] 全文校对和优化
-```
-
-#### 场景 2：多风格文案创作
-用户："为我们的新产品写三个版本的介绍：专业版、通俗版、社交媒体版"
-
-AI 应该创建以下任务列表：
-```
-1. [pending] 分析产品特性和目标受众
-2. [pending] 撰写专业版产品介绍
-3. [pending] 撰写通俗版产品介绍
-4. [pending] 创作社交媒体版简介
-5. [pending] 三个版本的统一性检查和优化
+1. [pending] Research the background and latest trends of AI development.
+2. [pending] Write the technical analysis section.
+3. [pending] Collect and write application cases.
+4. [pending] Analyze and write the future outlook.
+5. [pending] Proofread and optimize the entire article.
 ```
 
-#### 场景 3：文档结构优化
-用户："帮我重新组织这份报告的结构，让逻辑更清晰，增加过渡段落"
+#### Scenario 2: Multi-Style Copywriting
+User: "Write three versions of the introduction for our new product: a professional version, a casual version, and a social media version."
 
-AI 应该创建以下任务列表：
+The AI should create the following task list:
 ```
-1. [pending] 分析现有文档结构和逻辑问题
-2. [pending] 设计新的文档结构框架
-3. [pending] 重新安排章节和段落顺序
-4. [pending] 添加过渡段落和连接句
-5. [pending] 整体审校和流畅性检查
-```
-
-### 不使用 TodoList 的场景
-
-#### 简单修改任务
-- 单句话润色："把这句话改得更简洁"
-- 简单替换："把文中的'公司'都改成'企业'"
-- 格式调整：改变字体、调整间距等
-
-#### 咨询类请求
-- 询问写作技巧："如何让文章更有说服力？"
-- 评估内容："这个标题怎么样？"
-- 获取建议："应该用什么语调写这篇文章？"
-
-#### 即时性任务
-- 查找信息："现在是几点？"
-- 简单计算："这篇文章有多少字？"
-- 直接回答："什么是SEO？"
-
-### 最佳实践
-
-#### 任务命名规范
-使用清晰的动词开头：
-- 好的示例：✅ "撰写产品核心功能介绍"
-- 差的示例：❌ "产品功能部分"
-
-#### 任务粒度控制
-- **适中粒度**：一个任务应该能在合理时间内完成
-- **避免过细**：不要将"写第一段"、"写第二段"分开
-- **避免过粗**：不要用"完成整篇文章"这样的大任务
-
-#### 优先级设置原则
-- **High**：核心内容创作、关键章节、紧急截止日期
-- **Medium**：结构调整、格式优化、补充内容
-- **Low**：细节润色、风格统一、最终校对
-
-### 系统集成特性
-
-#### 智能提醒系统
-WriteFlow 会自动注入系统提醒，帮助 AI 保持任务感知：
-- 任务列表变化时自动提醒
-- 空任务列表时适当建议
-- 长时间会话时提醒检查进度
-
-#### 状态持久化
-- 任务状态在会话间保持
-- 支持多个写作项目并行管理
-- 提供完整的写作历史记录
-
-#### 进度可视化
-- 实时显示写作进度百分比
-- 按状态分组显示任务
-- 提供写作效率统计
-
-## 写作工具生态
-
-WriteFlow 的 TodoList 系统与其他写作工具深度集成：
-
-### 研究工具
-- Web 搜索和资料收集
-- 引用管理和文献整理
-- 数据分析和图表生成
-
-### 创作工具
-- 大纲生成器
-- 内容重写器
-- 风格适配器
-- 语法检查器
-
-### 发布工具
-- 格式转换器
-- 社交媒体优化
-- SEO 优化建议
-
-## 高级用法
-
-### 模板化任务流程
-为常见的写作类型预定义任务模板：
-
-#### 技术文档模板
-```
-1. 需求分析和目标确定
-2. 技术调研和资料收集
-3. 文档结构设计
-4. 核心内容撰写
-5. 示例和图表制作
-6. 全文校对和格式调整
+1. [pending] Analyze product features and target audience.
+2. [pending] Write the professional version of the product introduction.
+3. [pending] Write the casual version of the product introduction.
+4. [pending] Create the social media version of the introduction.
+5. [pending] Check and optimize the consistency of the three versions.
 ```
 
-#### 营销文案模板
-```
-1. 目标受众分析
-2. 核心卖点提炼
-3. 创意概念开发
-4. 文案正文撰写
-5. 号召性用语优化
-6. A/B 测试版本准备
-```
+#### Scenario 3: Document Structure Optimization
+User: "Help me reorganize the structure of this report to make it more logical and add transition paragraphs."
 
-#### 小说创作模板
+The AI should create the following task list:
 ```
-1. 构思小说基本框架和时代背景
-2. 设计主要人物角色和关系
-3. 撰写小说开篇章节
-4. 完善故事情节和冲突
-5. 全文校对和风格统一
+1. [pending] Analyze the existing document structure and logical issues.
+2. [pending] Design a new document structure framework.
+3. [pending] Rearrange the order of chapters and paragraphs.
+4. [pending] Add transition paragraphs and connecting sentences.
+5. [pending] Review the overall document for coherence and flow.
 ```
 
-**重要**：小说创作必须严格按照上述顺序执行，确保：
-- 先有框架再有人物
-- 先有人物再写情节
-- 先有基础再完善细节
+### Scenarios Where TodoList Should Not Be Used
 
-### 批量任务管理
-支持同时管理多个写作项目：
-- 不同项目使用不同的任务 ID 前缀
-- 支持项目间的任务依赖关系
-- 提供跨项目的进度概览
+#### Simple Modification Tasks
+- Polishing a single sentence: "Make this sentence more concise."
+- Simple replacement: "Change all instances of 'company' to 'organization' in the text."
+- Formatting adjustments: Changing fonts, adjusting spacing, etc.
 
-### 协作写作支持
-- 支持多人协作的任务分配
-- 提供任务评论和反馈机制
-- 集成版本控制和变更追踪
+#### Consultation-Type Requests
+- Asking for writing tips: "How can I make my writing more persuasive?"
+- Evaluating content: "What do you think of this headline?"
+- Getting suggestions: "What tone should I use for this article?"
 
-## 错误处理和恢复
+#### Immediate Tasks
+- Finding information: "What time is it?"
+- Simple calculation: "How many words are in this article?"
+- Direct answer: "What is SEO?"
 
-### 常见问题解决
-- **任务卡住**：创建子任务分解问题
-- **需求变更**：及时更新任务列表
-- **质量不达标**：增加校对和优化任务
+### Best Practices
 
-### 最佳恢复策略
-1. 保持任务状态的真实性
-2. 遇到问题时不要强行标记完成
-3. 及时记录解决方案和经验教训
+#### Task Naming Convention
+Start with a clear verb:
+- Good Example: ✅ "Write the core product features introduction"
+- Bad Example: ❌ "Product features section"
 
-## 总结
+#### Task Granularity Control
+- **Moderate Granularity**: A task should be completable within a reasonable amount of time.
+- **Avoid Being Too Fine-Grained**: Don't separate tasks like "write the first paragraph" and "write the second paragraph."
+- **Avoid Being Too Coarse**: Don't use large tasks like "complete the entire article."
 
-WriteFlow 的 TodoList 系统是专业写作工作流的核心。通过智能任务管理、状态追踪和系统集成，它帮助用户和 AI 助手协作完成高质量的写作项目。
+#### Priority Setting Principles
+- **High**: Core content creation, key chapters, urgent deadlines.
+- **Medium**: Structural adjustments, format optimization, supplementary content.
+- **Low**: Detail polishing, style unification, final proofreading.
 
-**关键成功因素**：
-- 及时创建和更新任务列表
-- 严格遵循单一活跃原则
-- 保持任务描述的清晰性
-- 适时利用系统提醒和进度反馈
+### System Integration Features
 
-遵循本指南的规范和最佳实践，WriteFlow 将成为您最得力的AI写作助手！
+#### Smart Reminder System
+WriteFlow automatically injects system reminders to help the AI maintain task awareness:
+- Automatic reminders when the task list changes.
+- Appropriate suggestions when the task list is empty.
+- Reminders to check progress during long sessions.
+
+#### State Persistence
+- Task states are preserved between sessions.
+- Supports parallel management of multiple writing projects.
+- Provides a complete history of writing activities.
+
+#### Progress Visualization
+- Real-time display of writing progress percentage.
+- Tasks grouped by status.
+- Provides statistics on writing efficiency.
+
+## Writing Tool Ecosystem
+
+WriteFlow's TodoList system is deeply integrated with other writing tools:
+
+### Research Tools
+- Web search and information gathering.
+- Citation management and literature organization.
+- Data analysis and chart generation.
+
+### Creation Tools
+- Outline generator.
+- Content rewriter.
+- Style adapter.
+- Grammar checker.
+
+### Publishing Tools
+- Format converter.
+- Social media optimizer.
+- SEO optimization suggestions.
+
+## Advanced Usage
+
+### Templated Task Workflows
+Pre-define task templates for common writing types:
+
+#### Technical Documentation Template
+```
+1. Requirement analysis and goal setting.
+2. Technical research and information gathering.
+3. Document structure design.
+4. Core content writing.
+5. Example and diagram creation.
+6. Full-text proofreading and formatting.
+```
+
+#### Marketing Copy Template
+```
+1. Target audience analysis.
+2. Core selling point refinement.
+3. Creative concept development.
+4. Main copy writing.
+5. Call-to-action optimization.
+6. A/B test version preparation.
+```
+
+#### Novel Writing Template
+```
+1. Conceive the basic framework and setting of the novel.
+2. Design the main characters and their relationships.
+3. Write the opening chapters of the novel.
+4. Develop the plot and conflicts.
+5. Proofread and unify the style of the entire text.
+```
+
+**Important**: Novel writing must strictly follow the order above to ensure:
+- The framework exists before the characters.
+- The characters exist before the plot is written.
+- The foundation is laid before the details are perfected.
+
+### Bulk Task Management
+Supports managing multiple writing projects simultaneously:
+- Use different task ID prefixes for different projects.
+- Supports task dependencies between projects.
+- Provides a cross-project progress overview.
+
+### Collaborative Writing Support
+- Supports task assignment for multi-person collaboration.
+- Provides mechanisms for task comments and feedback.
+- Integrates version control and change tracking.
+
+## Error Handling and Recovery
+
+### Common Problem Solving
+- **Task Stuck**: Create sub-tasks to break down the problem.
+- **Requirement Changes**: Update the task list in a timely manner.
+- **Quality Not Met**: Add proofreading and optimization tasks.
+
+### Best Recovery Strategies
+1. Maintain the authenticity of task statuses.
+2. Do not forcibly mark a task as complete when encountering problems.
+3. Promptly record solutions and lessons learned.
+
+## Conclusion
+
+WriteFlow's TodoList system is the core of a professional writing workflow. Through intelligent task management, status tracking, and system integration, it helps users and AI assistants collaborate to complete high-quality writing projects.
+
+**Key Success Factors**:
+- Timely creation and updating of the task list.
+- Strict adherence to the single active principle.
+- Maintaining clarity in task descriptions.
+- Timely utilization of system reminders and progress feedback.
+
+By following the guidelines and best practices in this guide, WriteFlow will become your most capable AI writing assistant!

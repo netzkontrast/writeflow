@@ -1,129 +1,129 @@
-# 🖋️ WriteFlow 系统架构设计
+# 🖋️ WriteFlow System Architecture Design
 
-基于 Claude Code 架构的 AI 写作助手系统（Node.js/TypeScript 实现）
+An AI writing assistant system based on the Claude Code architecture (implemented in Node.js/TypeScript).
 
-## 🎯 系统概述
+## 🎯 System Overview
 
-WriteFlow 是专为技术型作家设计的 CLI 写作助手，完全基于 Claude Code 的核心架构模式：
-- **h2A 双缓冲异步消息队列**
-- **nO Agent 主循环引擎** 
-- **斜杠命令交互系统**
-- **MH1 工具执行框架**
+WriteFlow is a CLI writing assistant designed for technical writers, based entirely on the core architectural patterns of Claude Code:
+- **h2A Double-Buffered Asynchronous Message Queue**
+- **nO Agent Main Loop Engine**
+- **Slash Command Interaction System**
+- **MH1 Tool Execution Framework**
 
-## 🏗️ 技术栈规范（与 Claude Code 一致）
+## 🏗️ Technology Stack Specification (Consistent with Claude Code)
 
 ```yaml
-核心技术栈:
-  运行时: Node.js 22.x (最新 LTS)
-  语言: TypeScript 5.3+
-  CLI框架: 原生 Node.js CLI
-  构建工具: ESBuild + Vite
-  包管理: npm/pnpm
+Core Technology Stack:
+  Runtime: Node.js 22.x (latest LTS)
+  Language: TypeScript 5.3+
+  CLI Framework: Native Node.js CLI
+  Build Tools: ESBuild + Vite
+  Package Management: npm/pnpm
 
-内部组件:
-  交互界面: React 组件（用于某些命令）
-  状态管理: 原生 TypeScript 状态
-  配置管理: YAML + 环境变量
+Internal Components:
+  Interactive UI: React components (for certain commands)
+  State Management: Native TypeScript state
+  Configuration Management: YAML + Environment Variables
 
-工具生态:
-  文件操作: fs/promises
-  网络请求: undici/fetch
-  文本处理: 原生 String API
-  命令执行: child_process
+Tool Ecosystem:
+  File Operations: fs/promises
+  Network Requests: undici/fetch
+  Text Processing: Native String API
+  Command Execution: child_process
 ```
 
-## 📁 项目结构
+## 📁 Project Structure
 
 ```
 writeflow/
 ├── src/
-│   ├── cli/                         # CLI 入口和命令
-│   │   ├── index.ts                 # 主入口文件
-│   │   ├── commands/                # 斜杠命令实现
-│   │   │   ├── outline.ts           # /outline 命令
-│   │   │   ├── rewrite.ts           # /rewrite 命令
-│   │   │   ├── research.ts          # /research 命令
-│   │   │   ├── publish.ts           # /publish 命令
-│   │   │   ├── settings.tsx         # /settings 命令（React）
-│   │   │   └── index.ts             # 命令注册
-│   │   ├── interactive/             # 交互式组件
-│   │   │   ├── CommandInput.tsx     # 命令输入组件
-│   │   │   ├── SettingsPanel.tsx    # 设置面板
-│   │   │   └── ProgressView.tsx     # 进度显示
-│   │   └── parser/                  # 命令解析器
-│   │       ├── SlashParser.ts       # 斜杠命令解析
-│   │       └── ArgParser.ts         # 参数解析
-│   ├── core/                        # 核心引擎
-│   │   ├── agent/                   # Agent 系统
-│   │   │   ├── nO-engine.ts         # nO 主循环引擎
-│   │   │   ├── main-agent.ts        # 主 Agent
-│   │   │   ├── sub-agent.ts         # 子 Agent
-│   │   │   └── task-agent.ts        # 任务 Agent
-│   │   ├── queue/                   # h2A 消息队列
-│   │   │   ├── h2A-queue.ts         # 双缓冲队列
-│   │   │   ├── message.ts           # 消息定义
-│   │   │   └── processor.ts         # 消息处理器
-│   │   ├── context/                 # 上下文管理
-│   │   │   ├── wU2-compressor.ts    # 上下文压缩器
-│   │   │   ├── memory-manager.ts    # 内存管理
-│   │   │   └── session-state.ts     # 会话状态
-│   │   └── security/                # 安全框架
-│   │       ├── validator.ts         # 6层验证器
-│   │       ├── sandbox.ts           # 沙箱环境
-│   │       └── permissions.ts       # 权限控制
-│   ├── tools/                       # 工具实现
-│   │   ├── base/                    # 基础工具
-│   │   │   ├── read-article.ts      # 读取文章
-│   │   │   ├── write-article.ts     # 写入文章
-│   │   │   ├── edit-article.ts      # 编辑文章
-│   │   │   └── search-content.ts    # 内容搜索
-│   │   ├── writing/                 # 写作工具
-│   │   │   ├── outline-generator.ts # 大纲生成
-│   │   │   ├── content-rewriter.ts  # 内容改写
-│   │   │   ├── style-adapter.ts     # 风格调整
-│   │   │   └── grammar-checker.ts   # 语法检查
-│   │   ├── research/                # 研究工具
-│   │   │   ├── web-search.ts        # 网络搜索
-│   │   │   ├── web-fetch.ts         # 内容抓取
-│   │   │   ├── fact-checker.ts      # 事实核查
-│   │   │   └── citation-manager.ts  # 引用管理
-│   │   └── publish/                 # 发布工具
-│   │       ├── markdown-formatter.ts # Markdown 格式化
-│   │       ├── wechat-converter.ts   # 微信格式转换
-│   │       ├── html-generator.ts     # HTML 生成
-│   │       └── platform-publisher.ts # 平台发布
-│   ├── types/                       # 类型定义
-│   │   ├── agent.ts                 # Agent 类型
-│   │   ├── command.ts               # 命令类型
-│   │   ├── tool.ts                  # 工具类型
-│   │   ├── message.ts               # 消息类型
-│   │   └── article.ts               # 文章类型
-│   └── utils/                       # 工具函数
-│       ├── config.ts                # 配置管理
-│       ├── logger.ts                # 日志系统
-│       ├── crypto.ts                # 加密工具
-│       └── validation.ts            # 验证工具
+│   ├── cli/                         # CLI entry point and commands
+│   │   ├── index.ts                 # Main entry file
+│   │   ├── commands/                # Slash command implementations
+│   │   │   ├── outline.ts           # /outline command
+│   │   │   ├── rewrite.ts           # /rewrite command
+│   │   │   ├── research.ts          # /research command
+│   │   │   ├── publish.ts           # /publish command
+│   │   │   ├── settings.tsx         # /settings command (React)
+│   │   │   └── index.ts             # Command registration
+│   │   ├── interactive/             # Interactive components
+│   │   │   ├── CommandInput.tsx     # Command input component
+│   │   │   ├── SettingsPanel.tsx    # Settings panel
+│   │   │   └── ProgressView.tsx     # Progress display
+│   │   └── parser/                  # Command parser
+│   │       ├── SlashParser.ts       # Slash command parsing
+│   │       └── ArgParser.ts         # Argument parsing
+│   ├── core/                        # Core engine
+│   │   ├── agent/                   # Agent system
+│   │   │   ├── nO-engine.ts         # nO main loop engine
+│   │   │   ├── main-agent.ts        # Main Agent
+│   │   │   ├── sub-agent.ts         # Sub Agent
+│   │   │   └── task-agent.ts        # Task Agent
+│   │   ├── queue/                   # h2A message queue
+│   │   │   ├── h2A-queue.ts         # Double-buffered queue
+│   │   │   ├── message.ts           # Message definition
+│   │   │   └── processor.ts         # Message processor
+│   │   ├── context/                 # Context management
+│   │   │   ├── wU2-compressor.ts    # Context compressor
+│   │   │   ├── memory-manager.ts    # Memory management
+│   │   │   └── session-state.ts     # Session state
+│   │   └── security/                # Security framework
+│   │       ├── validator.ts         # 6-layer validator
+│   │       ├── sandbox.ts           # Sandbox environment
+│   │       └── permissions.ts       # Permission control
+│   ├── tools/                       # Tool implementations
+│   │   ├── base/                    # Basic tools
+│   │   │   ├── read-article.ts      # Read article
+│   │   │   ├── write-article.ts     # Write article
+│   │   │   ├── edit-article.ts      # Edit article
+│   │   │   └── search-content.ts    # Search content
+│   │   ├── writing/                 # Writing tools
+│   │   │   ├── outline-generator.ts # Outline generator
+│   │   │   ├── content-rewriter.ts  # Content rewriter
+│   │   │   ├── style-adapter.ts     # Style adapter
+│   │   │   └── grammar-checker.ts   # Grammar checker
+│   │   ├── research/                # Research tools
+│   │   │   ├── web-search.ts        # Web search
+│   │   │   ├── web-fetch.ts         # Content fetching
+│   │   │   ├── fact-checker.ts      # Fact checker
+│   │   │   └── citation-manager.ts  # Citation manager
+│   │   └── publish/                 # Publishing tools
+│   │       ├── markdown-formatter.ts # Markdown formatter
+│   │       ├── wechat-converter.ts   # WeChat format converter
+│   │       ├── html-generator.ts     # HTML generator
+│   │       └── platform-publisher.ts # Platform publisher
+│   ├── types/                       # Type definitions
+│   │   ├── agent.ts                 # Agent types
+│   │   ├── command.ts               # Command types
+│   │   ├── tool.ts                  # Tool types
+│   │   ├── message.ts               # Message types
+│   │   └── article.ts               # Article types
+│   └── utils/                       # Utility functions
+│       ├── config.ts                # Configuration management
+│       ├── logger.ts                # Logging system
+│       ├── crypto.ts                # Cryptography tools
+│       └── validation.ts            # Validation tools
 ├── config/
-│   ├── default.yaml                 # 默认配置
-│   └── tools.yaml                   # 工具配置
-├── templates/                       # 写作模板
-│   ├── article/                     # 文章模板
-│   ├── outline/                     # 大纲模板
-│   └── style/                       # 风格模板
-├── dist/                            # 编译输出
-├── tests/                           # 测试文件
+│   ├── default.yaml                 # Default configuration
+│   └── tools.yaml                   # Tool configuration
+├── templates/                       # Writing templates
+│   ├── article/                     # Article templates
+│   ├── outline/                     # Outline templates
+│   └── style/                       # Style templates
+├── dist/                            # Compiled output
+├── tests/                           # Test files
 ├── package.json
 ├── tsconfig.json
-├── vite.config.ts                   # 构建配置
+├── vite.config.ts                   # Build configuration
 └── README.md
 ```
 
-## 🤖 Agent 架构设计
+## 🤖 Agent Architecture Design
 
-### 分层 Agent 系统（完全复刻 Claude Code）
+### Layered Agent System (Fully Replicates Claude Code)
 
 ```typescript
-// nO 主 Agent 引擎
+// nO Main Agent Engine
 class NOMainAgent {
   private h2aQueue: H2AMessageQueue
   private contextManager: WU2ContextManager
@@ -133,16 +133,16 @@ class NOMainAgent {
   async *agentLoop(): AsyncGenerator<AgentResponse> {
     while (true) {
       try {
-        // 1. 获取消息
+        // 1. Get message
         const message = await this.h2aQueue.nextMessage()
         
-        // 2. 上下文管理
+        // 2. Context management
         const context = await this.contextManager.getCurrentContext()
         
-        // 3. Plan 模式检查
+        // 3. Plan mode check
         const planState = await this.checkPlanMode(message, context)
         
-        // 4. 路由到对应处理器
+        // 4. Route to the corresponding handler
         switch (planState) {
           case 'default':
             yield* this.handleDefaultMode(message, context)
@@ -165,7 +165,7 @@ class NOMainAgent {
 }
 ```
 
-## 📨 h2A 消息队列系统
+## 📨 h2A Message Queue System
 
 ```typescript
 interface Message {
@@ -185,7 +185,7 @@ class H2AAsyncMessageQueue {
   private throughputCounter = 0
   private lastSecond = 0
 
-  // 核心异步迭代器（复刻 Claude Code）
+  // Core async iterator (replicates Claude Code)
   async *[Symbol.asyncIterator](): AsyncIterator<Message> {
     while (true) {
       if (this.primaryBuffer.length > 0) {
@@ -193,7 +193,7 @@ class H2AAsyncMessageQueue {
         this.recordThroughput()
         yield message
       } else {
-        // 等待新消息
+        // Wait for a new message
         await new Promise<void>(resolve => {
           this.readResolve = ({ value, done }) => {
             if (!done && value) {
@@ -206,16 +206,16 @@ class H2AAsyncMessageQueue {
     }
   }
 
-  // 零延迟消息入队（核心优势）
+  // Zero-latency message enqueueing (core advantage)
   enqueue(message: Message): void {
-    // 策略1：零延迟路径 - 直接传递给等待的读取者
+    // Strategy 1: Zero-latency path - directly pass to the waiting reader
     if (this.readResolve) {
       this.readResolve({ done: false, value: message })
       this.readResolve = null
       return
     }
     
-    // 策略2：缓冲路径 - 存储到循环缓冲区
+    // Strategy 2: Buffering path - store in the circular buffer
     this.primaryBuffer.push(message)
     this.processBackpressure()
   }
@@ -232,24 +232,24 @@ class H2AAsyncMessageQueue {
 }
 ```
 
-## ⚡ 斜杠命令系统
+## ⚡ Slash Command System
 
-### 命令解析器（复刻 Claude Code 模式）
+### Command Parser (Replicates Claude Code Pattern)
 
 ```typescript
 class SlashCommandParser {
   parseCommand(input: string): ParsedCommand | null {
-    // 检测斜杠命令（复刻 chunks.100.mjs:2048）
+    // Detect slash command (replicates chunks.100.mjs:2048)
     if (!input.startsWith("/")) {
       return null
     }
     
-    // 解析命令和参数（复刻解析逻辑）
+    // Parse command and arguments (replicates parsing logic)
     const parts = input.slice(1).split(" ")
     let commandName = parts[0]
     let isMCP = false
     
-    // MCP 命令检测
+    // MCP command detection
     if (parts.length > 1 && parts[1] === "(MCP)") {
       commandName = commandName + " (MCP)"
       isMCP = true
@@ -259,7 +259,7 @@ class SlashCommandParser {
       throw new Error("Commands are in the form `/command [args]`")
     }
     
-    // 命令分类
+    // Command classification
     const isCustom = commandName.includes(":")
     const type = isMCP ? "mcp" : isCustom ? "custom" : "standard"
     const args = input.slice(commandName.length + 2)
@@ -275,23 +275,23 @@ class SlashCommandParser {
 }
 ```
 
-### 写作专用斜杠命令
+### Writing-Specific Slash Commands
 
 ```typescript
-// 写作命令定义
+// Writing command definitions
 export const WritingCommands: SlashCommand[] = [
   {
     name: "outline",
     type: "prompt",
-    description: "生成文章大纲",
-    aliases: ["大纲"],
+    description: "Generate an article outline",
+    aliases: ["outline"],
     async execute(args: string, context: AgentContext): Promise<CommandResult> {
-      const prompt = `请为主题"${args}"生成详细的文章大纲，包含：
-1. 文章标题建议
-2. 核心观点提炼  
-3. 章节结构设计
-4. 关键论据准备
-5. 预估字数分配`
+      const prompt = `Please generate a detailed article outline for the topic "${args}", including:
+1. Article title suggestions
+2. Core idea refinement
+3. Chapter structure design
+4. Key argument preparation
+5. Estimated word count allocation`
       
       return {
         type: "prompt",
@@ -305,11 +305,11 @@ export const WritingCommands: SlashCommand[] = [
   {
     name: "rewrite", 
     type: "prompt",
-    description: "智能改写文章内容",
-    aliases: ["改写", "重写"],
+    description: "Intelligently rewrite article content",
+    aliases: ["rewrite", "revise"],
     async execute(args: string, context: AgentContext): Promise<CommandResult> {
       const [style, ...content] = args.split(" ")
-      const prompt = `请将以下内容改写为${style}风格：\n\n${content.join(" ")}`
+      const prompt = `Please rewrite the following content in a ${style} style:\n\n${content.join(" ")}`
       
       return {
         type: "prompt", 
@@ -323,15 +323,15 @@ export const WritingCommands: SlashCommand[] = [
   {
     name: "research",
     type: "prompt", 
-    description: "深度主题研究",
-    aliases: ["研究"],
+    description: "In-depth topic research",
+    aliases: ["research"],
     async execute(args: string, context: AgentContext): Promise<CommandResult> {
-      const prompt = `请对主题"${args}"进行深度研究，包括：
-1. 背景信息收集
-2. 最新发展趋势
-3. 权威资料来源
-4. 不同观点对比
-5. 关键数据统计`
+      const prompt = `Please conduct in-depth research on the topic "${args}", including:
+1. Background information collection
+2. Latest development trends
+3. Authoritative sources
+4. Comparison of different viewpoints
+5. Key statistical data`
       
       return {
         type: "prompt",
@@ -345,22 +345,20 @@ export const WritingCommands: SlashCommand[] = [
   {
     name: "publish",
     type: "local",
-    description: "发布到各个平台",
-    aliases: ["发布"],
+    description: "Publish to various platforms",
+    aliases: ["publish"],
     async execute(args: string, context: AgentContext): Promise<string> {
       const [platform, articlePath] = args.split(" ")
       
       switch (platform) {
         case "wechat":
-        case "微信":
           return await publishToWeChat(articlePath)
         case "zhihu":
-        case "知乎":
           return await publishToZhihu(articlePath)
         case "medium":
           return await publishToMedium(articlePath)
         default:
-          return `支持的平台: wechat(微信), zhihu(知乎), medium`
+          return `Supported platforms: wechat, zhihu, medium`
       }
     }
   },
@@ -368,8 +366,8 @@ export const WritingCommands: SlashCommand[] = [
   {
     name: "settings",
     type: "local-jsx",
-    description: "打开设置界面",
-    aliases: ["设置", "配置"],
+    description: "Open the settings interface",
+    aliases: ["settings", "config"],
     async execute(args: string, context: AgentContext): Promise<React.ReactElement> {
       return React.createElement(SettingsPanel, {
         onSave: (newConfig) => {
@@ -382,43 +380,43 @@ export const WritingCommands: SlashCommand[] = [
 ]
 ```
 
-## 🗜️ wU2 上下文压缩系统
+## 🗜️ wU2 Context Compression System
 
 ```typescript
 class WU2ContextCompressor {
-  private compressionThreshold = 0.92 // 92% 阈值
+  private compressionThreshold = 0.92 // 92% threshold
   
   async compress(context: ArticleContext): Promise<ArticleContext> {
     const currentTokens = this.calculateTokens(context)
     const maxTokens = this.getMaxTokens()
     
     if (currentTokens < maxTokens * this.compressionThreshold) {
-      return context // 无需压缩
+      return context // No compression needed
     }
     
     const compressed = await this.performCompression(context)
     
-    // 记录压缩统计
+    // Log compression statistics
     const compressedTokens = this.calculateTokens(compressed)
-    console.log(`上下文压缩: ${currentTokens} -> ${compressedTokens} tokens (${((1 - compressedTokens/currentTokens) * 100).toFixed(1)}%)`)
+    console.log(`Context compressed: ${currentTokens} -> ${compressedTokens} tokens (${((1 - compressedTokens/currentTokens) * 100).toFixed(1)}%)`)
     
     return compressed
   }
   
   private async performCompression(context: ArticleContext): Promise<ArticleContext> {
     return {
-      // 核心上下文（永不压缩）
+      // Core context (never compressed)
       currentArticle: context.currentArticle,
       activeOutline: context.activeOutline,
       writingGoals: context.writingGoals,
       userPreferences: context.userPreferences,
       
-      // 压缩内容
+      // Compressed content
       researchMaterial: this.compressResearchMaterial(context.researchMaterial),
       dialogueHistory: this.compressDialogueHistory(context.dialogueHistory),
       referenceArticles: this.compressReferences(context.referenceArticles),
       
-      // 元数据
+      // Metadata
       tokenCount: this.calculateTokens(context),
       compressionLevel: this.calculateCompressionLevel(context),
       lastUpdated: Date.now()
@@ -427,12 +425,12 @@ class WU2ContextCompressor {
 }
 ```
 
-## 🛠️ 写作工具系统
+## 🛠️ Writing Tool System
 
-### MH1 工具引擎适配
+### MH1 Tool Engine Adaptation
 
 ```typescript
-// 基础工具接口（复刻 Claude Code 模式）
+// Base tool interface (replicates Claude Code pattern)
 interface WritingTool {
   name: string
   description: string
@@ -441,21 +439,21 @@ interface WritingTool {
   execute(input: ToolInput): Promise<ToolResult>
 }
 
-// 核心写作工具集
+// Core writing toolset
 export const CoreWritingTools: WritingTool[] = [
   {
     name: "read_article",
-    description: "读取文章内容，支持多模态文件",
+    description: "Reads article content, supports multimodal files",
     inputSchema: ReadArticleInputSchema,
     securityLevel: "read-only",
     async execute(input: ReadArticleInput): Promise<ToolResult> {
-      // 安全验证
+      // Security validation
       await this.validateSecurity(input)
       
-      // 读取文章
+      // Read article
       const content = await fs.readFile(input.path, 'utf-8')
       
-      // 自动恶意内容检测（复刻 tG5 机制）
+      // Automatic malicious content detection (replicates tG5 mechanism)
       const securityWarning = await this.checkMaliciousContent(content)
       
       return {
@@ -472,7 +470,7 @@ export const CoreWritingTools: WritingTool[] = [
   
   {
     name: "generate_outline", 
-    description: "AI 生成文章大纲",
+    description: "AI generates an article outline",
     inputSchema: OutlineInputSchema,
     securityLevel: "ai-powered",
     async execute(input: OutlineInput): Promise<ToolResult> {
@@ -483,10 +481,10 @@ export const CoreWritingTools: WritingTool[] = [
         max_tokens: 4000,
         messages: [{
           role: "user",
-          content: `请为主题"${input.topic}"生成详细大纲：
-            目标风格：${input.style || "技术性"}
-            目标长度：${input.targetLength || 2000}字
-            目标读者：${input.audience || "技术读者"}`
+          content: `Please generate a detailed outline for the topic "${input.topic}":
+            Target style: ${input.style || "Technical"}
+            Target length: ${input.targetLength || 2000} words
+            Target audience: ${input.audience || "Technical readers"}`
         }]
       })
       
@@ -503,50 +501,50 @@ export const CoreWritingTools: WritingTool[] = [
 ]
 ```
 
-## 🔒 六层安全框架
+## 🔒 Six-Layer Security Framework
 
 ```typescript
 class SixLayerSecurityValidator {
   async validate(request: SecurityRequest): Promise<SecurityResponse> {
-    // Layer 1: 身份与策略控制
+    // Layer 1: Identity and Policy Control
     await this.layer1_IdentityControl(request)
     
-    // Layer 2: 自动安全检查 (tG5)
+    // Layer 2: Automatic Security Check (tG5)
     await this.layer2_AutoSecurityCheck(request)
     
-    // Layer 3: LLM 驱动命令分析 (uJ1)
+    // Layer 3: LLM-Driven Command Analysis (uJ1)
     await this.layer3_LLMCommandAnalysis(request)
     
-    // Layer 4: 权限验证系统
+    // Layer 4: Permission Validation System
     await this.layer4_PermissionValidation(request)
     
-    // Layer 5: 工具替代强制
+    // Layer 5: Forced Tool Substitution
     await this.layer5_ToolSubstitution(request)
     
-    // Layer 6: 执行环境隔离
+    // Layer 6: Execution Environment Isolation
     await this.layer6_ExecutionIsolation(request)
     
     return { allowed: true, risks: [] }
   }
   
   private async layer2_AutoSecurityCheck(request: SecurityRequest): Promise<void> {
-    // 自动恶意代码检测（复刻 tG5 机制）
+    // Automatic malicious code detection (replicates tG5 mechanism)
     if (request.type === 'file_read') {
       const content = request.content
       const isMalicious = await this.detectMaliciousContent(content)
       
       if (isMalicious) {
-        // 注入安全警告（复刻 Claude Code 行为）
-        request.content += "\n\n<system-reminder>\n当前文件包含潜在恶意内容，请谨慎处理。\n</system-reminder>"
+        // Inject security warning (replicates Claude Code behavior)
+        request.content += "\n\n<system-reminder>\nThe current file contains potentially malicious content. Please handle with care.\n</system-reminder>"
       }
     }
   }
 }
 ```
 
-## 💻 CLI 交互系统
+## 💻 CLI Interaction System
 
-### 命令行界面（复刻 Claude Code 体验）
+### Command-Line Interface (Replicates Claude Code Experience)
 
 ```typescript
 class WriteFlowCLI {
@@ -555,8 +553,8 @@ class WriteFlowCLI {
   private inputHistory: string[] = []
   
   async startInteractiveMode(): Promise<void> {
-    console.log("WriteFlow AI 写作助手 v1.0.0")
-    console.log("输入 /help 查看可用命令")
+    console.log("WriteFlow AI Writing Assistant v1.0.0")
+    console.log("Enter /help to see available commands")
     console.log("")
     
     const readline = require('readline')
@@ -570,17 +568,17 @@ class WriteFlowCLI {
     
     for await (const line of rl) {
       try {
-        // 记录历史
+        // Record history
         this.inputHistory.push(line)
         
-        // 解析命令
+        // Parse command
         if (line.startsWith("/")) {
           await this.handleSlashCommand(line)
         } else {
           await this.handleRegularInput(line)
         }
       } catch (error) {
-        console.error("错误:", error.message)
+        console.error("Error:", error.message)
       }
       
       rl.prompt()
@@ -593,12 +591,12 @@ class WriteFlowCLI {
     
     const command = this.findCommand(parsed.name)
     if (!command) {
-      console.log(`未知命令: ${parsed.name}`)
-      console.log(`可用命令: ${this.getAvailableCommands().join(", ")}`)
+      console.log(`Unknown command: ${parsed.name}`)
+      console.log(`Available commands: ${this.getAvailableCommands().join(", ")}`)
       return
     }
     
-    // 执行命令（复刻三种类型处理）
+    // Execute command (replicates three types of handling)
     switch (command.type) {
       case "local":
         const result = await command.execute(parsed.args)
@@ -619,47 +617,47 @@ class WriteFlowCLI {
 }
 ```
 
-## 📊 性能指标（对标 Claude Code）
+## 📊 Performance Metrics (Benchmark against Claude Code)
 
 ```yaml
-性能目标:
-  消息队列吞吐量: >10,000 msg/sec (复刻 h2A)
-  Agent 响应延迟: <100ms
-  命令解析时间: <10ms
-  工具执行超时: 120秒（默认）
-  内存使用峰值: <256MB
+Performance Targets:
+  Message Queue Throughput: >10,000 msg/sec (replicates h2A)
+  Agent Response Latency: <100ms
+  Command Parsing Time: <10ms
+  Tool Execution Timeout: 120 seconds (default)
+  Peak Memory Usage: <256MB
   
-写作特性性能:
-  大纲生成时间: <3秒
-  文章改写时间: <10秒
-  主题研究时间: <30秒
-  格式转换时间: <2秒
+Writing Feature Performance:
+  Outline Generation Time: <3 seconds
+  Article Rewriting Time: <10 seconds
+  Topic Research Time: <30 seconds
+  Format Conversion Time: <2 seconds
 ```
 
-## 🔧 配置系统
+## 🔧 Configuration System
 
-### CLAUDE.md 配置文件（复刻模式）
+### CLAUDE.md Configuration File (Replicates Pattern)
 
 ```yaml
 # writeflow/CLAUDE.md
-# WriteFlow 用户配置文件
+# WriteFlow User Configuration File
 
-输出中文
+Output in English
 
-# 写作偏好设置
+# Writing preference settings
 writing:
-  default_style: "技术性文章"
+  default_style: "Technical article"
   target_length: 2000
   auto_outline: true
   fact_check: true
 
-# AI 模型配置  
+# AI model configuration
 ai:
   model: "claude-3-opus-20240229"
   temperature: 0.7
   max_tokens: 4000
 
-# 发布平台配置
+# Publishing platform configuration
 publish:
   wechat:
     auto_format: true
@@ -668,20 +666,20 @@ publish:
     add_references: true
     format: "markdown"
 
-# 安全设置
+# Security settings
 security:
   content_filter: true
   fact_check_threshold: 0.8
   citation_required: true
 ```
 
-## 📦 Package.json（Node.js 22.x）
+## 📦 Package.json (Node.js 22.x)
 
 ```json
 {
   "name": "writeflow",
   "version": "1.0.0",
-  "description": "AI 写作助手 - 基于 Claude Code 架构",
+  "description": "AI Writing Assistant - Based on Claude Code Architecture",
   "main": "dist/cli/index.js",
   "type": "module",
   "bin": {
@@ -718,4 +716,4 @@ security:
 }
 ```
 
-这个重新设计完全基于 Claude Code 的真实技术栈：Node.js + TypeScript CLI，而不是 Go 或 React 18 应用。
+This redesign is based entirely on the actual technology stack of Claude Code: Node.js + TypeScript CLI, not a Go or React 18 application.

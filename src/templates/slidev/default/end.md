@@ -2,7 +2,7 @@
 layout: end
 ---
 
-# 谢谢
+# Thank You
 
 {{#if contact}}
 <div class="text-2xl mt-8">

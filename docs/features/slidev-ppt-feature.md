@@ -1,166 +1,165 @@
-# 🎯 WriteFlow Slidev PPT 创作功能需求文档
+# 🎯 WriteFlow Slidev PPT Creation Feature Requirements Document
 
-## 📋 项目概述
+## 📋 Project Overview
 
-### 背景
+### Background
 
-WriteFlow 作为专为技术型作家设计的 AI 写作助手，目前主要专注于文章创作。随着技术分享和演讲需求的增长，将 WriteFlow 的 AI 能力扩展到 PPT 创作领域，特别是与 Slidev（开发者友好的演示文稿工具）的深度集成，将极大提升技术内容创作者的生产力。
+As an AI writing assistant designed for technical writers, WriteFlow currently focuses mainly on article creation. With the growing demand for technical sharing and presentations, extending WriteFlow's AI capabilities to the realm of PPT creation, especially through deep integration with Slidev (a developer-friendly presentation tool), will greatly enhance the productivity of technical content creators.
 
-### 目标
+### Objectives
 
-1. **无缝集成**：将 Slidev 的 Markdown 演示文稿能力与 WriteFlow 的 AI 写作能力深度融合
-2. **智能转换**：支持将现有 Markdown 文章智能转换为演示文稿格式
-3. **AI 增强**：利用 AI 能力自动生成演讲大纲、优化内容结构、生成演讲备注
-4. **多格式导出**：支持导出为 PDF、PPTX、PNG、静态网站等多种格式
-5. **模块化设计**：通过 Agent 配置系统实现按需加载，避免工具膨胀
+1. **Seamless Integration**: Deeply integrate Slidev's Markdown presentation capabilities with WriteFlow's AI writing capabilities.
+2. **Intelligent Conversion**: Support the intelligent conversion of existing Markdown articles into presentation format.
+3. **AI Enhancement**: Utilize AI capabilities to automatically generate presentation outlines, optimize content structure, and generate speaker notes.
+4. **Multi-Format Export**: Support exporting to various formats such as PDF, PPTX, PNG, and static websites.
+5. **Modular Design**: Implement on-demand loading through an Agent configuration system to avoid tool bloat.
 
-### 核心价值
+### Core Value
 
-- **效率提升**：将文章到 PPT 的转换时间从小时级降至分钟级
-- **质量保证**：AI 辅助确保演讲内容逻辑清晰、重点突出
-- **开发者友好**：保持 Markdown 工作流，支持代码高亮、组件化、版本控制
-- **资源优化**：按需加载工具，不占用主系统上下文
+- **Efficiency Improvement**: Reduce the time for converting articles to PPTs from hours to minutes.
+- **Quality Assurance**: AI assistance ensures that the presentation content is logical and highlights key points.
+- **Developer-Friendly**: Maintain a Markdown workflow, supporting code highlighting, componentization, and version control.
+- **Resource Optimization**: Load tools on demand, without occupying the main system's context.
 
+## ⚡ Key Points of the New Version (Agent/Tool Workflow)
 
-## ⚡ 新版使用要点（Agent/Tool 工作流）
+- By default, only content is generated: `/slide create` and `/slide convert` will only return Slidev Markdown text by default, without writing to disk or exporting.
+- Tools are triggered on demand:
+  - `--dir=./slides/xxx` (or `--initDir`) → Triggers the `SlidevProjectInit` tool to generate a directory and write to `slides.md`.
+  - `--export=pdf|png` → Triggers the `SlideExporter` tool, which attempts to export by calling `npx slidev export`.
+- Examples:
+  - Generate content only: `/slide create "Exploring the Stars" --duration=20 --theme=default`
+  - Generate and write to disk: `/slide create "Exploring the Stars" --dir=./slides/demo`
+  - Convert and export: `/slide convert ./docs/article.md --dir=./slides/demo --export=pdf`
+- `npx` 404/network restriction prompt: If fetching `@slidev/cli` fails during export, the system will return suggestions for changing the source/installation and a command that can be copied.
 
-- 默认只生成内容：/slide create 与 /slide convert 默认只返回 Slidev Markdown 文本，不落盘、不导出
-- 按需触发工具：
-  - --dir=./slides/xxx（或 --initDir）→ 触发 SlidevProjectInit 工具，生成目录并写入 slides.md
-  - --export=pdf|png → 触发 SlideExporter 工具，调用 npx slidev export 尝试导出了
-- 示例：
-  - 仅生成内容：/slide create "探索星空" --duration=20 --theme=default
-  - 生成并写盘：/slide create "探索星空" --dir=./slides/demo
-  - 转换并导出：/slide convert ./docs/article.md --dir=./slides/demo --export=pdf
-- npx 404/网络受限提示：导出时若拉取 @slidev/cli 失败，系统会返回换源/安装建议与可复制的命令
+## ✅ Usage Aligned with Slidev (Current Implementation and Plans)
 
-## ✅ 与 Slidev 对齐的使用方式（当前实现与计划）
+This project strictly follows Slidev's standard workflow: with `slides.md` at its core, it uses `slidev dev/build/export` for previewing, building, and exporting.
 
-本项目严格遵循 Slidev 的标准工作流：以 slides.md 为核心，通过 slidev dev/build/export 进行预览、构建与导出。
+- Official export capabilities
+  - HTML/Static Site: `slidev build`
+  - PDF: `slidev export slides.md`
+  - PNG (page by page): `slidev export --format png slides.md`
+  - Note: Slidev does not directly export to PPTX (`.pptx`). If PPTX is needed, you can use Marp/Pandoc or a "PDF → PPTX" conversion chain. See the "PPTX Solution" section below.
 
-- 官方导出能力
-  - HTML/静态站点：slidev build
-  - PDF：slidev export slides.md
-  - PNG（逐页图片）：slidev export --format png slides.md
-  - 说明：Slidev 官方不直接导出 PPTX（.pptx）。如需 PPTX，可选用 Marp/Pandoc 或“PDF → PPTX”的转换链路，见下文“PPTX 方案”。
+### 1) Quick Start (Currently Available)
 
-### 1) 快速开始（当前可用）
+- Write content to `slides.md` (implemented as a local command)
+  - Write from a file:
+    - `/slide-export ./slides/demo --from=./docs/features/slidev-ppt-feature.md`
+  - Write from raw text:
+    - `/slide-export ./slides/demo --from="# Title\n\n- Point 1\n- Point 2"`
+  - Effect: Generates a standard Slidev document at `./slides/demo/slides.md`.
 
-- 将内容写入 slides.md（已实现的本地命令）
-  - 从文件写入：
-    - /slide-export ./slides/demo --from=./docs/features/slidev-ppt-feature.md
-  - 从原始文本写入：
-    - /slide-export ./slides/demo --from="# 标题\n\n- 要点1\n- 要点2"
-  - 效果：在 ./slides/demo/slides.md 生成规范的 Slidev 文档。
+- Export to PDF/PNG (requires that `npx slidev` can be executed on the local machine)
+  - PDF: `npx -y slidev export ./slides/demo/slides.md`
+  - PNG: `npx -y slidev export --format png ./slides/demo/slides.md`
+  - If `npx` cannot download `@slidev/cli` from the current npm source (see npm 404), please switch to the official source or install it locally:
+    - Switch source: `npm config set registry https://registry.npmjs.org/`
+    - Global install: `npm i -g @slidev/cli`
+    - Project install: `npm i -D @slidev/cli`
 
-- 导出 PDF/PNG（依赖本机可通过 npx 执行 slidev）
-  - PDF：npx -y slidev export ./slides/demo/slides.md
-  - PNG：npx -y slidev export --format png ./slides/demo/slides.md
-  - 若 npx 从当前 npm 源无法下载 @slidev/cli（见 npm 404），请切换至官方源或本地安装：
-    - 切换源：npm config set registry https://registry.npmjs.org/
-    - 全局安装：npm i -g @slidev/cli
-    - 项目安装：npm i -D @slidev/cli
+Tip: `/slide create`, `/slide convert`, and `/slide outline` only generate content and return Slidev text by default. If `--dir` or `--export=pdf|png` is explicitly provided, the Agent will call a tool (`SlidevProjectInit`/`SlideExporter`) to automatically write to disk or export.
 
-提示：/slide create、/slide convert、/slide outline 默认只生成内容并返回 Slidev 文本；若显式提供 --dir 或 --export=pdf|png，将由 Agent 调用工具（SlidevProjectInit/SlideExporter）自动落盘或导出。
+### 2) Command Matrix (Aligned with Slidev)
 
-### 2) 命令矩阵（对齐 Slidev）
+- Implemented (CLI + Agent tools)
+  - `/slide create|convert ...` (generates content only by default; triggers a tool when `--dir`/`--export` is used)
+  - `/slide-export <outputDir> --from=<path|"raw text"> [--pdf] [--theme=default] [--slides=20]`
+    - Generates `slides.md` in the specified directory; optionally attempts to export to PDF using `npx slidev export` (provides a prompt if the environment is restricted).
 
-- 已实现（CLI + Agent 工具）
-  - /slide create|convert ...（默认仅生成内容；带 --dir/--export 时触发工具）
-  - /slide-export <outputDir> --from=<path|"raw text"> [--pdf] [--theme=default] [--slides=20]
-    - 生成 slides.md 到指定目录；可选尝试 npx slidev export 导出 PDF（环境受限时给出提示）。
+- Planned (Coming Soon)
+  - `/slide init <dir> [--theme=default]`
+    - Generates a standard Slidev project scaffold (`slides.md` + basic structure).
+  - `/slide dev <slides.md|dir>`
+    - Equivalent to `npx slidev slides.md`, starts a local preview.
+  - `/slide build <slides.md|dir> [--outDir=dist]`
+    - Equivalent to `npx slidev build …`, produces a static site.
+  - `/slide export <slides.md|dir> [--pdf | --png]`
+    - Equivalent to `npx slidev export …` (will incorporate the current `/slide-export` into this command system and keep the alias).
 
-- 计划中（即将提供）
-  - /slide init <dir> [--theme=default]
-    - 生成标准 Slidev 项目脚手架（slides.md + 基础结构）。
-  - /slide dev <slides.md|dir>
-    - 等价 npx slidev slides.md，启动本地预览。
-  - /slide build <slides.md|dir> [--outDir=dist]
-    - 等价 npx slidev build …，产出静态站点。
-  - /slide export <slides.md|dir> [--pdf | --png]
-    - 等价 npx slidev export …（将把当前 /slide-export 纳入此命令体系并保留别名）。
+### 3) PPTX (PowerPoint) Export Solution
 
-### 3) PPTX（PowerPoint）导出方案
+Slidev does not export to PPTX directly. Optional solutions:
+- Solution A: Markdown → PPTX (editable)
+  - Marp CLI: `npx -y @marp-team/marp-cli ./slides/demo/slides.md -o ./slides/demo/slides.pptx`
+  - Pandoc: `pandoc ./slides/demo/slides.md -o ./slides/demo/slides.pptx`
+  - Note: Slidev's advanced syntax/components may be downgraded to basic Markdown in Marp/Pandoc. It is recommended to "simplify" the content (titles/paragraphs/lists) before exporting.
+- Solution B: PDF → PPTX (visually similar, less editable)
+  1) Export to PDF with Slidev: `npx -y slidev export ./slides/demo/slides.md`
+  2) Convert with LibreOffice: `soffice --headless --convert-to pptx ./slides/demo/slides.pdf --outdir ./slides/demo`
 
-Slidev 不直接导出 PPTX。可选方案：
-- 方案 A：Markdown → PPTX（可编辑）
-  - Marp CLI：npx -y @marp-team/marp-cli ./slides/demo/slides.md -o ./slides/demo/slides.pptx
-  - Pandoc：pandoc ./slides/demo/slides.md -o ./slides/demo/slides.pptx
-  - 说明：Slidev 的高级语法/组件在 Marp/Pandoc 中可能退化为基础 Markdown。建议在导出前做“朴素化”处理（标题/段落/列表）。
-- 方案 B：PDF → PPTX（外观接近，编辑性弱）
-  1) 用 Slidev 导出 PDF：npx -y slidev export ./slides/demo/slides.md
-  2) LibreOffice 转换：soffice --headless --convert-to pptx ./slides/demo/slides.pdf --outdir ./slides/demo
-
-### 4) 常见问题
-- npx slidev export 报 404
-  - 原因：当前 npm 源不包含 @slidev/cli 或网络受限。
-  - 处理：切换至官方源或本地安装 @slidev/cli；或在 CI 中预装依赖后再调用。
-- /slide covert …
-  - 正确子命令为 convert（转换）。
+### 4) Common Problems
+- `npx slidev export` returns a 404 error
+  - Reason: The current npm source does not include `@slidev/cli` or there are network restrictions.
+  - Solution: Switch to the official source or install `@slidev/cli` locally; or pre-install the dependency in CI before calling.
+- `/slide covert …`
+  - The correct subcommand is `convert`.
 
 ---
 
-## 🎮 Agent 配置系统设计
+## 🎮 Agent Configuration System Design
 
-### 核心理念：模块化与按需加载
+### Core Philosophy: Modularity and On-Demand Loading
 
-参考 Kode 项目和 Claude Code 的架构设计，WriteFlow 的 Slidev 功能将通过独立的 Agent 配置系统实现，确保：
-- **工具隔离**：Slidev 相关工具不会污染主系统的工具列表
-- **上下文优化**：仅在需要时加载，不占用默认 system prompt 空间
-- **灵活扩展**：易于添加新功能，不影响核心系统稳定性
+Referring to the architectural design of the Kode project and Claude Code, WriteFlow's Slidev functionality will be implemented through an independent Agent configuration system, ensuring:
+- **Tool Isolation**: Slidev-related tools will not pollute the main system's tool list.
+- **Context Optimization**: Loaded only when needed, not occupying the default system prompt space.
+- **Flexible Extension**: Easy to add new features without affecting the stability of the core system.
 
-### Agent 配置文件结构
+### Agent Configuration File Structure
 
 ```yaml
 # .writeflow/agents/slidev-ppt.md
 ---
 name: slidev-ppt
-description: "专门用于创建和管理 Slidev 演示文稿，包括 Markdown 到 PPT 的转换、大纲生成、内容优化等功能"
+description: "Specialized for creating and managing Slidev presentations, including Markdown to PPT conversion, outline generation, content optimization, etc."
 whenToUse: |
-  - 用户需要创建技术演讲稿或 PPT
-  - 需要将 Markdown 文章转换为演示文稿
-  - 优化现有的 Slidev 演示文稿
-  - 导出演示文稿为多种格式
+  - When the user needs to create a technical presentation or PPT.
+  - When a Markdown article needs to be converted into a presentation.
+  - To optimize an existing Slidev presentation.
+  - To export a presentation to various formats.
 tools:
-  - Read           # 读取文件
-  - Write          # 写入文件
-  - Edit           # 编辑文件
-  - MultiEdit      # 批量编辑
-  - Bash           # 执行系统命令
-  - Glob           # 文件模式匹配
-  - Grep           # 内容搜索
-  - WebSearch      # 网络搜索
-  - WebFetch       # 网页获取
-model_name: main  # 可选：指定使用的模型
+  - Read           # Read files
+  - Write          # Write to files
+  - Edit           # Edit files
+  - MultiEdit      # Bulk editing
+  - Bash           # Execute system commands
+  - Glob           # File pattern matching
+  - Grep           # Content search
+  - WebSearch      # Web search
+  - WebFetch       # Web page fetching
+model_name: main  # Optional: specify the model to use
 ---
 
-你是 WriteFlow 的 Slidev PPT 创作专家。你的任务是帮助用户创建专业、美观、富有表现力的技术演示文稿。
+You are WriteFlow's Slidev PPT creation expert. Your task is to help users create professional, beautiful, and expressive technical presentations.
 
-## 核心能力
+## Core Capabilities
 
-1. **内容转换**：将长文章智能拆分为适合演讲的幻灯片
-2. **结构优化**：确保演讲逻辑清晰，节奏合理
-3. **视觉增强**：建议合适的图表、动画和过渡效果
-4. **时间控制**：根据演讲时长优化内容密度
+1. **Content Conversion**: Intelligently split long articles into slides suitable for a presentation.
+2. **Structure Optimization**: Ensure the presentation has a clear logical flow and a reasonable pace.
+3. **Visual Enhancement**: Suggest appropriate charts, animations, and transition effects.
+4. **Time Control**: Optimize content density based on the presentation duration.
 
-## 工作流程
+## Workflow
 
-1. 分析用户需求（主题、时长、受众）
-2. 生成或转换内容结构
-3. 优化每页幻灯片的信息量
-4. 添加视觉元素和动画建议
-5. 生成演讲备注和时间提示
+1. Analyze user requirements (topic, duration, audience).
+2. Generate or convert the content structure.
+3. Optimize the amount of information on each slide.
+4. Add suggestions for visual elements and animations.
+5. Generate speaker notes and timing cues.
 
-## 最佳实践
+## Best Practices
 
-- 每页幻灯片聚焦一个核心观点
-- 使用渐进式披露控制信息流
-- 代码示例要简洁且高亮关键部分
-- 合理使用图表替代文字描述
-- 保持视觉风格的一致性
+- Each slide should focus on one core idea.
+- Use progressive disclosure to control the flow of information.
+- Code examples should be concise and highlight key parts.
+- Use charts to replace text descriptions where appropriate.
+- Maintain a consistent visual style.
 ```
 
-### Agent 加载机制
+### Agent Loading Mechanism
 
 ```typescript
 // src/utils/agentLoader.ts
@@ -169,7 +168,7 @@ export class SlidevAgentLoader {
   private agentConfig: AgentConfig | null = null
   private tools: Map<string, WritingTool> = new Map()
 
-  // 单例模式，避免重复加载
+  // Singleton pattern to avoid repeated loading
   static getInstance(): SlidevAgentLoader {
     if (!this.instance) {
       this.instance = new SlidevAgentLoader()
@@ -177,18 +176,18 @@ export class SlidevAgentLoader {
     return this.instance
   }
 
-  // 按需加载 Agent 配置
+  // Load Agent configuration on demand
   async loadAgent(): Promise<AgentConfig> {
     if (this.agentConfig) {
       return this.agentConfig
     }
 
-    // 读取配置文件
+    // Read the configuration file
     const configPath = path.join(process.cwd(), '.writeflow/agents/slidev-ppt.md')
     const content = await fs.readFile(configPath, 'utf-8')
     const { data: frontmatter, content: systemPrompt } = matter(content)
 
-    // 构建 Agent 配置
+    // Build the Agent configuration
     this.agentConfig = {
       name: frontmatter.name,
       description: frontmatter.description,
@@ -198,29 +197,29 @@ export class SlidevAgentLoader {
       model: frontmatter.model_name || 'main'
     }
 
-    // 动态加载工具
+    // Dynamically load tools
     await this.loadTools(frontmatter.tools)
 
     return this.agentConfig
   }
 
-  // 动态加载指定的工具
+  // Dynamically load the specified tools
   private async loadTools(toolNames: string[]): Promise<void> {
     for (const toolName of toolNames) {
       if (!this.tools.has(toolName)) {
-        // 懒加载工具模块
+        // Lazily load the tool module
         const tool = await import(`../tools/slidev/${toolName}`)
         this.tools.set(toolName, new tool.default())
       }
     }
   }
 
-  // 获取已加载的工具
+  // Get the loaded tools
   getTools(): WritingTool[] {
     return Array.from(this.tools.values())
   }
 
-  // 卸载 Agent，释放资源
+  // Unload the Agent to free up resources
   unload(): void {
     this.agentConfig = null
     this.tools.clear()
@@ -228,23 +227,23 @@ export class SlidevAgentLoader {
 }
 ```
 
-### 命令触发机制
+### Command Trigger Mechanism
 
 ```typescript
 // src/commands/slide.ts
 export class SlideCommand {
   async execute(args: string, context: CommandContext): Promise<void> {
-    // 检测是否为 slide 相关命令
+    // Check if it is a slide-related command
     if (!this.isSlideCommand(args)) {
       return
     }
 
-    // 动态加载 Slidev Agent
+    // Dynamically load the Slidev Agent
     const loader = SlidevAgentLoader.getInstance()
     const agent = await loader.loadAgent()
 
     try {
-      // 创建独立的执行上下文
+      // Create an independent execution context
       const slideContext = {
         ...context,
         systemPrompt: agent.systemPrompt,
@@ -252,127 +251,127 @@ export class SlideCommand {
         model: agent.model
       }
 
-      // 执行 Slidev 相关任务
+      // Execute the Slidev-related task
       await this.executeSlideTask(args, slideContext)
 
     } finally {
-      // 可选：执行完毕后卸载，释放内存
+      // Optional: unload after execution to free up memory
       // loader.unload()
     }
   }
 }
 ```
 
-## 🏗️ 功能架构设计
+## 🏗️ Feature Architecture Design
 
-### 1. 命令系统扩展
+### 1. Command System Extension
 
-#### `/slide` - PPT 创作主命令
+#### `/slide` - The main command for PPT creation
 
 ```typescript
 {
   type: "prompt",
   name: "slide",
-  aliases: ["ppt", "演示", "幻灯片"],
-  description: "AI 辅助创建 Slidev 演示文稿",
+  aliases: ["ppt", "presentation", "slides"],
+  description: "AI-assisted creation of Slidev presentations",
 
   subcommands: {
-    "create": "创建新的演示文稿",
-    "convert": "将文章转换为演示文稿",
-    "outline": "生成演讲大纲",
-    "optimize": "优化现有演示文稿",
-    "export": "导出演示文稿"
+    "create": "Create a new presentation",
+    "convert": "Convert an article into a presentation",
+    "outline": "Generate a presentation outline",
+    "optimize": "Optimize an existing presentation",
+    "export": "Export a presentation"
   },
 
-  usage: "/slide <子命令> [选项]",
+  usage: "/slide <subcommand> [options]",
   examples: [
-    "/slide create 'AI Agent 架构设计' --duration=30 --style=technical",
+    "/slide create 'AI Agent Architecture Design' --duration=30 --style=technical",
     "/slide convert ./articles/tech-article.md --split-by=h2",
-    "/slide outline 'Rust 性能优化' --slides=15 --audience=senior",
+    "/slide outline 'Rust Performance Optimization' --slides=15 --audience=senior",
     "/slide optimize ./slides.md --add-animations --improve-flow",
     "/slide export ./slides.md --format=pdf --theme=seriph"
   ]
 }
 ```
 
-#### `/slide-outline` - 演讲大纲生成
+#### `/slide-outline` - Presentation outline generation
 
 ```typescript
 {
   type: "prompt",
   name: "slide-outline",
-  aliases: ["ppt-outline", "演讲大纲"],
-  description: "生成结构化的演讲大纲",
+  aliases: ["ppt-outline", "presentation-outline"],
+  description: "Generate a structured presentation outline",
 
   parameters: {
-    topic: "演讲主题",
-    duration: "演讲时长（分钟）",
-    slides: "幻灯片数量",
-    audience: "目标听众（junior/senior/mixed）",
-    style: "演讲风格（technical/business/educational）"
+    topic: "The topic of the presentation",
+    duration: "The duration of the presentation (in minutes)",
+    slides: "The number of slides",
+    audience: "The target audience (junior/senior/mixed)",
+    style: "The style of the presentation (technical/business/educational)"
   },
 
   output: {
-    title: "演讲标题",
-    subtitle: "副标题",
+    title: "The title of the presentation",
+    subtitle: "The subtitle",
     sections: [
       {
-        name: "章节名称",
-        slides: "预计页数",
-        duration: "预计时长",
-        keyPoints: ["要点1", "要点2"],
-        speakerNotes: "演讲备注"
+        name: "The name of the section",
+        slides: "The estimated number of pages",
+        duration: "The estimated duration",
+        keyPoints: ["Point 1", "Point 2"],
+        speakerNotes: "Speaker notes"
       }
     ],
-    timeline: "时间安排",
-    resources: "参考资源"
+    timeline: "The timeline",
+    resources: "Reference resources"
   }
 }
 ```
 
-#### `/slide-convert` - Markdown 文章转换
+#### `/slide-convert` - Markdown article conversion
 
 ```typescript
 {
   type: "local",
   name: "slide-convert",
-  aliases: ["md2slide", "文章转PPT"],
-  description: "将 Markdown 文章智能转换为 Slidev 格式",
+  aliases: ["md2slide", "article-to-ppt"],
+  description: "Intelligently convert a Markdown article into Slidev format",
 
   parameters: {
-    source: "源文件路径",
-    splitBy: "分割策略（h1/h2/h3/section/auto）",
-    maxSlides: "最大幻灯片数",
-    includeNotes: "是否生成演讲备注",
-    theme: "应用的主题"
+    source: "The path to the source file",
+    splitBy: "The splitting strategy (h1/h2/h3/section/auto)",
+    maxSlides: "The maximum number of slides",
+    includeNotes: "Whether to generate speaker notes",
+    theme: "The theme to be applied"
   },
 
   conversionRules: {
-    headings: "标题映射规则",
-    content: "内容分割规则",
-    code: "代码块处理",
-    images: "图片优化",
-    lists: "列表转换"
+    headings: "Heading mapping rules",
+    content: "Content splitting rules",
+    code: "Code block handling",
+    images: "Image optimization",
+    lists: "List conversion"
   }
 }
 ```
 
-### 2. 工具集设计
+### 2. Toolset Design
 
-#### SlidevGenerator - Slidev 格式生成器
+#### SlidevGenerator - A generator for the Slidev format
 
 ```typescript
 export class SlidevGeneratorTool implements WritingTool {
   name = "slidev_generator"
-  description = "生成 Slidev 格式的演示文稿"
+  description = "Generates a presentation in Slidev format"
 
   async execute(input: SlidevGeneratorInput): Promise<ToolResult> {
     const { content, config } = input
 
-    // 1. 解析内容结构
+    // 1. Parse the content structure
     const structure = this.analyzeContent(content)
 
-    // 2. 生成 Slidev 头部配置
+    // 2. Generate the Slidev headmatter configuration
     const headmatter = this.generateHeadmatter({
       title: config.title,
       theme: config.theme || 'default',
@@ -382,7 +381,7 @@ export class SlidevGeneratorTool implements WritingTool {
       mdc: true
     })
 
-    // 3. 生成幻灯片内容
+    // 3. Generate the slide content
     const slides = this.generateSlides(structure, {
       splitStrategy: config.splitBy,
       maxSlidesCount: config.maxSlides,
@@ -390,13 +389,13 @@ export class SlidevGeneratorTool implements WritingTool {
       includeTransitions: config.transitions
     })
 
-    // 4. 添加演讲者备注
+    // 4. Add speaker notes
     const slidesWithNotes = this.addSpeakerNotes(slides, {
       autoGenerate: config.autoNotes,
       style: config.noteStyle
     })
 
-    // 5. 组装最终内容
+    // 5. Assemble the final content
     const slidevContent = this.assembleSlidev(
       headmatter,
       slidesWithNotes
@@ -418,20 +417,20 @@ export class SlidevGeneratorTool implements WritingTool {
   private generateSlides(structure: ContentStructure, config: SlideConfig): Slide[] {
     const slides: Slide[] = []
 
-    // 封面页
+    // Cover slide
     slides.push(this.createCoverSlide(structure.title, structure.subtitle))
 
-    // 目录页（可选）
+    // Table of contents slide (optional)
     if (config.includeTOC) {
       slides.push(this.createTOCSlide(structure.sections))
     }
 
-    // 内容页
+    // Content slides
     structure.sections.forEach(section => {
       slides.push(...this.createContentSlides(section, config))
     })
 
-    // 结尾页
+    // End slide
     slides.push(this.createEndSlide(structure.conclusion))
 
     return slides
@@ -439,27 +438,27 @@ export class SlidevGeneratorTool implements WritingTool {
 }
 ```
 
-#### SlideConverter - Markdown 到 Slidev 转换器
+#### SlideConverter - A converter from Markdown to Slidev
 
 ```typescript
 export class SlideConverterTool implements WritingTool {
   name = "slide_converter"
-  description = "将 Markdown 文章转换为 Slidev 演示文稿"
+  description = "Converts a Markdown article into a Slidev presentation"
 
   async execute(input: SlideConverterInput): Promise<ToolResult> {
     const { markdown, options } = input
 
-    // 1. 解析 Markdown 结构
+    // 1. Parse the Markdown structure
     const ast = this.parseMarkdown(markdown)
 
-    // 2. 智能内容分割
+    // 2. Intelligently split the content
     const segments = this.intelligentSplit(ast, {
       strategy: options.splitBy || 'auto',
       targetSlides: options.maxSlides || 20,
       preserveContext: true
     })
 
-    // 3. 内容优化和重组
+    // 3. Optimize and reorganize the content
     const optimizedSegments = segments.map(segment => ({
       ...segment,
       content: this.optimizeForPresentation(segment.content),
@@ -467,14 +466,14 @@ export class SlideConverterTool implements WritingTool {
       animations: this.suggestAnimations(segment)
     }))
 
-    // 4. 生成 Slidev 格式
+    // 4. Generate the Slidev format
     const slidevContent = this.generateSlidevFormat(optimizedSegments, {
       theme: options.theme,
       transitions: options.transitions,
       aspectRatio: options.aspectRatio || '16/9'
     })
 
-    // 5. 添加交互元素
+    // 5. Add interactive elements
     const interactiveContent = this.addInteractiveElements(slidevContent, {
       codePlayground: options.enablePlayground,
       clickAnimations: options.enableAnimations,
@@ -491,57 +490,57 @@ export class SlideConverterTool implements WritingTool {
   }
 
   private intelligentSplit(ast: MarkdownAST, config: SplitConfig): Segment[] {
-    // AI 驱动的智能分割算法
+    // An AI-driven intelligent splitting algorithm
     const segments: Segment[] = []
 
     if (config.strategy === 'auto') {
-      // 分析内容密度和逻辑关系
+      // Analyze content density and logical relationships
       const density = this.analyzeContentDensity(ast)
       const relationships = this.analyzeLogicalRelationships(ast)
 
-      // 基于分析结果动态分割
+      // Dynamically split based on the analysis results
       return this.dynamicSplit(ast, density, relationships, config.targetSlides)
     }
 
-    // 基于标题级别分割
+    // Split based on heading level
     return this.splitByHeading(ast, config.strategy)
   }
 }
 ```
 
-#### SlideOptimizer - PPT 内容优化器
+#### SlideOptimizer - A PPT content optimizer
 
 ```typescript
 export class SlideOptimizerTool implements WritingTool {
   name = "slide_optimizer"
-  description = "优化演示文稿内容和结构"
+  description = "Optimizes the content and structure of a presentation"
 
   async execute(input: SlideOptimizerInput): Promise<ToolResult> {
     const { slidevContent, goals } = input
 
     const optimizations = []
 
-    // 1. 内容精简
+    // 1. Content simplification
     if (goals.includes('conciseness')) {
       optimizations.push(this.simplifyContent(slidevContent))
     }
 
-    // 2. 视觉增强
+    // 2. Visual enhancement
     if (goals.includes('visual')) {
       optimizations.push(this.enhanceVisuals(slidevContent))
     }
 
-    // 3. 流程优化
+    // 3. Flow optimization
     if (goals.includes('flow')) {
       optimizations.push(this.improveFlow(slidevContent))
     }
 
-    // 4. 动画建议
+    // 4. Animation suggestions
     if (goals.includes('animations')) {
       optimizations.push(this.suggestAnimations(slidevContent))
     }
 
-    // 5. 时间优化
+    // 5. Timing optimization
     if (goals.includes('timing')) {
       optimizations.push(this.optimizeTiming(slidevContent))
     }
@@ -562,65 +561,65 @@ export class SlideOptimizerTool implements WritingTool {
 }
 ```
 
-### 3. AI 增强功能
+### 3. AI Enhancement Features
 
-#### 智能内容分析
+#### Intelligent Content Analysis
 
 ```typescript
 interface ContentAnalyzer {
-  // 分析内容结构和重要性
+  // Analyze the structure and importance of the content
   analyzeImportance(content: string): ImportanceMap
 
-  // 识别关键概念和术语
+  // Identify key concepts and terms
   extractKeyConepts(content: string): Concept[]
 
-  // 检测内容类型（技术、商务、教育等）
+  // Detect the content type (technical, business, educational, etc.)
   detectContentType(content: string): ContentType
 
-  // 评估复杂度级别
+  // Assess the complexity level
   assessComplexity(content: string): ComplexityLevel
 }
 ```
 
-#### 演讲备注生成
+#### Speaker Notes Generation
 
 ```typescript
 interface SpeakerNotesGenerator {
-  // 生成演讲要点
+  // Generate talking points
   generateTalkingPoints(slide: Slide): string[]
 
-  // 生成时间提示
+  // Generate timing cues
   generateTimingCues(slide: Slide, totalDuration: number): TimingCue[]
 
-  // 生成过渡语句
+  // Generate transition statements
   generateTransitions(currentSlide: Slide, nextSlide: Slide): string
 
-  // 生成互动建议
+  // Suggest interactions
   suggestInteractions(slide: Slide): Interaction[]
 }
 ```
 
-#### 视觉元素建议
+#### Visual Element Suggestions
 
 ```typescript
 interface VisualSuggestionEngine {
-  // 建议图表类型
+  // Suggest chart types
   suggestCharts(data: any): ChartSuggestion[]
 
-  // 建议图标使用
+  // Suggest icon usage
   suggestIcons(content: string): IconSuggestion[]
 
-  // 建议布局模式
+  // Suggest layout patterns
   suggestLayout(content: string): LayoutSuggestion
 
-  // 建议配色方案
+  // Suggest a color scheme
   suggestColorScheme(theme: string): ColorScheme
 }
 ```
 
-## 🛠️ 技术实现方案
+## 🛠️ Technical Implementation Plan
 
-### 1. 核心依赖（按需安装）
+### 1. Core Dependencies (Installed on demand)
 
 ```json
 {
@@ -637,56 +636,56 @@ interface VisualSuggestionEngine {
 }
 ```
 
-注意：Slidev 相关依赖将作为可选依赖，仅在用户首次使用 `/slide` 命令时提示安装。
+Note: Slidev-related dependencies will be treated as optional dependencies, and users will be prompted to install them only when they first use the `/slide` command.
 
-### 2. 项目结构扩展
+### 2. Project Structure Extension
 
 ```bash
 writeflow/
 ├── .writeflow/
-│   └── agents/                        # Agent 配置目录
-│       ├── slidev-ppt.md              # Slidev Agent 配置
-│       └── README.md                  # Agent 使用说明
+│   └── agents/                        # Agent configuration directory
+│       ├── slidev-ppt.md              # Slidev Agent configuration
+│       └── README.md                  # Agent usage instructions
 ├── src/
 │   ├── utils/
-│   │   └── agentLoader.ts             # Agent 加载器
+│   │   └── agentLoader.ts             # Agent loader
 │   ├── tools/
-│   │   └── slidev/                    # Slidev 相关工具（按需加载）
-│   │       ├── SlidevGenerator.ts     # 生成器
-│   │       ├── SlideConverter.ts      # 转换器
-│   │       ├── SlideOptimizer.ts      # 优化器
-│   │       ├── SlideExporter.ts       # 导出器
-│   │       └── index.ts               # 工具导出
+│   │   └── slidev/                    # Slidev-related tools (loaded on demand)
+│   │       ├── SlidevGenerator.ts     # Generator
+│   │       ├── SlideConverter.ts      # Converter
+│   │       ├── SlideOptimizer.ts      # Optimizer
+│   │       ├── SlideExporter.ts       # Exporter
+│   │       └── index.ts               # Tool exports
 │   ├── commands/
-│   │   └── slide.ts                   # Slide 主命令
+│   │   └── slide.ts                   # The main slide command
 │   └── templates/
-│       └── slidev/                    # Slidev 模板
-│           ├── default/                # 默认模板集
-│           │   ├── cover.md           # 封面模板
-│           │   ├── toc.md             # 目录模板
-│           │   ├── content.md         # 内容模板
-│           │   └── end.md             # 结尾模板
-│           └── themes/                # 主题特定模板
-│               ├── technical/         # 技术演讲模板
-│               ├── business/          # 商务演示模板
-│               └── academic/          # 学术报告模板
+│       └── slidev/                    # Slidev templates
+│           ├── default/                # Default template set
+│           │   ├── cover.md           # Cover template
+│           │   ├── toc.md             # Table of contents template
+│           │   ├── content.md         # Content template
+│           │   └── end.md             # End template
+│           └── themes/                # Theme-specific templates
+│               ├── technical/         # Technical presentation template
+│               ├── business/          # Business presentation template
+│               └── academic/          # Academic report template
 ```
 
-### 3. 配置系统
+### 3. Configuration System
 
 ```yaml
 # .writeflow/slidev.config.yaml
 slidev:
-  # 默认主题
+  # Default theme
   defaultTheme: seriph
 
-  # Agent 设置
+  # Agent settings
   agent:
-    autoLoad: false      # 是否自动加载（默认否）
-    cacheTools: true     # 是否缓存工具（默认是）
-    unloadAfter: 3600000 # 闲置多久后卸载（毫秒）
+    autoLoad: false      # Whether to load automatically (default: no)
+    cacheTools: true     # Whether to cache tools (default: yes)
+    unloadAfter: 3600000 # Unload after being idle for this long (in milliseconds)
 
-  # 默认配置
+  # Default configuration
   defaults:
     aspectRatio: 16/9
     canvasWidth: 1024
@@ -694,195 +693,195 @@ slidev:
     monaco: true
     mdc: true
 
-  # 转换规则
+  # Conversion rules
   conversion:
     splitStrategy: auto
     maxSlidesPerSection: 5
     includeNotes: true
     preserveCodeBlocks: true
 
-  # 导出设置
+  # Export settings
   export:
     formats: [pdf, pptx, png]
     quality: high
     withNotes: false
     withClicks: false
 
-  # 性能优化
+  # Performance optimization
   performance:
-    preloadTemplates: false  # 预加载模板
-    cacheExports: true       # 缓存导出结果
-    maxConcurrentExports: 2  # 最大并发导出数
+    preloadTemplates: false  # Preload templates
+    cacheExports: true       # Cache export results
+    maxConcurrentExports: 2  # Maximum number of concurrent exports
 ```
 
-## 📊 实施计划
+## 📊 Implementation Plan
 
-### 第一阶段：基础功能（2周）
+### Phase 1: Basic Functionality (2 weeks)
 
 1. **Week 1**
-   - 实现 `/slide` 主命令框架
-   - 实现基础的 Markdown 到 Slidev 转换
-   - 支持基本的幻灯片生成
+   - Implement the `/slide` main command framework.
+   - Implement basic Markdown to Slidev conversion.
+   - Support basic slide generation.
 
 2. **Week 2**
-   - 实现 `/slide-outline` 大纲生成
-   - 添加基础的内容分割策略
-   - 支持简单的主题应用
+   - Implement `/slide-outline` for outline generation.
+   - Add a basic content splitting strategy.
+   - Support simple theme application.
 
-### 第二阶段：AI 增强（2周）
+### Phase 2: AI Enhancement (2 weeks)
 
 1. **Week 3**
-   - 实现智能内容分析
-   - 添加演讲备注自动生成
-   - 优化内容分割算法
+   - Implement intelligent content analysis.
+   - Add automatic generation of speaker notes.
+   - Optimize the content splitting algorithm.
 
 2. **Week 4**
-   - 实现内容优化建议
-   - 添加视觉元素建议
-   - 完善动画和过渡效果
+   - Implement content optimization suggestions.
+   - Add suggestions for visual elements.
+   - Refine animations and transition effects.
 
-### 第三阶段：高级功能（2周）
+### Phase 3: Advanced Features (2 weeks)
 
 1. **Week 5**
-   - 实现多格式导出
-   - 添加实时预览功能
-   - 支持自定义模板
+   - Implement multi-format export.
+   - Add a real-time preview feature.
+   - Support custom templates.
 
 2. **Week 6**
-   - 性能优化
-   - 错误处理完善
-   - 文档编写和测试
+   - Performance optimization.
+   - Refine error handling.
+   - Write documentation and conduct testing.
 
-## 🎯 成功指标
+## 🎯 Success Metrics
 
-### 功能指标
+### Functional Metrics
 
-- ✅ 支持至少 5 种 Slidev 官方主题
-- ✅ Markdown 到 Slidev 转换成功率 > 95%
-- ✅ AI 生成的大纲满意度 > 80%
-- ✅ 支持导出 PDF、PPTX、PNG 格式
+- ✅ Support for at least 5 official Slidev themes.
+- ✅ Markdown to Slidev conversion success rate > 95%.
+- ✅ AI-generated outline satisfaction rate > 80%.
+- ✅ Support for exporting to PDF, PPTX, and PNG formats.
 
-### 性能指标
+### Performance Metrics
 
-- ⚡ 30 页 PPT 生成时间 < 10 秒
-- ⚡ 文章转换响应时间 < 5 秒
-- ⚡ PDF 导出时间 < 30 秒
+- ⚡ Generation time for a 30-page PPT < 10 seconds.
+- ⚡ Article conversion response time < 5 seconds.
+- ⚡ PDF export time < 30 seconds.
 
-### 用户体验指标
+### User Experience Metrics
 
-- 🎨 命令使用学习成本 < 5 分钟
-- 🎨 生成内容无需手动调整比例 > 70%
-- 🎨 用户满意度评分 > 4.5/5
+- 🎨 Learning curve for using the command < 5 minutes.
+- 🎨 Proportion of generated content that does not require manual adjustment > 70%.
+- 🎨 User satisfaction rating > 4.5/5.
 
-## 🔄 迭代优化方向
+## 🔄 Iterative Optimization Directions
 
-### 短期优化（1-2月）
+### Short-Term Optimization (1-2 months)
 
-1. **模板系统**
-   - 行业特定模板（技术、商务、教育）
-   - 场景模板（产品发布、技术分享、培训）
-   - 自定义模板支持
+1. **Template System**
+   - Industry-specific templates (technical, business, educational).
+   - Scenario templates (product launch, technical sharing, training).
+   - Support for custom templates.
 
-2. **协作功能**
-   - 多人协作编辑
-   - 评论和批注
-   - 版本管理
+2. **Collaboration Features**
+   - Multi-user collaborative editing.
+   - Comments and annotations.
+   - Version management.
 
-### 中期规划（3-6月）
+### Mid-Term Planning (3-6 months)
 
-1. **智能助手**
-   - 实时内容建议
-   - 语音转文字输入
-   - 自动配图和图表生成
+1. **Intelligent Assistant**
+   - Real-time content suggestions.
+   - Speech-to-text input.
+   - Automatic generation of charts and images.
 
-2. **平台集成**
-   - GitHub/GitLab 集成
-   - Notion/Obsidian 导入
-   - 云端同步和分享
+2. **Platform Integration**
+   - GitHub/GitLab integration.
+   - Notion/Obsidian import.
+   - Cloud synchronization and sharing.
 
-### 长期愿景（6月+）
+### Long-Term Vision (6+ months)
 
-1. **AI 演讲教练**
-   - 演讲节奏分析
-   - 内容改进建议
-   - 观众互动预测
+1. **AI Presentation Coach**
+   - Analysis of presentation rhythm.
+   - Suggestions for content improvement.
+   - Prediction of audience interaction.
 
-2. **多媒体支持**
-   - 视频嵌入和剪辑
-   - 音频旁白生成
-   - AR/VR 演示支持
+2. **Multimedia Support**
+   - Video embedding and editing.
+   - Generation of audio narration.
+   - AR/VR presentation support.
 
-## 📝 风险与对策
+## 📝 Risks and Countermeasures
 
-### 技术风险
+### Technical Risks
 
-| 风险 | 影响 | 对策 |
-|-----|-----|-----|
-| Slidev API 变更 | 高 | 版本锁定，渐进式升级 |
-| AI 生成质量不稳定 | 中 | 多模型备份，人工审核机制 |
-| 导出格式兼容性 | 中 | 充分测试，提供多种导出选项 |
+| Risk                      | Impact | Countermeasure                          |
+| ------------------------- | ------ | --------------------------------------- |
+| Slidev API changes        | High   | Version locking, gradual upgrades       |
+| Unstable AI generation quality | Medium | Multi-model backups, manual review mechanism |
+| Export format compatibility | Medium | Thorough testing, multiple export options |
 
-### 用户风险
+### User Risks
 
-| 风险 | 影响 | 对策 |
-|-----|-----|-----|
-| 学习曲线陡峭 | 高 | 提供详细教程和示例 |
-| 生成内容不符预期 | 中 | 预览功能，撤销机制 |
-| 性能问题 | 低 | 优化算法，提供进度提示 |
+| Risk                     | Impact | Countermeasure                        |
+| ------------------------ | ------ | ------------------------------------- |
+| Steep learning curve     | High   | Detailed tutorials and examples       |
+| Generated content not as expected | Medium | Preview feature, undo mechanism         |
+| Performance issues       | Low    | Algorithm optimization, progress indicators |
 
-## 🎊 总结
+## 🎊 Conclusion
 
-WriteFlow Slidev PPT 创作功能将为技术内容创作者提供一个强大的演示文稿创作工具，通过 AI 技术大幅提升 PPT 制作效率，同时保持专业性和美观性。该功能的实现将使 WriteFlow 成为一个更加完整的技术内容创作平台，覆盖从文章写作到演讲准备的完整工作流。
-
----
+The WriteFlow Slidev PPT creation feature will provide technical content creators with a powerful presentation creation tool, significantly improving PPT production efficiency through AI technology while maintaining professionalism and aesthetics. The implementation of this feature will make WriteFlow a more complete technical content creation platform, covering the entire workflow from article writing to presentation preparation.
 
 ---
 
-*文档版本：2.0.0*
-*创建日期：2025-01-03*
-*更新日期：2025-01-03*
-*作者：WriteFlow Team*
+---
 
-## 📚 附录：Agent 配置示例
+*Document Version: 2.0.0*
+*Creation Date: 2025-01-03*
+*Update Date: 2025-01-03*
+*Author: WriteFlow Team*
 
-### 示例 1：基础 Slidev Agent 配置
+## 📚 Appendix: Agent Configuration Example
 
-保存为 `.writeflow/agents/slidev-ppt.md`：
+### Example 1: Basic Slidev Agent Configuration
+
+Save as `.writeflow/agents/slidev-ppt.md`:
 
 ```markdown
 ---
 name: slidev-ppt
-description: "Slidev PPT 创作专家"
-whenToUse: "用户需要创建或转换演示文稿"
+description: "Slidev PPT creation expert"
+whenToUse: "When the user needs to create or convert a presentation"
 tools: ["SlidevGenerator", "SlideConverter"]
 ---
 
-你是 Slidev PPT 创作专家，帮助用户创建专业的技术演示文稿。
+You are a Slidev PPT creation expert, helping users create professional technical presentations.
 ```
 
-### 示例 2：使用流程
+### Example 2: Usage Flow
 
 ```bash
-# 1. 用户输入命令
-$ writeflow /slide create "AI Agent 架构设计"
+# 1. User inputs a command
+$ writeflow /slide create "AI Agent Architecture Design"
 
-# 2. 系统检测到 slide 命令，动态加载 Slidev Agent
+# 2. The system detects the slide command and dynamically loads the Slidev Agent.
 
-# 3. Agent 接管任务，使用专用工具生成 PPT
+# 3. The Agent takes over the task and uses specialized tools to generate the PPT.
 
-# 4. 完成后返回结果，可选择性卸载 Agent 释放资源
+# 4. After completion, the result is returned, and the Agent can be optionally unloaded to free up resources.
 ```
 
-### 示例 3：依赖安装提示
+### Example 3: Dependency Installation Prompt
 
 ```typescript
-// 首次使用时的安装引导
+// Installation guide for first-time use
 if (!isSlidevInstalled()) {
   console.log(`
-    首次使用 Slidev 功能需要安装相关依赖。
-    这些依赖是可选的，仅在使用 PPT 功能时需要。
+    First-time use of the Slidev feature requires the installation of related dependencies.
+    These dependencies are optional and are only needed when using the PPT feature.
 
-    是否安装？(y/n)
+    Install now? (y/n)
   `)
 
   if (userConfirms()) {

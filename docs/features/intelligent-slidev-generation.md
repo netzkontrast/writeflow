@@ -1,148 +1,148 @@
-# Slidev 智能PPT生成系统 - 产品需求文档
+# Slidev Intelligent PPT Generation System - Product Requirements Document
 
-## 1. 产品概述
+## 1. Product Overview
 
-### 1.1 背景
-当前WriteFlow的幻灯片生成功能基于固定模板，无法满足用户多样化的创意需求。需要升级为智能化、通用化的PPT生成系统，充分利用Slidev的完整特性。
+### 1.1 Background
+The current slide generation feature in WriteFlow is based on fixed templates, which cannot meet the diverse creative needs of users. It needs to be upgraded to an intelligent and universal PPT generation system that fully utilizes the complete features of Slidev.
 
-### 1.2 目标
-- 从"固定模板填充"升级到"智能理解需求并创造"
-- 提供灵活的AI驱动生成方式
-- 保留模板生态系统作为补充方案
-- 充分利用Slidev的所有高级特性
+### 1.2 Objectives
+- Upgrade from "fixed template filling" to "intelligently understanding needs and creating".
+- Provide a flexible, AI-driven generation method.
+- Retain the template ecosystem as a supplementary solution.
+- Make full use of all the advanced features of Slidev.
 
-## 2. 核心功能需求
+## 2. Core Functional Requirements
 
-### 2.1 智能内容分析
-- **用户意图识别**：理解用户的演示目标和受众
-- **内容类型分析**：自动识别教学、商业、技术等不同类型
-- **结构规划**：智能规划幻灯片的逻辑结构和流程
+### 2.1 Intelligent Content Analysis
+- **User Intent Recognition**: Understand the user's presentation goals and audience.
+- **Content Type Analysis**: Automatically identify different types such as educational, business, and technical.
+- **Structure Planning**: Intelligently plan the logical structure and flow of the slides.
 
-### 2.2 Slidev知识库集成
-- **完整文档整合**：集成 `https://sli.dev/llms-full.txt`
-- **特性理解**：深度理解Slidev的语法、组件、动画、主题等
-- **最佳实践应用**：应用Slidev官方推荐的设计模式
+### 2.2 Slidev Knowledge Base Integration
+- **Complete Document Integration**: Integrate `https://sli.dev/llms-full.txt`.
+- **Feature Understanding**: Deeply understand Slidev's syntax, components, animations, themes, etc.
+- **Best Practice Application**: Apply the design patterns recommended by the official Slidev documentation.
 
-### 2.3 视觉设计智能化
-- **主题选择**：根据内容类型智能选择合适主题
-- **色彩搭配**：参考现代设计趋势（如Aurora Gradient风格）
-- **层次设计**：超大元素与小元素的对比设计
-- **字体策略**：中英文混用的专业字体搭配
+### 2.3 Intelligent Visual Design
+- **Theme Selection**: Intelligently select a suitable theme based on the content type.
+- **Color Matching**: Refer to modern design trends (such as the Aurora Gradient style).
+- **Hierarchical Design**: A design that contrasts oversized elements with smaller ones.
+- **Font Strategy**: A professional font combination that mixes Chinese and English.
 
-### 2.4 高级特性运用
-- **动画效果**：v-click、v-motion等交互动画
-- **组件集成**：充分利用内置组件和自定义组件
-- **布局优化**：多样化的页面布局设计
-- **媒体整合**：图片、视频、图表的智能整合
+### 2.4 Application of Advanced Features
+- **Animation Effects**: Interactive animations such as v-click and v-motion.
+- **Component Integration**: Make full use of built-in and custom components.
+- **Layout Optimization**: A variety of page layout designs.
+- **Media Integration**: Intelligent integration of images, videos, and charts.
 
-## 3. 技术规格
+## 3. Technical Specifications
 
-### 3.1 系统架构
+### 3.1 System Architecture
 ```
-用户输入 → 内容分析器 → Slidev知识库 → 智能生成引擎 → Markdown输出
+User Input → Content Analyzer → Slidev Knowledge Base → Intelligent Generation Engine → Markdown Output
 ```
 
-### 3.2 知识库管理
-- **存储方式**：本地缓存 + 定期更新机制
-- **检索优化**：基于内容类型的智能检索
-- **版本管理**：跟踪Slidev版本更新
+### 3.2 Knowledge Base Management
+- **Storage Method**: Local cache + a regular update mechanism.
+- **Retrieval Optimization**: Intelligent retrieval based on content type.
+- **Version Management**: Track Slidev version updates.
 
-### 3.3 提示词设计
+### 3.3 Prompt Design
 ```typescript
 interface PromptTemplate {
-  systemPrompt: string      // Slidev知识库 + 设计原则
-  contentAnalysis: string   // 内容分析指导
-  structurePlanning: string // 结构规划策略
-  visualDesign: string      // 视觉设计指导
-  technicalImpl: string     // 技术实现细节
+  systemPrompt: string      // Slidev knowledge base + design principles
+  contentAnalysis: string   // Guidance for content analysis
+  structurePlanning: string // Strategy for structure planning
+  visualDesign: string      // Guidance for visual design
+  technicalImpl: string     // Details of the technical implementation
 }
 ```
 
-## 4. 用户体验设计
+## 4. User Experience Design
 
-### 4.1 输入方式
-- **自然语言描述**：用户用自然语言描述PPT需求
-- **内容上传**：支持文档、图片等多媒体内容
-- **参考风格**：可选择参考的设计风格或现有PPT
+### 4.1 Input Methods
+- **Natural Language Description**: Users describe their PPT needs in natural language.
+- **Content Upload**: Supports multimedia content such as documents and images.
+- **Reference Style**: Users can choose a reference design style or an existing PPT.
 
-### 4.2 生成流程
-1. **需求理解**：AI分析用户意图和内容
-2. **结构规划**：展示拟定的PPT结构供确认
-3. **样式选择**：推荐合适的主题和设计风格
-4. **内容生成**：生成完整的Slidev Markdown文件
-5. **预览确认**：提供预览和调整机会
+### 4.2 Generation Process
+1. **Requirement Understanding**: The AI analyzes the user's intent and content.
+2. **Structure Planning**: The proposed PPT structure is displayed for confirmation.
+3. **Style Selection**: Suitable themes and design styles are recommended.
+4. **Content Generation**: A complete Slidev Markdown file is generated.
+5. **Preview and Confirmation**: A preview and the opportunity for adjustments are provided.
 
-### 4.3 输出质量
-- **完整性**：确保用户内容不遗漏
-- **专业性**：符合演示设计最佳实践
-- **可用性**：生成的文件可直接用于演示
-- **可定制性**：支持后续手动调整
+### 4.3 Output Quality
+- **Completeness**: Ensure that no user content is omitted.
+- **Professionalism**: Comply with the best practices of presentation design.
+- **Usability**: The generated file can be used directly for a presentation.
+- **Customizability**: Supports subsequent manual adjustments.
 
-## 5. 实现优先级
+## 5. Implementation Priority
 
-### Phase 1: 基础智能生成
-- [ ] 集成Slidev完整知识库
-- [ ] 设计核心提示词模板
-- [ ] 实现基础的智能生成命令
-- [ ] 支持常见PPT类型（商业、教学、技术）
+### Phase 1: Basic Intelligent Generation
+- [ ] Integrate the complete Slidev knowledge base.
+- [ ] Design the core prompt template.
+- [ ] Implement the basic intelligent generation command.
+- [ ] Support common PPT types (business, educational, technical).
 
-### Phase 2: 高级特性支持
-- [ ] 集成高级动画和交互效果
-- [ ] 支持复杂布局和组件
-- [ ] 优化视觉设计算法
-- [ ] 增强内容分析能力
+### Phase 2: Advanced Feature Support
+- [ ] Integrate advanced animations and interactive effects.
+- [ ] Support complex layouts and components.
+- [ ] Optimize the visual design algorithm.
+- [ ] Enhance content analysis capabilities.
 
-### Phase 3: 生态系统完善
-- [ ] 模板库集成
-- [ ] 用户自定义模板支持
-- [ ] 协作和分享功能
-- [ ] 性能优化和缓存机制
+### Phase 3: Ecosystem Improvement
+- [ ] Integrate a template library.
+- [ ] Support user-defined templates.
+- [ ] Add collaboration and sharing features.
+- [ ] Optimize performance and caching mechanisms.
 
-## 6. 成功指标
+## 6. Success Metrics
 
-### 6.1 质量指标
-- **生成完整率**：≥95% 内容不遗漏
-- **设计专业度**：用户满意度 ≥4.5/5
-- **技术准确性**：生成的Slidev代码正确率 ≥98%
+### 6.1 Quality Metrics
+- **Generation Completeness Rate**: ≥95% of content is not omitted.
+- **Design Professionalism**: User satisfaction ≥4.5/5.
+- **Technical Accuracy**: Correctness of the generated Slidev code ≥98%.
 
-### 6.2 效率指标
-- **生成速度**：平均生成时间 <30秒
-- **使用便捷性**：从输入到可用PPT <2分钟
-- **学习成本**：新用户上手时间 <5分钟
+### 6.2 Efficiency Metrics
+- **Generation Speed**: Average generation time <30 seconds.
+- **Ease of Use**: From input to a usable PPT in <2 minutes.
+- **Learning Curve**: Time for a new user to get started <5 minutes.
 
-### 6.3 用户体验指标
-- **功能满意度**：≥4.0/5
-- **推荐意愿**：NPS ≥50
-- **复用率**：用户重复使用率 ≥60%
+### 6.3 User Experience Metrics
+- **Functional Satisfaction**: ≥4.0/5.
+- **Willingness to Recommend**: NPS ≥50.
+- **Reuse Rate**: User repeat usage rate ≥60%.
 
-## 7. 风险与缓解
+## 7. Risks and Mitigation
 
-### 7.1 技术风险
-- **知识库更新滞后**：建立自动更新机制
-- **生成质量不稳定**：多轮测试和优化
-- **性能瓶颈**：缓存和异步处理
+### 7.1 Technical Risks
+- **Outdated Knowledge Base**: Establish an automatic update mechanism.
+- **Unstable Generation Quality**: Multiple rounds of testing and optimization.
+- **Performance Bottlenecks**: Caching and asynchronous processing.
 
-### 7.2 用户体验风险
-- **学习成本过高**：提供详细文档和示例
-- **期望管理**：明确说明功能边界
-- **反馈收集**：建立用户反馈渠道
+### 7.2 User Experience Risks
+- **Steep Learning Curve**: Provide detailed documentation and examples.
+- **Expectation Management**: Clearly define the boundaries of the feature.
+- **Feedback Collection**: Establish channels for user feedback.
 
-## 8. 时间规划
+## 8. Timeline
 
-- **Week 1-2**：需求细化和技术调研
-- **Week 3-4**：核心功能开发
-- **Week 5-6**：测试和优化
-- **Week 7**：文档编写和发布准备
-- **Week 8**：发布和用户反馈收集
+- **Weeks 1-2**: Requirement refinement and technical investigation.
+- **Weeks 3-4**: Core feature development.
+- **Weeks 5-6**: Testing and optimization.
+- **Week 7**: Documentation writing and release preparation.
+- **Week 8**: Release and user feedback collection.
 
-## 9. 资源需求
+## 9. Resource Requirements
 
-### 9.1 开发资源
-- 核心开发：1人周 × 6周
-- 测试验证：0.5人周 × 2周
-- 文档编写：0.5人周 × 1周
+### 9.1 Development Resources
+- Core development: 1 person-week × 6 weeks.
+- Testing and validation: 0.5 person-weeks × 2 weeks.
+- Documentation writing: 0.5 person-weeks × 1 week.
 
-### 9.2 外部依赖
-- Slidev官方文档获取
-- AI模型API调用配额
-- 测试用户群体
+### 9.2 External Dependencies
+- Access to the official Slidev documentation.
+- API call quota for the AI model.
+- A group of test users.

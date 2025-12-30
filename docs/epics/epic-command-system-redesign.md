@@ -1,212 +1,212 @@
-# Epic: WriteFlow 命令系统重新设计 - Brownfield Enhancement
+# Epic: WriteFlow Command System Redesign - Brownfield Enhancement
 
-**Epic ID:** EPIC-001  
-**创建时间:** 2025-08-31  
-**状态:** Draft  
-**负责人:** PM (John)
+**Epic ID:** EPIC-001
+**Creation Date:** 2025-08-31
+**Status:** Draft
+**Owner:** PM (John)
 
-## Epic 目标
+## Epic Goal
 
-重新设计 WriteFlow 的命令系统，使其从技术导向转变为真正实用的作者工具，增加核心写作命令（写作、润色、扩展、续写等），简化命令参数，提升用户体验。
+To redesign WriteFlow's command system, shifting it from a technology-oriented approach to a genuinely practical tool for authors. This involves adding core writing commands (write, polish, expand, continue, etc.), simplifying command parameters, and improving the user experience.
 
-## Epic 描述
+## Epic Description
 
-### 现有系统背景：
-- **当前功能：** WriteFlow v2.2.6，基于 TypeScript + React + Ink 的 AI 写作助手
-- **技术栈：** Node.js 18+, TypeScript, React, Ink UI, Anthropic Claude API
-- **集成点：** 命令系统位于 `src/cli/commands/` 目录，包含核心命令、风格命令、发布命令等
+### Existing System Background:
+- **Current Functionality:** WriteFlow v2.2.6, an AI writing assistant based on TypeScript + React + Ink.
+- **Technology Stack:** Node.js 18+, TypeScript, React, Ink UI, Anthropic Claude API.
+- **Integration Points:** The command system is located in the `src/cli/commands/` directory and includes core, style, and publishing commands.
 
-### 当前问题分析
+### Current Problem Analysis
 
-1. **命令设计问题：**
-   - 现有命令过于技术化，不符合作者实际写作流程
-   - 缺少常用的写作命令如：写作、扩展、润色、续写、总结等
-   - 命令参数复杂，不够直观
+1. **Command Design Issues:**
+   - Existing commands are too technical and do not align with an author's actual writing process.
+   - Commonly used writing commands such as write, expand, polish, continue, and summarize are missing.
+   - Command parameters are complex and not intuitive.
 
-2. **缺失的核心功能：**
-   - 没有直接的 `/write` 或 `/compose` 命令来创作内容
-   - 缺少 `/expand` 扩展内容命令
-   - 缺少 `/polish` 润色命令
-   - 缺少 `/continue` 续写命令
-   - 缺少 `/summarize` 总结命令
-   - 缺少 `/grammar` 语法检查命令
+2. **Missing Core Functionality:**
+   - No direct `/write` or `/compose` command to create content.
+   - Missing an `/expand` command to expand on content.
+   - Missing a `/polish` command for polishing.
+   - Missing a `/continue` command to continue writing.
+   - Missing a `/summarize` command for summarization.
+   - Missing a `/grammar` command for grammar checking.
 
-3. **用户体验问题：**
-   - 命令不够直观，需要记忆复杂参数
-   - 缺少写作流程引导
-   - 工具调用不透明
+3. **User Experience Issues:**
+   - Commands are not intuitive and require memorizing complex parameters.
+   - Lack of guidance for the writing process.
+   - Opaque tool invocation.
 
-### 增强详情：
-- **新增核心写作命令：** `/write`, `/draft`, `/compose`, `/polish`, `/expand`, `/simplify`, `/continue`
-- **新增辅助工具命令：** `/grammar`, `/summarize`, `/translate`, `/check`
-- **简化现有命令的参数结构，** 使其更直观易用
-- **重新设计 `/help` 命令的显示格式，** 按功能分类展示
-- **集成方式：** 扩展现有的 SlashCommand 系统，保持向后兼容
+### Enhancement Details:
+- **Add new core writing commands:** `/write`, `/draft`, `/compose`, `/polish`, `/expand`, `/simplify`, `/continue`.
+- **Add new utility tool commands:** `/grammar`, `/summarize`, `/translate`, `/check`.
+- **Simplify the parameter structure of existing commands** to make them more intuitive and user-friendly.
+- **Redesign the display format of the `/help` command** to show commands by functional category.
+- **Integration Method:** Extend the existing `SlashCommand` system while maintaining backward compatibility.
 
-### 成功标准：
-- 用户能够使用直观的命令进行日常写作任务
-- 命令参数简化，学习成本降低
-- 保持现有功能完整性和性能
+### Success Criteria:
+- Users are able to use intuitive commands for daily writing tasks.
+- Command parameters are simplified, reducing the learning curve.
+- The integrity and performance of existing functionality are maintained.
 
-## Stories 分解
+## Story Breakdown
 
-### Story 1: 核心写作命令实现
-**目标：** 在 `src/cli/commands/core-commands.ts` 中新增基础创作命令
+### Story 1: Core Writing Command Implementation
+**Goal:** Add basic creation commands to `src/cli/commands/core-commands.ts`.
 
-**功能范围：**
-- `/write <主题>` - 直接写作文章
-- `/draft <主题>` - 快速起草
-- `/compose <类型> <主题>` - 指定类型创作
-- 实现智能提示生成和工具集成
+**Functional Scope:**
+- `/write <topic>` - Write an article directly.
+- `/draft <topic>` - Quickly draft content.
+- `/compose <type> <topic>` - Create content of a specified type.
+- Implement intelligent prompt generation and tool integration.
 
-**验收标准：**
-- 命令能正确识别和解析参数
-- 生成合适的 AI 提示进行内容创作
-- 与现有工具系统正确集成
-- 现有命令功能不受影响
+**Acceptance Criteria:**
+- Commands must correctly identify and parse parameters.
+- Generate appropriate AI prompts for content creation.
+- Correctly integrate with the existing tool system.
+- The functionality of existing commands must not be affected.
 
-### Story 2: 内容优化命令实现  
-**目标：** 新增内容优化相关命令
+### Story 2: Content Optimization Command Implementation
+**Goal:** Add new commands related to content optimization.
 
-**功能范围：**
-- `/polish [内容]` - 润色文本
-- `/expand <内容>` - 扩展深度
-- `/simplify <内容>` - 简化表达  
-- `/continue [文件]` - 续写内容
-- 支持文件路径和直接内容输入
+**Functional Scope:**
+- `/polish [content]` - Polish text.
+- `/expand <content>` - Expand on a topic.
+- `/simplify <content>` - Simplify expression.
+- `/continue [file]` - Continue writing content.
+- Support both file paths and direct content input.
 
-**验收标准：**
-- 支持文件路径和直接文本输入两种方式
-- 能正确读取和处理文件内容
-- 生成针对性的优化提示
-- 处理各种边界情况（空文件、大文件等）
+**Acceptance Criteria:**
+- Support both file paths and direct text input.
+- Must be able to correctly read and process file content.
+- Generate targeted optimization prompts.
+- Handle various edge cases (empty files, large files, etc.).
 
-### Story 3: 辅助工具命令和 Help 系统重构
-**目标：** 实现辅助工具命令和改进帮助系统
+### Story 3: Utility Tool Commands and Help System Redesign
+**Goal:** Implement utility tool commands and improve the help system.
 
-**功能范围：**
-- `/grammar [文件]` - 语法检查
-- `/summarize <内容>` - 总结提炼
-- `/translate <语言> <内容>` - 翻译内容
-- `/check [文件]` - 事实核查
-- 重构 `/help` 命令，按功能分类显示，提升用户体验
+**Functional Scope:**
+- `/grammar [file]` - Grammar checking.
+- `/summarize <content>` - Summarize and extract key points.
+- `/translate <language> <content>` - Translate content.
+- `/check [file]` - Fact-checking.
+- Redesign the `/help` command to display by functional category, improving user experience.
 
-**验收标准：**
-- 辅助工具命令正常工作
-- Help 系统按功能分类清晰展示
-- 支持单个命令的详细帮助
-- 新用户能快速上手使用
+**Acceptance Criteria:**
+- Utility tool commands must work correctly.
+- The help system must be clearly displayed by functional category.
+- Support detailed help for individual commands.
+- New users should be able to get started quickly.
 
-## 兼容性要求
+## Compatibility Requirements
 
-- ✅ 现有 API (`SlashCommand` 接口) 保持不变
-- ✅ 现有命令 (`/outline`, `/rewrite`, `/research`) 继续工作
-- ✅ UI 组件 (React + Ink) 遵循现有模式
-- ✅ 性能影响最小化（复用现有工具系统）
+- ✅ The existing API (`SlashCommand` interface) will remain unchanged.
+- ✅ Existing commands (`/outline`, `/rewrite`, `/research`) will continue to work.
+- ✅ UI components (React + Ink) will follow existing patterns.
+- ✅ Performance impact will be minimized (by reusing the existing tool system).
 
-## 风险缓解
+## Risk Mitigation
 
-### 主要风险：
-新命令可能与现有命令系统产生冲突或性能问题
+### Main Risks:
+New commands may conflict with the existing command system or cause performance issues.
 
-### 缓解措施：
-- 采用渐进式添加，每个 Story 独立测试
-- 复用现有的 `AgentContext` 和工具系统
-- 保持命令注册机制不变
-- 在测试环境充分验证后再合并
+### Mitigation Measures:
+- Adopt a gradual addition approach, with each Story being tested independently.
+- Reuse the existing `AgentContext` and tool system.
+- Keep the command registration mechanism unchanged.
+- Fully validate in a test environment before merging.
 
-### 回滚计划：
-- 可以通过 Git 回滚到特定提交
-- 或者临时禁用新增命令
-- 保持现有命令的独立性，确保核心功能不受影响
+### Rollback Plan:
+- Can roll back to a specific commit via Git.
+- Or, temporarily disable the new commands.
+- Maintain the independence of existing commands to ensure core functionality is not affected.
 
-## 完成定义 (Definition of Done)
+## Definition of Done
 
-- ✅ 所有 Stories 完成，新命令正常工作
-- ✅ 现有功能通过回归测试验证
-- ✅ 命令系统集成正确，无冲突
-- ✅ 文档和帮助信息更新完成
-- ✅ 现有功能无回归问题
-- ✅ 用户体验测试通过
-- ✅ 性能测试满足要求
+- ✅ All Stories are complete, and new commands are working correctly.
+- ✅ Existing functionality is verified through regression testing.
+- ✅ The command system is correctly integrated, with no conflicts.
+- ✅ Documentation and help information are updated.
+- ✅ No regression issues with existing functionality.
+- ✅ User experience testing has passed.
+- ✅ Performance testing meets the requirements.
 
-## 预期影响
+## Expected Impact
 
-### 用户体验改善：
-- 写作流程更自然，符合作者思维习惯
-- 学习成本降低，新用户更容易上手
-- 命令更直观，减少记忆负担
+### User Experience Improvement:
+- The writing process will be more natural and aligned with an author's thought process.
+- The learning curve will be reduced, making it easier for new users to get started.
+- Commands will be more intuitive, reducing the burden of memorization.
 
-### 功能完整性：
-- 覆盖完整的写作工作流：创作 → 优化 → 辅助工具
-- 提供专业的写作辅助功能
-- 保持技术专业性和易用性的平衡
+### Functional Completeness:
+- Covers the entire writing workflow: Creation → Optimization → Utility Tools.
+- Provides professional writing assistance features.
+- Balances technical professionalism with ease of use.
 
-## Story Manager 交接说明
+## Story Manager Handover Notes
 
-请为这个 brownfield epic 开发详细的用户故事。关键考虑因素：
+Please develop detailed user stories for this brownfield epic. Key considerations:
 
-- **技术环境：** 这是对现有 WriteFlow v2.2.6 系统的增强，运行在 TypeScript + React + Ink 技术栈上
-- **集成点：** 命令系统 (`src/cli/commands/`)、SlashCommand 接口、AgentContext 系统
-- **现有模式：** 基于 `type: 'prompt'` 和 `type: 'local'` 的命令结构
-- **关键兼容性要求：** 保持现有命令工作正常，不破坏 UI 系统
-- **测试要求：** 每个故事必须包含验证现有功能保持完整的测试
+- **Technical Environment:** This is an enhancement to the existing WriteFlow v2.2.6 system, running on a TypeScript + React + Ink technology stack.
+- **Integration Points:** The command system (`src/cli/commands/`), `SlashCommand` interface, and `AgentContext` system.
+- **Existing Patterns:** A command structure based on `type: 'prompt'` and `type: 'local'`.
+- **Key Compatibility Requirements:** Maintain the normal operation of existing commands and do not break the UI system.
+- **Testing Requirements:** Each story must include tests that verify the continued integrity of existing functionality.
 
-这个 epic 应该在保持系统完整性的同时，实现让 WriteFlow 成为真正实用的作者写作工具的目标。
+This epic should achieve the goal of making WriteFlow a truly practical writing tool for authors while maintaining the integrity of the system.
 
-## 附录：新命令设计示例
+## Appendix: New Command Design Examples
 
-### /write 命令示例
+### /write Command Example
 ```typescript
 {
   name: 'write',
-  aliases: ['写作', 'w'],
-  description: '直接写作文章',
-  usage: '/write <主题或要求>',
+  aliases: ['write', 'w'],
+  description: 'Write an article directly',
+  usage: '/write <topic or requirement>',
   
   async getPromptForCommand(args: string): Promise<string> {
-    return `请根据以下要求写作：
+    return `Please write according to the following requirements:
 
 ${args}
 
-要求：
-1. 结构清晰，逻辑连贯
-2. 语言流畅，表达准确
-3. 适当使用例子和数据支撑
-4. 保持专业性和可读性平衡`
+Requirements:
+1. A clear and logical structure.
+2. Fluent language and accurate expression.
+3. Appropriate use of examples and data for support.
+4. A balance between professionalism and readability.`
   }
 }
 ```
 
-### 改进后的 Help 显示格式
+### Improved Help Display Format
 ```
-WriteFlow AI 写作助手 - 命令参考
+WriteFlow AI Writing Assistant - Command Reference
 
-📝 创作命令:
-  /write <主题>         写作文章
-  /draft <主题>         快速起草
-  /compose <类型> <主题> 指定类型创作
+📝 Creation Commands:
+  /write <topic>         Write an article
+  /draft <topic>         Quickly draft content
+  /compose <type> <topic> Create content of a specified type
 
-✨ 优化命令:
-  /polish [内容]        润色文本
-  /expand <内容>        扩展深度
-  /simplify <内容>      简化表达
-  /continue [文件]      续写内容
+✨ Optimization Commands:
+  /polish [content]        Polish text
+  /expand <content>        Expand on a topic
+  /simplify <content>      Simplify expression
+  /continue [file]      Continue writing
 
-🔧 工具命令:
-  /grammar [文件]       语法检查
-  /summarize <内容>     总结提炼
-  /translate <语言>     翻译内容
-  /check [文件]         事实核查
+🔧 Utility Commands:
+  /grammar [file]       Check grammar
+  /summarize <content>     Summarize and extract key points
+  /translate <language>     Translate content
+  /check [file]         Fact-check
 
-📚 研究命令:
-  /outline <主题>       生成大纲
-  /research <主题>      深度研究
-  /cite <来源>          引用管理
+📚 Research Commands:
+  /outline <topic>       Generate an outline
+  /research <topic>      In-depth research
+  /cite <source>          Manage citations
 ```
 
 ---
 
-**创建日期：** 2025-08-31  
-**最后更新：** 2025-08-31  
-**下一步：** 交给 Story Manager 创建详细用户故事
+**Creation Date:** 2025-08-31
+**Last Updated:** 2025-08-31
+**Next Step:** Hand over to the Story Manager to create detailed user stories.

@@ -1,206 +1,206 @@
-# 🎯 WriteFlow 功能文档
+# 🎯 WriteFlow Feature Documents
 
-欢迎来到 WriteFlow 功能文档中心。这里详细记录了各项功能的需求、设计、实现和测试方案。
+Welcome to the WriteFlow Feature Documentation Center. Here, you will find detailed records of the requirements, design, implementation, and testing plans for each feature.
 
-## 📚 功能文档列表
+## 📚 Feature Document List
 
-### [Slidev PPT 创作功能](./slidev-ppt-feature.md) 🆕
-**AI 驱动的演示文稿创作系统**
+### [Slidev PPT Creation Feature](./slidev-ppt-feature.md) 🆕
+**An AI-driven presentation creation system**
 
-#### 核心能力
-- 🎨 **智能创作**: AI 根据主题生成完整演示文稿
-- 🔄 **文章转换**: 将 Markdown 文章智能转换为 PPT
-- 📝 **大纲生成**: 自动生成结构化的演讲大纲
-- ✨ **内容优化**: AI 优化演示内容和视觉效果
+#### Core Capabilities
+- 🎨 **Intelligent Creation**: AI generates complete presentations based on a topic.
+- 🔄 **Article Conversion**: Intelligently converts Markdown articles into PPTs.
+- 📝 **Outline Generation**: Automatically generates a structured presentation outline.
+- ✨ **Content Optimization**: AI optimizes presentation content and visual effects.
 
-#### 技术特点
-- 基于 Slidev 框架
-- 支持 Markdown 语法
-- 丰富的主题模板
-- 实时预览功能
+#### Technical Features
+- Based on the Slidev framework.
+- Supports Markdown syntax.
+- A rich selection of theme templates.
+- Real-time preview functionality.
 
-## 🚀 即将推出的功能
+## 🚀 Upcoming Features
 
-### 多模态内容支持
-- **图表生成**: AI 自动生成数据可视化图表
-- **图像处理**: 智能图片裁剪和优化
-- **视频嵌入**: 支持视频内容集成
+### Multimodal Content Support
+- **Chart Generation**: AI automatically generates data visualization charts.
+- **Image Processing**: Intelligent image cropping and optimization.
+- **Video Embedding**: Supports the integration of video content.
 
-### 协作功能
-- **团队协作**: 多人实时协作编辑
-- **版本控制**: 完整的版本历史记录
-- **评论系统**: 内容评审和反馈
+### Collaboration Features
+- **Team Collaboration**: Real-time collaborative editing for multiple users.
+- **Version Control**: A complete history of versions.
+- **Comment System**: Content review and feedback.
 
-### AI 增强功能
-- **智能续写**: 根据上下文自动续写
-- **风格迁移**: 一键转换写作风格
-- **内容摘要**: 自动生成多种长度摘要
+### AI-Enhanced Features
+- **Intelligent Continuation**: Automatically continues writing based on context.
+- **Style Transfer**: One-click conversion of writing style.
+- **Content Summarization**: Automatically generates summaries of various lengths.
 
-## 📊 功能分类
+## 📊 Feature Categories
 
-### 写作辅助功能
-| 功能 | 状态 | 优先级 | 文档 |
-|-----|------|--------|------|
-| Slidev PPT | ✅ 已完成 | P0 | [查看文档](./slidev-ppt-feature.md) |
-| 大纲生成 | ✅ 已完成 | P0 | 内置功能 |
-| 内容改写 | ✅ 已完成 | P0 | 内置功能 |
-| 语法检查 | ✅ 已完成 | P1 | 内置功能 |
+### Writing Assistance Features
+| Feature         | Status    | Priority | Document                               |
+| --------------- | --------- | -------- | -------------------------------------- |
+| Slidev PPT      | ✅ Completed | P0       | [View Document](./slidev-ppt-feature.md) |
+| Outline Generation | ✅ Completed | P0       | Built-in feature                       |
+| Content Rewriting | ✅ Completed | P0       | Built-in feature                       |
+| Grammar Check   | ✅ Completed | P1       | Built-in feature                       |
 
-### 研究功能
-| 功能 | 状态 | 优先级 | 说明 |
-|-----|------|--------|------|
-| 网络搜索 | ✅ 已完成 | P0 | 深度主题研究 |
-| 事实核查 | 🔄 开发中 | P1 | 信息准确性验证 |
-| 引用管理 | 📋 计划中 | P2 | 参考文献管理 |
+### Research Features
+| Feature        | Status      | Priority | Description                    |
+| -------------- | ----------- | -------- | ------------------------------ |
+| Web Search     | ✅ Completed | P0       | In-depth topic research        |
+| Fact-Checking  | 🔄 In-Progress | P1       | Information accuracy verification |
+| Citation Management | 📋 Planned   | P2       | Bibliography management        |
 
-### 发布功能
-| 功能 | 状态 | 优先级 | 说明 |
-|-----|------|--------|------|
-| 多平台发布 | ✅ 已完成 | P0 | 支持多种格式 |
-| 微信排版 | ✅ 已完成 | P1 | 公众号优化 |
-| SEO 优化 | 📋 计划中 | P2 | 搜索引擎优化 |
+### Publishing Features
+| Feature           | Status    | Priority | Description               |
+| ----------------- | --------- | -------- | ------------------------- |
+| Multi-Platform Publishing | ✅ Completed | P0       | Supports various formats  |
+| WeChat Formatting | ✅ Completed | P1       | Official Account optimization |
+| SEO Optimization  | 📋 Planned   | P2       | Search engine optimization |
 
-## 📝 功能需求文档模板
+## 📝 Feature Requirement Document Template
 
-每个功能文档应包含以下部分：
+Each feature document should include the following sections:
 
-### 1. 功能概述
-- 功能名称和版本
-- 功能描述
-- 目标用户
-- 使用场景
+### 1. Feature Overview
+- Feature name and version
+- Feature description
+- Target users
+- Use cases
 
-### 2. 需求分析
-- 用户需求
-- 业务需求
-- 技术需求
-- 非功能需求
+### 2. Requirement Analysis
+- User requirements
+- Business requirements
+- Technical requirements
+- Non-functional requirements
 
-### 3. 设计方案
-- 架构设计
-- 接口设计
-- 数据模型
-- 交互流程
+### 3. Design Plan
+- Architectural design
+- Interface design
+- Data model
+- Interaction flow
 
-### 4. 实现计划
-- 开发阶段
-- 时间安排
-- 资源需求
-- 风险评估
+### 4. Implementation Plan
+- Development phases
+- Timeline
+- Resource requirements
+- Risk assessment
 
-### 5. 测试方案
-- 测试策略
-- 测试用例
-- 验收标准
-- 性能指标
+### 5. Testing Plan
+- Testing strategy
+- Test cases
+- Acceptance criteria
+- Performance metrics
 
-## 🔄 功能开发流程
+## 🔄 Feature Development Process
 
 ```mermaid
 graph LR
-    A[需求分析] --> B[设计评审]
-    B --> C[技术方案]
-    C --> D[开发实现]
-    D --> E[测试验证]
-    E --> F[文档更新]
-    F --> G[发布上线]
+    A[Requirement Analysis] --> B[Design Review]
+    B --> C[Technical Plan]
+    C --> D[Development]
+    D --> E[Testing and Validation]
+    E --> F[Documentation Update]
+    F --> G[Release]
 ```
 
-### 阶段说明
+### Phase Descriptions
 
-1. **需求分析**: 收集用户反馈，分析功能需求
-2. **设计评审**: 评审功能设计，确定技术方案
-3. **技术方案**: 制定详细的技术实现方案
-4. **开发实现**: 按照方案进行功能开发
-5. **测试验证**: 全面测试功能的正确性
-6. **文档更新**: 更新用户文档和技术文档
-7. **发布上线**: 功能发布和用户通知
+1. **Requirement Analysis**: Collect user feedback and analyze feature requirements.
+2. **Design Review**: Review the feature design and determine the technical plan.
+3. **Technical Plan**: Formulate a detailed technical implementation plan.
+4. **Development**: Develop the feature according to the plan.
+5. **Testing and Validation**: Comprehensively test the correctness of the feature.
+6. **Documentation Update**: Update user and technical documentation.
+7. **Release**: Release the feature and notify users.
 
-## 🎯 优先级定义
+## 🎯 Priority Definitions
 
-### P0 - 核心功能
-- 产品核心价值
-- 用户必需功能
-- 影响基本使用
+### P0 - Core Features
+- Core value of the product
+- Essential features for users
+- Affects basic usability
 
-### P1 - 重要功能
-- 提升用户体验
-- 常用功能增强
-- 竞争力功能
+### P1 - Important Features
+- Enhances user experience
+- Improvements to commonly used features
+- Competitive features
 
-### P2 - 增值功能
-- 锦上添花功能
-- 特定场景需求
-- 未来扩展功能
+### P2 - Value-Added Features
+- "Nice-to-have" features
+- Niche use case requirements
+- Future extension features
 
-## 📈 功能成熟度
+## 📈 Feature Maturity
 
 ### Level 1: MVP
-- 基本功能可用
-- 核心流程完整
-- 基础测试通过
+- Basic functionality is available.
+- The core workflow is complete.
+- Basic testing has passed.
 
 ### Level 2: Beta
-- 功能基本完善
-- 用户测试通过
-- 性能基本达标
+- The feature is mostly complete.
+- User testing has passed.
+- Performance is generally acceptable.
 
 ### Level 3: GA
-- 功能完全成熟
-- 生产环境稳定
-- 文档完整齐全
+- The feature is fully mature.
+- Stable in a production environment.
+- Documentation is complete and comprehensive.
 
-## 🔍 功能评估指标
+## 🔍 Feature Evaluation Metrics
 
-### 使用率指标
-- 日活跃用户数
-- 功能使用频率
-- 用户留存率
+### Usage Metrics
+- Daily active users
+- Feature usage frequency
+- User retention rate
 
-### 性能指标
-- 响应时间
-- 处理速度
-- 资源消耗
+### Performance Metrics
+- Response time
+- Processing speed
+- Resource consumption
 
-### 质量指标
-- 错误率
-- 用户满意度
-- 问题解决率
+### Quality Metrics
+- Error rate
+- User satisfaction
+- Issue resolution rate
 
-## 🤝 贡献新功能
+## 🤝 Contributing New Features
 
-### 提议流程
-1. 在 GitHub Issues 提出功能建议
-2. 参与社区讨论
-3. 提交功能设计文档
-4. 获得社区反馈
+### Proposal Process
+1. Propose a feature suggestion in GitHub Issues.
+2. Participate in community discussions.
+3. Submit a feature design document.
+4. Get feedback from the community.
 
-### 开发流程
-1. Fork 项目仓库
-2. 创建功能分支
-3. 实现功能代码
-4. 提交 Pull Request
-5. 代码审查
-6. 合并发布
+### Development Process
+1. Fork the project repository.
+2. Create a feature branch.
+3. Implement the feature code.
+4. Submit a Pull Request.
+5. Code review.
+6. Merge and release.
 
-## 📚 相关资源
+## 📚 Related Resources
 
-### 开发指南
-- [系统架构](../architecture/system-architecture.md)
-- [技术实现](../architecture/technical-implementation.md)
-- [工具系统](../architecture/writing-tools.md)
+### Development Guides
+- [System Architecture](../architecture/system-architecture.md)
+- [Technical Implementation](../architecture/technical-implementation.md)
+- [Tool System](../architecture/writing-tools.md)
 
-### 使用指南
-- [快速开始](../guides/quick-start.md)
-- [斜杠命令](../guides/slash-commands.md)
-- [Slidev 指南](../guides/slidev-ppt-guide.md)
+### User Guides
+- [Quick Start](../guides/quick-start.md)
+- [Slash Commands](../guides/slash-commands.md)
+- [Slidev Guide](../guides/slidev-ppt-guide.md)
 
-### 外部链接
-- [GitHub 仓库](https://github.com/writeflow/writeflow)
-- [问题追踪](https://github.com/writeflow/writeflow/issues)
-- [讨论社区](https://github.com/writeflow/writeflow/discussions)
+### External Links
+- [GitHub Repository](https://github.com/writeflow/writeflow)
+- [Issue Tracker](https://github.com/writeflow/writeflow/issues)
+- [Discussion Community](https://github.com/writeflow/writeflow/discussions)
 
 ---
 
-*最后更新：2025-01-03*  
+*Last updated: 2025-01-03*
 *WriteFlow Feature Team*

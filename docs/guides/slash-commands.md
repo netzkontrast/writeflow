@@ -14,11 +14,11 @@ A complete replica of the Claude Code slash command architecture, including:
 - **`/help`**: Shows a list of all available commands and their descriptions.
 - **`/help [command]`**: Shows detailed information about a specific command.
 
-### Chinese Alias Examples
-- **`/大纲`**: Equivalent to `/outline`
-- **`/改写`**: Equivalent to `/rewrite`
-- **`/研究`**: Equivalent to `/research`
-- **`/帮助`**: Equivalent to `/help`
+### Alias Examples
+- **`/outline`**: `outline`
+- **`/rewrite`**: `rewrite`
+- **`/research`**: `research`
+- **`/help`**: `help`
 
 ## 📋 Core Writing Commands
 
@@ -27,21 +27,21 @@ A complete replica of the Claude Code slash command architecture, including:
 ```typescript
 {
   type: "prompt",
-  name: "outline", 
-  aliases: ["大纲", "ol"],
+  name: "outline",
+  aliases: ["outline", "ol"],
   description: "AI-generated article outline",
-  
+
   usage: "/outline <topic> [options]",
   examples: [
     "/outline AI agent technology development trends",
     "/outline Microservices architecture design --style=technical --length=3000"
   ],
-  
+
   async getPromptForCommand(args: string, context: AgentContext): Promise<string> {
     const [topic, ...options] = args.split(" ")
     const style = this.extractOption(options, "style") || "technical"
     const length = this.extractOption(options, "length") || "2000"
-    
+
     return `Please generate a detailed ${style} article outline for the topic "${topic}":
 
 Target word count: ${length} words
@@ -60,7 +60,7 @@ Please generate an outline with the following structure:
 
 Please ensure the outline is logical and easy to follow.`
   },
-  
+
   allowedTools: ["web_search", "read_article", "write_article", "citation_manager"],
   progressMessage: "Generating article outline"
 }
@@ -72,26 +72,26 @@ Please ensure the outline is logical and easy to follow.`
 {
   type: "prompt",
   name: "rewrite",
-  aliases: ["改写", "rw", "重写"],
+  aliases: ["rewrite", "rw", "revise"],
   description: "Intelligently rewrite article content",
-  
+
   usage: "/rewrite <style> <content or file path>",
   examples: [
     "/rewrite casual ./articles/tech-article.md",
     "/rewrite academic This is a piece of technical content that needs rewriting...",
     "/rewrite formal --tone=professional --keep-structure"
   ],
-  
+
   async getPromptForCommand(args: string, context: AgentContext): Promise<string> {
     const [style, ...contentParts] = args.split(" ")
     let content = contentParts.join(" ")
-    
+
     // Check if it's a file path
     if (content.startsWith("./") || content.startsWith("/")) {
       const fileContent = await this.readFile(content)
       content = fileContent
     }
-    
+
     if (!content) {
       throw new Error("Please provide content or a file path to rewrite.")
     }
@@ -122,7 +122,7 @@ Rewrite requirements:
 
 Please provide the complete rewritten content.`
   },
-  
+
   allowedTools: ["read_article", "edit_article", "style_adapter", "grammar_checker"],
   progressMessage: "Intelligently rewriting content"
 }
@@ -132,25 +132,25 @@ Please provide the complete rewritten content.`
 
 ```typescript
 {
-  type: "prompt", 
+  type: "prompt",
   name: "research",
-  aliases: ["研究", "调研", "rs"],
+  aliases: ["research", "investigate", "rs"],
   description: "In-depth topic research and information gathering",
-  
+
   usage: "/research <topic> [options]",
   examples: [
     "/research AI Agent architecture design",
     "/research Blockchain technology development --depth=in-depth --sources=10",
     "/research Quantum computing applications --lang=en --time=last-year"
   ],
-  
+
   async getPromptForCommand(args: string, context: AgentContext): Promise<string> {
     const [topic, ...options] = args.split(" ")
     const depth = this.extractOption(options, "depth") || "standard"
     const maxSources = this.extractOption(options, "sources") || "8"
     const timeRange = this.extractOption(options, "time") || "unlimited"
     const language = this.extractOption(options, "lang") || "en-zh"
-    
+
     return `Please conduct in-depth research on the topic "${topic}" and provide a comprehensive analysis report:
 
 Research parameters:
@@ -197,9 +197,9 @@ Please provide the following content:
 
 Please ensure the information is accurate, the sources are reliable, and provide specific citation links.`
   },
-  
+
   allowedTools: [
-    "web_search", "web_fetch", "fact_checker", 
+    "web_search", "web_fetch", "fact_checker",
     "citation_manager", "read_article", "write_article"
   ],
   progressMessage: "Conducting in-depth topic research"
@@ -212,9 +212,9 @@ Please ensure the information is accurate, the sources are reliable, and provide
 {
   type: "local",
   name: "publish",
-  aliases: ["发布", "pub", "deploy"],
+  aliases: ["publish", "pub", "deploy"],
   description: "Publish articles to various platforms",
-  
+
   usage: "/publish <platform> <article-path> [options]",
   examples: [
     "/publish wechat ./articles/ai-trends.md",
@@ -222,10 +222,10 @@ Please ensure the information is accurate, the sources are reliable, and provide
     "/publish medium ./articles/startup.md --draft",
     "/publish html ./articles/tutorial.md --theme=tech"
   ],
-  
+
   async call(args: string, context: AgentContext): Promise<string> {
     const [platform, articlePath, ...options] = args.split(" ")
-    
+
     if (!platform || !articlePath) {
       return `Usage: /publish <platform> <article-path> [options]
 
@@ -270,33 +270,33 @@ Please ensure the information is accurate, the sources are reliable, and provide
 
       // Read the article content
       const article = await this.readArticleFile(articlePath)
-      
+
       // Publish based on the platform
       switch (platform.toLowerCase()) {
         case "wechat":
           return await this.publishToWeChat(article, options, context)
-          
+
         case "zhihu":
           return await this.publishToZhihu(article, options, context)
-          
+
         case "medium":
           return await this.publishToMedium(article, options, context)
-          
+
         case "html":
           return await this.generateHTML(article, options, context)
-          
+
         case "pdf":
           return await this.generatePDF(article, options, context)
-          
+
         default:
           return `❌ Unsupported platform: ${platform}\nPlease use: wechat, zhihu, medium, html, pdf`
       }
-      
+
     } catch (error) {
       return `❌ Publishing failed: ${error.message}`
     }
   },
-  
+
   userFacingName: () => "publish"
 }
 ```
@@ -307,20 +307,20 @@ Please ensure the information is accurate, the sources are reliable, and provide
 {
   type: "local-jsx",
   name: "model",
-  aliases: ["模型", "ai"],
+  aliases: ["model", "ai"],
   description: "Set AI model and parameters",
-  
+
   usage: "/model [model-name] [parameters]",
   examples: [
     "/model",                                    // Open model selection interface
     "/model claude-3-opus-20240229",            // Switch to Opus
     "/model claude-3-sonnet-20240229 --temp=0.5" // Set model and temperature
   ],
-  
+
   async call(args: string, context: AgentContext): Promise<React.ReactElement> {
     const { createElement } = await import('react')
     const [modelName, ...params] = args.split(" ")
-    
+
     if (!args.trim()) {
       // Open model selection interface
       return createElement(ModelSelectorPanel, {
@@ -334,7 +334,7 @@ Please ensure the information is accurate, the sources are reliable, and provide
             costLevel: "High"
           },
           {
-            id: "claude-3-sonnet-20240229", 
+            id: "claude-3-sonnet-20240229",
             name: "Claude 3 Sonnet",
             description: "Balanced performance and cost, for daily writing",
             maxTokens: 4000,
@@ -342,7 +342,7 @@ Please ensure the information is accurate, the sources are reliable, and provide
           },
           {
             id: "claude-3-haiku-20240307",
-            name: "Claude 3 Haiku", 
+            name: "Claude 3 Haiku",
             description: "Fast response, for simple tasks",
             maxTokens: 4000,
             costLevel: "Low"
@@ -362,16 +362,16 @@ Please ensure the information is accurate, the sources are reliable, and provide
       // Set model directly
       const config = context.getConfig()
       config.ai.model = modelName
-      
+
       // Parse other parameters
-      const temperature = this.extractParam(params, "temp") 
+      const temperature = this.extractParam(params, "temp")
       const maxTokens = this.extractParam(params, "tokens")
-      
+
       if (temperature) config.ai.temperature = parseFloat(temperature)
       if (maxTokens) config.ai.max_tokens = parseInt(maxTokens)
-      
+
       await context.updateConfig(config)
-      
+
       return createElement('div', null, [
         createElement('p', null, `✓ Model set to: ${modelName}`),
         temperature && createElement('p', null, `✓ Temperature: ${temperature}`),
@@ -379,7 +379,7 @@ Please ensure the information is accurate, the sources are reliable, and provide
       ].filter(Boolean))
     }
   },
-  
+
   userFacingName: () => "model"
 }
 ```
@@ -390,19 +390,19 @@ Please ensure the information is accurate, the sources are reliable, and provide
 {
   type: "prompt",
   name: "style",
-  aliases: ["风格", "语调"],
+  aliases: ["style", "tone"],
   description: "Adjust article writing style",
-  
+
   usage: "/style <target-style> [content]",
   examples: [
     "/style casual",                        // View description of casual style
     "/style formal This content needs a more formal expression",   // Rewrite directly
     "/style technical ./articles/draft.md"      // Rewrite the entire file
   ],
-  
+
   async getPromptForCommand(args: string, context: AgentContext): Promise<string> {
     const [targetStyle, ...contentParts] = args.split(" ")
-    
+
     const styleGuides = {
       "casual": {
         description: "Easy to understand, suitable for a general audience",
@@ -425,13 +425,13 @@ Please ensure the information is accurate, the sources are reliable, and provide
         tone: "Objective and neutral"
       }
     }
-    
+
     const guide = styleGuides[targetStyle]
     if (!guide) {
       return `Please select a valid writing style:
 
 📝 Available styles:
-${Object.entries(styleGuides).map(([name, info]) => 
+${Object.entries(styleGuides).map(([name, info]) =>
   `• ${name}: ${info.description}`
 ).join('\n')}
 
@@ -439,15 +439,15 @@ Usage examples:
 /style casual This technical content needs a more casual expression.
 /style formal ./articles/draft.md`
     }
-    
+
     let content = contentParts.join(" ")
-    
+
     // Check if it's a file path
     if (content.startsWith("./") || content.startsWith("/")) {
       // This will trigger the read_article tool
       content = `[File content will be read by the read_article tool: ${content}]`
     }
-    
+
     if (!content || content.includes("[File content will be read by")) {
       return `Please use the read_article tool to read the file, then rewrite it in a ${targetStyle} style.
 
@@ -474,7 +474,7 @@ Rewrite requirements:
 
 Please provide the complete rewritten result.`
   },
-  
+
   allowedTools: ["read_article", "edit_article", "style_adapter", "grammar_checker"],
   progressMessage: "Adjusting writing style"
 }
@@ -486,15 +486,15 @@ Please provide the complete rewritten result.`
 {
   type: "local",
   name: "help",
-  aliases: ["帮助", "h", "?"],
+  aliases: ["help", "h", "?"],
   description: "Display command help information",
-  
+
   async call(args: string, context: AgentContext): Promise<string> {
     if (args.trim()) {
       // Display detailed help for a specific command
       return this.getCommandHelp(args.trim())
     }
-    
+
     return `WriteFlow AI Writing Assistant - Command Reference
 
 📝 Writing Commands:
@@ -519,7 +519,7 @@ Please provide the complete rewritten result.`
   /search <keyword>          Search for content
 
 💡 Usage Tips:
-  - Commands support English and Chinese aliases (e.g., /大纲 is equivalent to /outline)
+  - Commands support aliases (e.g., /outline is equivalent to /outline)
   - Use /help <command> to view detailed instructions
   - Most commands support --parameter=value option format
 
@@ -529,7 +529,7 @@ Example session:
 > /rewrite casual ./articles/technical-article.md
 > /publish wechat ./articles/final-article.md`
   },
-  
+
   userFacingName: () => "help"
 }
 ```
@@ -542,7 +542,7 @@ Example session:
 // src/cli/commands/command-executor.ts
 export class SlashCommandExecutor {
   private commands: Map<string, SlashCommand> = new Map()
-  
+
   constructor() {
     this.registerWritingCommands()
   }
@@ -550,35 +550,35 @@ export class SlashCommandExecutor {
   // Replicates the logic of Claude Code's rN5 function
   async executeCommand(
     commandName: string,
-    args: string, 
+    args: string,
     context: AgentContext,
     callbacks: CommandCallbacks
   ): Promise<CommandResult> {
     try {
       // Find the command (cw1 function replica)
       const command = this.findCommand(commandName)
-      
+
       // Execute based on command type (replicating three type handlers)
       switch (command.type) {
         case "local-jsx":
           return this.executeJSXCommand(command, args, context, callbacks)
-          
+
         case "local":
           return this.executeLocalCommand(command, args, context)
-          
+
         case "prompt":
           return this.executePromptCommand(command, args, context)
-          
+
         default:
-          throw new Error(`Unknown command type: ${command.type}`)
+          throw new Error(\`Unknown command type: ${command.type}\`)
       }
-      
+
     } catch (error) {
       return {
         success: false,
         error: error.message,
         messages: [
-          { role: 'assistant', content: `❌ Command execution failed: ${error.message}` }
+          { role: 'assistant', content: \`❌ Command execution failed: ${error.message}\` }
         ]
       }
     }
@@ -594,30 +594,30 @@ export class SlashCommandExecutor {
     return new Promise((resolve) => {
       command.call((output, skipMessage) => {
         if (skipMessage?.skipMessage) {
-          resolve({ 
-            success: true, 
-            messages: [], 
-            shouldQuery: false, 
-            skipHistory: true 
+          resolve({
+            success: true,
+            messages: [],
+            shouldQuery: false,
+            skipHistory: true
           })
           return
         }
-        
+
         resolve({
           success: true,
           messages: [
             {
               role: 'assistant',
-              content: `<command-name>/${command.userFacingName()}</command-name>
+              content: \`<command-name>/${command.userFacingName()}</command-name>
 <command-message>${command.userFacingName()}</command-message>
-<command-args>${args}</command-args>`
+<command-args>${args}</command-args>\`
             },
             output ? {
               role: 'assistant',
-              content: `<local-command-stdout>${output}</local-command-stdout>`
+              content: \`<local-command-stdout>${output}</local-command-stdout>\`
             } : {
-              role: 'assistant', 
-              content: `<local-command-stdout>Command executed successfully</local-command-stdout>`
+              role: 'assistant',
+              content: \`<local-command-stdout>Command executed successfully</local-command-stdout>\`
             }
           ],
           shouldQuery: false
@@ -631,14 +631,14 @@ export class SlashCommandExecutor {
   // local type command execution
   private async executeLocalCommand(
     command: SlashCommand,
-    args: string, 
+    args: string,
     context: AgentContext
   ): Promise<CommandResult> {
     const commandMessage = {
       role: 'assistant' as const,
-      content: `<command-name>/${command.userFacingName()}</command-name>
+      content: \`<command-name>/${command.userFacingName()}</command-name>
 <command-message>${command.userFacingName()}</command-message>
-<command-args>${args}</command-args>`
+<command-args>${args}</command-args>\`
     }
 
     try {
@@ -649,7 +649,7 @@ export class SlashCommandExecutor {
           commandMessage,
           {
             role: 'assistant',
-            content: `<local-command-stdout>${result}</local-command-stdout>`
+            content: \`<local-command-stdout>${result}</local-command-stdout>\`
           }
         ],
         shouldQuery: false
@@ -660,8 +660,8 @@ export class SlashCommandExecutor {
         messages: [
           commandMessage,
           {
-            role: 'assistant', 
-            content: `<local-command-stderr>${String(error)}</local-command-stderr>`
+            role: 'assistant',
+            content: \`<local-command-stderr>${String(error)}</local-command-stderr>\`
           }
         ],
         shouldQuery: false
@@ -677,15 +677,15 @@ export class SlashCommandExecutor {
   ): Promise<CommandResult> {
     const promptData = await command.getPromptForCommand(args, context)
     const allowedTools = command.allowedTools || []
-    
+
     const commandMessages = [
-      `<command-message>${command.userFacingName()} ${command.progressMessage || 'is processing'}…</command-message>`,
-      `<command-name>/${command.userFacingName()}</command-name>`,
-      args ? `<command-args>${args}</command-args>` : null
+      \`<command-message>${command.userFacingName()} ${command.progressMessage || 'is processing'}…</command-message>\`,
+      \`<command-name>/${command.userFacingName()}</command-name>\`,
+      args ? \`<command-args>${args}</command-args>\` : null
     ].filter(Boolean).join('\n')
-    
+
     const maxThinkingTokens = await this.calculateThinkingTokens(promptData)
-    
+
     return {
       success: true,
       messages: [
@@ -714,10 +714,10 @@ interface SettingsPanelProps {
   onDone: (success: boolean) => void
 }
 
-export const SettingsPanel: React.FC<SettingsPanelProps> = ({ 
-  config, 
-  onSave, 
-  onDone 
+export const SettingsPanel: React.FC<SettingsPanelProps> = ({
+  config,
+  onSave,
+  onDone
 }) => {
   const [formConfig, setFormConfig] = useState(config)
   const [saving, setSaving] = useState(false)
@@ -737,7 +737,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
   return React.createElement('div', { className: 'settings-panel' }, [
     React.createElement('h2', null, '⚙️ WriteFlow Settings'),
-    
+
     // Writing settings
     React.createElement('section', null, [
       React.createElement('h3', null, '📝 Writing Settings'),
@@ -757,7 +757,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         ])
       ])
     ]),
-    
+
     // AI model settings
     React.createElement('section', null, [
       React.createElement('h3', null, '🤖 AI Model'),
@@ -776,15 +776,15 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         ])
       ])
     ]),
-    
+
     // Buttons
     React.createElement('div', { className: 'button-group' }, [
-      React.createElement('button', { 
-        onClick: handleSave, 
-        disabled: saving 
+      React.createElement('button', {
+        onClick: handleSave,
+        disabled: saving
       }, saving ? 'Saving...' : '💾 Save'),
-      React.createElement('button', { 
-        onClick: () => onDone(false) 
+      React.createElement('button', {
+        onClick: () => onDone(false)
       }, '❌ Cancel')
     ])
   ])
@@ -842,46 +842,46 @@ export class CLIRenderer {
       text: this.chalk.blue(message),
       spinner: 'dots'
     }).start()
-    
+
     return () => spinner.stop()
   }
 
   // Render article outline
   renderOutline(outline: OutlineStructure): void {
-    console.log(this.chalk.cyan.bold(`📋 ${outline.title}`))
+    console.log(this.chalk.cyan.bold(\`📋 ${outline.title}\`))
     console.log()
-    
+
     for (const section of outline.sections) {
       const indent = '  '.repeat(section.level - 1)
       const marker = section.level === 1 ? '■' : section.level === 2 ? '▪' : '·'
-      
-      console.log(`${indent}${this.chalk.blue(marker)} ${this.chalk.bold(section.title)}`)
+
+      console.log(\`${indent}${this.chalk.blue(marker)} ${this.chalk.bold(section.title)}\`)
       if (section.summary) {
-        console.log(`${indent}  ${this.chalk.gray(section.summary)}`)
+        console.log(\`${indent}  ${this.chalk.gray(section.summary)}\`)
       }
       if (section.estimatedWords) {
-        console.log(`${indent}  ${this.chalk.yellow(`Estimated words: ${section.estimatedWords}`)}`)
+        console.log(\`${indent}  ${this.chalk.yellow(\`Estimated words: ${section.estimatedWords}\`)}\`)
       }
     }
-    
+
     console.log()
-    console.log(`Total estimated words: ${this.chalk.yellow.bold(outline.estimatedLength)}`)
+    console.log(\`Total estimated words: ${this.chalk.yellow.bold(outline.estimatedLength)}\`)
   }
 
   // Render publish result
   renderPublishResult(platform: string, result: PublishResult): void {
-    console.log(this.chalk.green.bold(`✅ Published to ${platform}`))
-    
+    console.log(this.chalk.green.bold(\`✅ Published to ${platform}\`))
+
     if (result.url) {
-      console.log(`🔗 Link: ${this.chalk.underline(result.url)}`)
+      console.log(\`🔗 Link: ${this.chalk.underline(result.url)}\`)
     }
-    
+
     if (result.previewPath) {
-      console.log(`👀 Preview: ${result.previewPath}`)
+      console.log(\`👀 Preview: ${result.previewPath}\`)
     }
-    
+
     if (result.stats) {
-      console.log(`📊 Stats: ${result.stats.words} words, ${result.stats.characters} characters`)
+      console.log(\`📊 Stats: ${result.stats.words} words, ${result.stats.characters} characters\`)
     }
   }
 }

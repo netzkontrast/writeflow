@@ -1,138 +1,138 @@
-# 📚 WriteFlow 文档中心
+# 📚 WriteFlow Documentation Center
 
-欢迎来到 WriteFlow 文档中心！这里包含了所有关于 WriteFlow 的文档和资源。
+Welcome to the WriteFlow Documentation Center! This is where you will find all the documentation and resources related to WriteFlow.
 
-## 📁 文档结构
+## 📁 Document Structure
 
 ```
 docs/
-├── guides/                 # 📖 使用指南
-│   ├── README.md          # 指南索引
-│   ├── quick-start.md     # 快速开始
-│   ├── ai-providers-setup.md  # AI 配置
-│   ├── slash-commands.md  # 命令指南
-│   ├── deep-research-guide.md # 智能调研指南
-│   └── slidev-ppt-guide.md # PPT 指南
+├── guides/                 # 📖 User Guides
+│   ├── README.md          # Guide Index
+│   ├── quick-start.md     # Quick Start
+│   ├── ai-providers-setup.md  # AI Configuration
+│   ├── slash-commands.md  # Command Guide
+│   ├── deep-research-guide.md # Intelligent Research Guide
+│   └── slidev-ppt-guide.md # PPT Guide
 │
-├── architecture/          # 🏗️ 架构文档
-│   ├── system-architecture.md  # 系统架构
-│   ├── technical-implementation.md # 技术实现
-│   └── writing-tools.md  # 工具系统
+├── architecture/          # 🏗️ Architecture Documents
+│   ├── system-architecture.md  # System Architecture
+│   ├── technical-implementation.md # Technical Implementation
+│   └── writing-tools.md  # Tool System
 │
-├── features/              # 🎯 功能文档
-│   ├── slidev-ppt-feature.md # Slidev 功能
-│   └── intelligent-research-system.md # 智能调研系统
+├── features/              # 🎯 Feature Documents
+│   ├── slidev-ppt-feature.md # Slidev Feature
+│   └── intelligent-research-system.md # Intelligent Research System
 │
-├── epics/                 # 📋 史诗任务
-├── stories/               # 📝 用户故事
-└── qa/                    # 🧪 质量保证
+├── epics/                 # 📋 Epics
+├── stories/               # 📝 User Stories
+└── qa/                    # 🧪 Quality Assurance
 ```
 
-## 🚀 快速访问
+## 🚀 Quick Access
 
-### 新手入门
-- [快速开始指南](./guides/quick-start.md) - 5分钟上手
-- [AI 提供商设置](./guides/ai-providers-setup.md) - 配置 AI 模型
-- [斜杠命令指南](./guides/slash-commands.md) - 掌握所有命令
+### For Newcomers
+- [Quick Start Guide](./guides/quick-start.md) - Get started in 5 minutes
+- [AI Provider Setup](./guides/ai-providers-setup.md) - Configure AI models
+- [Slash Command Guide](./guides/slash-commands.md) - Master all commands
 
-### 热门功能
-- 🆕 [智能调研系统](./guides/deep-research-guide.md) - AI 深度调研报告生成
-- 🆕 [Slidev PPT 使用手册](./guides/slidev-ppt-guide.md) - AI 创建演示文稿
-- [系统架构设计](./architecture/system-architecture.md) - 了解技术架构
-- [写作工具集](./architecture/writing-tools.md) - 探索工具能力
+### Popular Features
+- 🆕 [Intelligent Research System](./guides/deep-research-guide.md) - AI-powered deep research report generation
+- 🆕 [Slidev PPT User Manual](./guides/slidev-ppt-guide.md) - Create presentations with AI
+- [System Architecture Design](./architecture/system-architecture.md) - Understand the technical architecture
+- [Writing Toolset](./architecture/writing-tools.md) - Explore the tool capabilities
 
-## 📖 文档分类
+## 📖 Document Categories
 
-### 使用指南 (guides/)
-面向用户的操作指南和教程，帮助快速掌握 WriteFlow 的使用方法。
+### User Guides (guides/)
+User-facing operational guides and tutorials to help you quickly master how to use WriteFlow.
 
-**包含内容：**
-- 快速入门教程
-- 功能使用说明
-- 最佳实践指南
-- 常见问题解答
+**Includes:**
+- Quick start tutorials
+- Feature usage instructions
+- Best practice guides
+- Frequently Asked Questions
 
-[查看所有指南 →](./guides/README.md)
+[View all guides →](./guides/README.md)
 
-### 架构文档 (architecture/)
-深入介绍 WriteFlow 的技术架构、设计理念和实现细节。
+### Architecture Documents (architecture/)
+In-depth introduction to WriteFlow's technical architecture, design philosophy, and implementation details.
 
-**包含内容：**
-- 系统整体架构
-- 核心组件设计
-- 技术选型说明
-- 性能优化策略
+**Includes:**
+- Overall system architecture
+- Core component design
+- Technology selection rationale
+- Performance optimization strategies
 
-[查看架构文档 →](./architecture/)
+[View architecture documents →](./architecture/)
 
-### 功能文档 (features/)
-详细描述各项功能的需求、设计和实现方案。
+### Feature Documents (features/)
+Detailed descriptions of the requirements, design, and implementation plans for each feature.
 
-**包含内容：**
-- 功能需求文档
-- 设计规格说明
-- 实施计划
-- 测试方案
+**Includes:**
+- Feature requirement documents
+- Design specification notes
+- Implementation plans
+- Testing plans
 
-[查看功能文档 →](./features/)
+[View feature documents →](./features/)
 
-## 🎯 推荐阅读路径
+## 🎯 Recommended Reading Paths
 
-### 👶 初学者路径
-1. [快速开始](./guides/quick-start.md)
-2. [AI 配置](./guides/ai-providers-setup.md)
-3. [基础命令](./guides/slash-commands.md#基础命令)
+### 👶 Beginner Path
+1. [Quick Start](./guides/quick-start.md)
+2. [AI Configuration](./guides/ai-providers-setup.md)
+3. [Basic Commands](./guides/slash-commands.md#basic-commands)
 
-### 🚀 进阶用户路径
-1. [完整命令指南](./guides/slash-commands.md)
-2. [Slidev PPT 功能](./guides/slidev-ppt-guide.md)
-3. [系统架构](./architecture/system-architecture.md)
+### 🚀 Advanced User Path
+1. [Complete Command Guide](./guides/slash-commands.md)
+2. [Slidev PPT Feature](./guides/slidev-ppt-guide.md)
+3. [System Architecture](./architecture/system-architecture.md)
 
-### 🔧 开发者路径
-1. [技术架构](./architecture/system-architecture.md)
-2. [技术实现](./architecture/technical-implementation.md)
-3. [工具系统](./architecture/writing-tools.md)
-4. [功能设计](./features/)
+### 🔧 Developer Path
+1. [Technical Architecture](./architecture/system-architecture.md)
+2. [Technical Implementation](./architecture/technical-implementation.md)
+3. [Tool System](./architecture/writing-tools.md)
+4. [Feature Design](./features/)
 
-## 📝 文档规范
+## 📝 Document Standards
 
-### 文档命名
-- 使用小写字母和连字符
-- 例如：`slidev-ppt-guide.md`
+### Document Naming
+- Use lowercase letters and hyphens.
+- Example: `slidev-ppt-guide.md`
 
-### 文档格式
-- 使用 Markdown 格式
-- 包含目录（TOC）
-- 提供代码示例
-- 添加相关链接
+### Document Format
+- Use Markdown format.
+- Include a Table of Contents (TOC).
+- Provide code examples.
+- Add relevant links.
 
-### 更新维护
-- 标注最后更新时间
-- 记录版本信息
-- 保持内容同步
+### Updates and Maintenance
+- Indicate the last update time.
+- Record version information.
+- Keep content synchronized.
 
-## 🔄 最近更新
+## 🔄 Recent Updates
 
-| 文档 | 更新时间 | 主要变更 |
-|-----|---------|---------|
-| [Slidev PPT 使用手册](./guides/slidev-ppt-guide.md) | 2025-01-03 | 新增完整使用手册 |
-| [指南索引](./guides/README.md) | 2025-01-03 | 创建指南索引页 |
-| [文档中心首页](./README.md) | 2025-01-03 | 重组文档结构 |
+| Document                                           | Update Time | Main Changes              |
+| -------------------------------------------------- | ----------- | ------------------------- |
+| [Slidev PPT User Manual](./guides/slidev-ppt-guide.md) | 2025-01-03  | Added complete user manual |
+| [Guide Index](./guides/README.md)                  | 2025-01-03  | Created guide index page  |
+| [Doc Center Home](./README.md)                     | 2025-01-03  | Reorganized doc structure |
 
-## 🤝 贡献文档
+## 🤝 Contributing to the Documentation
 
-我们欢迎社区贡献文档！请查看：
-- [贡献指南](../CONTRIBUTING.md)
-- [文档模板](./templates/)
-- [写作规范](./writing-style.md)
+We welcome community contributions to the documentation! Please check out:
+- [Contribution Guide](../CONTRIBUTING.md)
+- [Document Templates](./templates/)
+- [Writing Style Guide](./writing-style.md)
 
-## 📮 联系与支持
+## 📮 Contact and Support
 
-- **GitHub Issues**: [提交问题](https://github.com/writeflow/writeflow/issues)
-- **Discussions**: [参与讨论](https://github.com/writeflow/writeflow/discussions)
-- **官网**: [writeflow.app](https://writeflow.app)
+- **GitHub Issues**: [Submit an issue](https://github.com/writeflow/writeflow/issues)
+- **Discussions**: [Participate in discussions](https://github.com/writeflow/writeflow/discussions)
+- **Official Website**: [writeflow.app](https://writeflow.app)
 
 ---
 
-*WriteFlow Documentation Center v1.0.0*  
-*最后更新：2025-09-03*
+*WriteFlow Documentation Center v1.0.0*
+*Last updated: 2025-09-03*
